@@ -1,25 +1,48 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import MainLayout from '../layouts/MainLayout.vue'
 
-import Home from '@/pages/Home.vue'
-import About from '@/pages/About.vue'
-import News from '@/pages/News.vue'
-import Fixtures from '@/pages/Fixtures.vue'
-import YouthTeam from '@/pages/YouthTeam.vue'
-import WomenTeam from '@/pages/WomenTeam.vue'
-
-const routes: RouteRecordRaw[] = [
-    { path: '/', name: 'Home', component: Home },
-    { path: '/about', name: 'About', component: About },
-    { path: '/news', name: 'News', component: News },
-    { path: '/fixtures', name: 'Fixtures', component: Fixtures },
-    { path: '/youth-team', name: 'YouthTeam', component: YouthTeam },
-    { path: '/women-team', name: 'WomenTeam', component: WomenTeam }
+const routes = [
+    {
+        path: '/',
+        component: MainLayout,
+        children: [
+            {
+                path: '',
+                name: 'Home',
+                component: () => import('@/pages/Home.vue'),
+            },
+            {
+                path: 'about',
+                name: 'About',
+                component: () => import('@/pages/About.vue'),
+            },
+            {
+                path: 'news',
+                name: 'News',
+                component: () => import('@/pages/News.vue'),
+            },
+            {
+                path: 'fixtures',
+                name: 'Fixtures',
+                component: () => import('@/pages/Fixtures.vue'),
+            },
+            {
+                path: 'youth-team',
+                name: 'YouthTeam',
+                component: () => import('@/pages/YouthTeam.vue'),
+            },
+            {
+                path: 'women-team',
+                name: 'WomenTeam',
+                component: () => import('@/pages/WomenTeam.vue'),
+            },
+        ],
+    },
 ]
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
 })
 
 export default router
