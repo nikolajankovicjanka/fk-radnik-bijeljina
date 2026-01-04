@@ -1,7 +1,5 @@
 <template>
     <div>
-        <h1>Welcome to FK Radnik Bijeljina</h1>
-        <p>Homepage skeleton</p>
     </div>
 </template>
 
@@ -17,5 +15,10 @@ export default defineComponent({
 h1 {
     font-size: 2rem;
     font-weight: bold;
+}
+
+.font-radnik {
+    font-size: 2rem;
+    color: blue;
 }
 </style>
