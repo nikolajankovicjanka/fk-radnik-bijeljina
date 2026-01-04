@@ -1,0 +1,66 @@
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    @apply fixed top-0 left-0 w-full z-50;
+    background: linear-gradient(
+            to bottom,
+            rgba(4, 21, 38, 0.95),
+            rgba(4, 21, 38, 0.85)
+    );
+    backdrop-filter: blur(6px);
+}
+
+/* LOGO */
+.navbar-logo {
+    @apply flex items-center gap-2 text-white font-bold uppercase tracking-wide;
+}
+
+/* NAV LINKS */
+.nav-link {
+    @apply relative text-white text-sm uppercase tracking-widest
+    opacity-90 transition-all duration-300;
+}
+
+.nav-link:hover {
+    @apply opacity-100;
+}
+
+/* underline animation */
+.nav-link::after {
+    content: "";
+    @apply absolute left-0 -bottom-2 w-0 h-[2px]
+    bg-[var(--radnik-accent)]
+    transition-all duration-300;
+}
+
+.nav-link:hover::after {
+    @apply w-full;
+}
+
+/* ACTIVE ROUTE */
+.nav-link-active {
+    @apply opacity-100;
+}
+
+.nav-link-active::after {
+    @apply w-full;
+}
+
+/* AUTH BUTTON */
+.navbar-btn {
+    @apply ml-4 px-5 py-2 rounded-md text-sm uppercase font-semibold
+    text-white bg-[var(--radnik-accent)]
+    hover:bg-blue-500 transition;
+}
+
+/* MOBILE */
+.mobile-menu {
+    @apply fixed top-0 right-0 h-screen w-64 bg-[var(--radnik-dark)]
+    transform translate-x-full transition-transform duration-300 z-50;
+}
+
+.mobile-menu.open {
+    @apply translate-x-0;
+}
