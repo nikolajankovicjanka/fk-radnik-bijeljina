@@ -12,12 +12,10 @@
     backdrop-filter: blur(6px);
 }
 
-/* LOGO */
 .navbar-logo {
     @apply flex items-center gap-2 text-white font-bold uppercase tracking-wide;
 }
 
-/* NAV LINKS */
 .nav-link {
     @apply relative text-white text-sm uppercase tracking-widest
     opacity-90 transition-all duration-300;
@@ -27,7 +25,6 @@
     @apply opacity-100;
 }
 
-/* underline animation */
 .nav-link::after {
     content: "";
     @apply absolute left-0 -bottom-2 w-0 h-[2px]
@@ -39,7 +36,6 @@
     @apply w-full;
 }
 
-/* ACTIVE ROUTE */
 .nav-link-active {
     @apply opacity-100;
 }
@@ -48,14 +44,12 @@
     @apply w-full;
 }
 
-/* AUTH BUTTON */
 .navbar-btn {
     @apply ml-4 px-5 py-2 rounded-md text-sm uppercase font-semibold
     text-white bg-[var(--radnik-accent)]
     hover:bg-blue-500 transition;
 }
 
-/* MOBILE */
 .mobile-menu {
     @apply fixed top-0 right-0 h-screen w-64 bg-[var(--radnik-dark)]
     transform translate-x-full transition-transform duration-300 z-50;
@@ -63,4 +57,9 @@
 
 .mobile-menu.open {
     @apply translate-x-0;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+    @apply text-2xl font-bold opacity-100 hover:opacity-100 transition;
 }

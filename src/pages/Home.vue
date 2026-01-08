@@ -1,13 +1,16 @@
 <template>
     <div>
+        <HeroSlider></HeroSlider>
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import HeroSlider from "../components/hero/HeroSlider.vue";
 
 export default defineComponent({
-    name: 'Home'
+    name: 'Home',
+    components: {HeroSlider}
 })
 </script>
 
