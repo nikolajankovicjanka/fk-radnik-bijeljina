@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex flex-col bg-[#041526]">
+    <div class="min-h-screen flex flex-col">
         <Navbar class="sticky top-0 z-50 flex-shrink-0" />
         <main class="flex-grow">
             <RouterView />
