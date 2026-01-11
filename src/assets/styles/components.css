@@ -149,7 +149,7 @@
 .button-news {
     @apply flex items-center justify-center px-4 py-2 rounded-md text-center;
     margin-top: auto;
-    background: #1e90ff;
+    background: #3332c9;
     border: none;
     padding: 0.5rem 1rem;
     color: white;
@@ -159,7 +159,7 @@
 }
 
 .button-news:hover {
-    background: #1c86ee;
+    background: #3332c9;
 }
 
 .news-section {
@@ -167,9 +167,20 @@
 }
 
 .section-title {
-    color: #fff;
+    background: #3332c9;
+    color: white;
+    padding: 1rem;
     font-size: 2rem;
     margin-bottom: 2rem;
+    border-radius: 1rem
+}
+
+.section-title-revers {
+    color: white;
+    padding: 1rem;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 1rem
 }
 
 .news-slider {
@@ -191,7 +202,7 @@
     height: 44px;
     border-radius: 999px;
 
-    background: #2aa2ff;
+    background: #3332c9;
     color: #fff;
     border: none;
     cursor: pointer;

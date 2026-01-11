@@ -58,7 +58,7 @@ const closeMobileMenu = () => {
                 <!-- Login -->
                 <RouterLink
                         to="/login"
-                        class="bg-blue-500 hover:bg-blue-600 transition text-white text-sm font-semibold px-4 py-2 rounded-md"
+                        class="bg-blue-800 hover:bg-blue-600 transition text-white text-sm font-semibold px-4 py-2 rounded-md"
                 >
                     Login / Register
                 </RouterLink>
