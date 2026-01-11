@@ -3,24 +3,30 @@
     <HeroSlider />
 
     <!-- NEWS: centered container -->
-    <section class="relative overflow-hidden
-    bg-[linear-gradient(135deg,#1e436c,#05213f_45%,#1e436c)]
-    before:absolute before:inset-0 before:content-['']
-    before:bg-[linear-gradient(135deg,rgba(80,170,255,0.08)_22%,rgba(80,170,255,0)_42%,rgba(80,170,255,0.10)_63%)]
-    before:opacity-100">
+    <section class="relative bg-[#ffffff]">
         <div class="container mx-auto px-4">
             <NewsSliderHomepage />
         </div>
     </section>
+    <section class="relative p-7 bg-[#071f36]">
+        <div class="container mx-auto px-4">
+            <MatchTabs />
+        </div>
+    </section>
+
+
+
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import HeroSlider from '../components/hero/HeroSlider.vue'
 import NewsSliderHomepage from '../components/news/NewsSliderHomepage.vue'
+import MatchTabs from '../components/matches/MatchTabs.vue'
 
 export default defineComponent({
     components: {
+        MatchTabs,
         HeroSlider,
         NewsSliderHomepage
     }
