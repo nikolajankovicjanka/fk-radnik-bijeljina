@@ -117,6 +117,7 @@
     object-fit: cover;
     object-position: center;
     display: block;
+    transition: transform 0.4s ease;
 }
 
 .card-news img {
@@ -126,6 +127,10 @@
     display: block;
     flex-shrink: 0;
 }
+.card-news:hover .image-wrapper img {
+    transform: scale(1.1);
+}
+
 
 .content {
     padding: 1rem;
@@ -252,4 +257,192 @@
     .news-next {
         right: -10px;
     }
+}
+
+.hero-diagonal {
+    height: 82vh;
+    background: #041526;
+    overflow: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+.stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* panel */
+.panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-radius: 0;
+    overflow: hidden;
+    cursor: pointer;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border: none;
+    transition: left 420ms ease, right 420ms ease, width 420ms ease, filter 420ms ease, opacity 420ms ease;
+    transform: translateZ(0);
+
+    clip-path: polygon(0 0, 96% 0, 100% 100%, 4% 100%);
+}
+
+.panel[data-edge="first"] {
+    border-top-left-radius: 18px;
+    border-bottom-left-radius: 18px;
+}
+.panel[data-edge="last"] {
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+}
+
+/* overlay: neaktivni tamniji, aktivni svjetliji */
+.overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    transition: opacity 300ms ease, background 300ms ease;
+    background: linear-gradient(to top,
+    rgba(4, 21, 38, 0.92) 0%,
+    rgba(4, 21, 38, 0.70) 45%,
+    rgba(4, 21, 38, 0.35) 100%
+    );
+}
+
+.panel.active .overlay {
+    background: linear-gradient(to top,
+    rgba(4, 21, 38, 0.88) 0%,
+    rgba(4, 21, 38, 0.50) 45%,
+    rgba(4, 21, 38, 0.15) 100%
+    );
+}
+
+/* states */
+.panel:not(.active) {
+    opacity: 0.82;
+    filter: saturate(0.92);
+}
+.panel.active {
+    opacity: 1;
+    filter: none;
+}
+
+/* logo (aktivni) */
+.panel-logo {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 46px;
+    height: auto;
+    z-index: 3;
+    opacity: 0.95;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+/* centar label (neaktivni) */
+.center-label {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 10px 24px rgba(0,0,0,0.55);
+}
+
+/* detaljni content (aktivni) */
+.content {
+    position: absolute;
+    left: 28px;
+    bottom: 28px;
+    z-index: 3;
+    color: #fff;
+    max-width: 85%;
+    text-shadow: 0 6px 22px rgba(0, 0, 0, 0.65);
+    animation: riseUp 420ms ease forwards;
+}
+
+@keyframes riseUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.kicker {
+    margin: 0 0 6px;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.title {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.05;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.desc {
+    margin: 10px 0 0;
+    max-width: 520px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* CTA row */
+.cta-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.cta {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.20);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 150ms ease, background 150ms ease;
+}
+
+.cta:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-1px);
+}
+
+/* MOBILE fallback */
+@media (max-width: 900px) {
+    .hero-diagonal { height: auto; }
+    .stack { display: grid; gap: 12px; padding: 12px; }
+
+    .panel {
+        position: relative;
+        width: 100% !important;
+        left: auto !important;
+        right: auto !important;
+        height: 240px;
+        clip-path: none;
+        border-radius: 16px;
+    }
+
+    .panel.active { height: 340px; }
+
+    .center-label { font-size: 18px; }
 }

@@ -1,85 +1,152 @@
 <script setup lang="ts">
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Autoplay, EffectFade, Navigation } from 'swiper/modules'
+import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-import 'swiper/css'
-import 'swiper/css/effect-fade'
-import 'swiper/css/navigation'
+type Panel = {
+    short: string
+    kicker: string
+    title: string
+    description: string
+    image: string
+    ctas: { label: string; to: string }[]
+}
 
+const router = useRouter()
 
-const slides = [
+const active = ref(0)
+
+const panels: Panel[] = [
     {
-        title: 'FK Radnik Bijeljina',
-        subtitle: 'Igraj za nas, za klub, za grad',
+        short: 'Tim',
+        kicker: 'PRVI TIM',
+        title: 'FK RADNIK BIJELJINA',
+        description: 'Prvi tim, sastav i informacije.',
         image: '/hero/fk-radnik-hero-1.jpg',
+        ctas: [
+            { label: 'Raspored', to: '/fixtures' },
+        ],
     },
     {
-        title: 'Borba do kraja',
-        subtitle: 'Plavo-bijela porodica',
+        short: 'Vijesti',
+        kicker: 'AKTUELNO',
+        title: 'VIJESTI',
+        description: 'Aktuelnosti iz FK Radnika.',
         image: '/hero/fk-radnik-joma.jpg',
+        ctas: [
+            { label: 'Sve vijesti', to: '/news' },
+        ],
     },
     {
-        title: 'Borba do kraja',
-        subtitle: 'Plavo-bijela Bijeljina',
+        short: 'Rezultati',
+        kicker: 'SVE SELEKCIJE',
+        title: 'REZULTATI',
+        description: 'Rezultati svih selekcija Radnika.',
         image: '/hero/fk-radnik-bozo.jpg',
+        ctas: [
+            { label: 'Fixtures', to: '/fixtures' },
+        ],
+    },
+    {
+        short: 'Žene',
+        kicker: 'WOMEN',
+        title: 'ŽENSKI TIM',
+        description: 'Ženski tim FK Radnika.',
+        image: '/hero/fk-radnik-zene.jpg',
+        ctas: [
+            { label: 'Ženski tim', to: '/women-team' },
+        ],
     },
 ]
+const widths = computed(() => {
+    const other = 50 / (panels.length - 1)
+    return panels.map((_, i) => (i === active.value ? 50 : other))
+})
+
+const lefts = computed(() => {
+    const arr: number[] = []
+    let acc = 0
+    for (let i = 0; i < panels.length; i++) {
+        arr.push(acc)
+        acc += widths.value[i]
+    }
+    return arr
+})
+
+
+const bleedPx = 90
+const edgeBleedPx = 8
+
+function setActive(i: number) {
+    active.value = i
+}
+
+function go(to: string) {
+    router.push(to)
+}
+
+function panelStyle(i: number) {
+    const isFirst = i === 0
+    const isLast = i === panels.length - 1
+
+    return {
+        backgroundImage: `url(${panels[i].image})`,
+        zIndex: i === active.value ? 20 : 10 - Math.abs(i - active.value),
+
+        left: isFirst ? `-${edgeBleedPx}px` : isLast ? 'auto' : `${lefts.value[i]}%`,
+        right: isLast ? `-${edgeBleedPx}px` : 'auto',
+
+        width: `calc(${widths.value[i]}% + ${isLast ? edgeBleedPx : bleedPx}px + ${isFirst ? edgeBleedPx : 0}px)`,
+    } as Record<string, string | number>
+}
 </script>
 
 <template>
-    <section class="relative h-[90vh]">
-        <Swiper
-                :modules="[Autoplay, EffectFade, Navigation]"
-                :autoplay="{ delay: 6000, disableOnInteraction: false }"
-                effect="fade"
-                loop
-                :navigation="{
-                prevEl: '.swiper-button-prev-custom',
-                nextEl: '.swiper-button-next-custom'
-                }"
-                class="h-full"
-        >
-            <SwiperSlide v-for="(slide, i) in slides" :key="i">
-                <div
-                        class="h-full bg-cover bg-center relative"
-                        :style="{ backgroundImage: `url(${slide.image})` }"
-                >
-                    <div class="absolute inset-0 bg-black/60"></div>
+    <section class="hero-diagonal">
+        <div class="stack">
+            <button
+                    v-for="(p, i) in panels"
+                    :key="i"
+                    class="panel"
+                    :class="{ active: i === active }"
+                    :data-edge="i === 0 ? 'first' : i === panels.length - 1 ? 'last' : 'mid'"
+                    type="button"
+                    :style="panelStyle(i)"
+                    @mouseenter="setActive(i)"
+                    @focus="setActive(i)"
+                    @click="setActive(i)"
+            >
+                <div class="overlay"></div>
 
-                    <div class="relative z-10 h-full flex items-center justify-center text-center px-4">
-                        <div class="text-white">
-                            <h1 class="text-4xl md:text-6xl font-bold uppercase">
-                                {{ slide.title }}
-                            </h1>
-                            <p class="mt-4 text-lg tracking-wide">
-                                {{ slide.subtitle }}
-                            </p>
-                        </div>
+                <!-- logo samo na aktivnom -->
+                <img
+                        v-if="i === active"
+                        src="/logo/FK_Radnik_logo.png"
+                        alt="FK Radnik"
+                        class="panel-logo"
+                />
+
+                <div v-if="i !== active" class="center-label">
+                    {{ p.short }}
+                </div>
+
+                <div v-if="i === active" class="content">
+                    <p class="kicker">{{ p.kicker }}</p>
+                    <h2 class="title">{{ p.title }}</h2>
+                    <p class="desc">{{ p.description }}</p>
+
+                    <div class="cta-row">
+                        <button
+                                v-for="(cta, idx) in p.ctas"
+                                :key="idx"
+                                type="button"
+                                class="cta"
+                                @click.stop="go(cta.to)"
+                        >
+                            {{ cta.label }}
+                        </button>
                     </div>
                 </div>
-            </SwiperSlide>
-
-            <!-- NAV CONTROLS -->
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-6 text-white">
-                <button class="swiper-button-prev-custom">
-                    ←
-                </button>
-
-                <div class="flex gap-2 text-sm tracking-widest">
-          <span
-                  v-for="(_, index) in slides"
-                  :key="index"
-                  class="opacity-60"
-          >
-            {{ String(index + 1).padStart(2, '0') }}
-          </span>
-                </div>
-
-                <button class="swiper-button-next-custom">
-                    →
-                </button>
-            </div>
-        </Swiper>
+            </button>
+        </div>
     </section>
 </template>
-
