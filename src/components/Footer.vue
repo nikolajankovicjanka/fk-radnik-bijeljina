@@ -51,7 +51,7 @@ const footerLinks = [
                 <div class="order-first lg:order-none">
                     <div class="flex flex-col items-center">
                         <img
-                                src="/FK_Radnik_logo.png"
+                                src="/logo/FK_Radnik_logo.png"
                                 alt="FK Radnik Bijeljina"
                                 class="h-32 w-auto mb-4"
                         />

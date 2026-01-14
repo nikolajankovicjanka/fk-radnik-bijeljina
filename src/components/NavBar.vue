@@ -26,7 +26,7 @@ const closeMobileMenu = () => {
         <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
             <div class="flex items-center gap-3">
                 <img
-                        src="/FK_Radnik_logo.png"
+                        src="/logo/FK_Radnik_logo.png"
                         alt="FK Radnik Bijeljina"
                         class="h-12 w-auto"
                 />
@@ -125,7 +125,7 @@ const closeMobileMenu = () => {
                 <div class="flex items-center justify-between p-6 border-b border-white/10">
                     <div class="flex items-center gap-3">
                         <img
-                                src="/FK_Radnik_logo.png"
+                                src="/logo/FK_Radnik_logo.png"
                                 alt="FK Radnik Bijeljina"
                                 class="h-10 w-auto"
                         />
