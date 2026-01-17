@@ -62,6 +62,7 @@ const widths = computed(() => {
     return panels.map((_, i) => (i === active.value ? 50 : other))
 })
 
+
 const lefts = computed(() => {
     const arr: number[] = []
     let acc = 0

@@ -1,48 +1,80 @@
-import { defineStore } from 'pinia'
-import type { NewsItem } from '@/types/news'
-import { getNews } from '../src/services/newsService'
+import { defineStore } from "pinia";
+import type { NewsItem, NewsCategory } from "@/types/news";
+import { fetchNews } from "@/services/newsService";
 
-type State = {
-    items: NewsItem[]
-    loading: boolean
-    error: string | null
-    lastLoadedAt: number | null
-}
+type Pagination = {
+    page: number;
+    perPage: number;
+    total: number;
+    lastPage: number;
+};
 
-export const useNewsStore = defineStore('news', {
-    state: (): State => ({
-        items: [],
-        loading: false,
-        error: null,
-        lastLoadedAt: null,
+export const useNewsStore = defineStore("news", {
+    state: () => ({
+        items: [] as NewsItem[],
+        isLoading: false,
+        error: null as string | null,
+        pagination: {
+            page: 1,
+            perPage: 9,
+            total: 0,
+            lastPage: 1,
+        } as Pagination,
+        activeCategory: "club" as NewsCategory | "all",
+        query: "" as string,
     }),
 
     getters: {
-        // primjer: sortirano po datumu (pretpostavka ISO date)
-        sorted(state): NewsItem[] {
-            return [...state.items].sort((a, b) => b.date.localeCompare(a.date))
-        },
-        bySlug: (state) => {
-            return (slug: string) => state.items.find((x) => x.slug === slug)
+        filtered(state) {
+            const byCategory =
+                state.activeCategory === "all"
+                    ? state.items
+                    : state.items.filter((n) => n.category === state.activeCategory);
+
+            const q = state.query.trim().toLowerCase();
+            if (!q) return byCategory;
+
+            return byCategory.filter(
+                (n) =>
+                    n.title.toLowerCase().includes(q) ||
+                    n.excerpt.toLowerCase().includes(q)
+            );
         },
     },
 
     actions: {
-        async fetchAll(force = false) {
-            if (!force && this.items.length > 0) return
-
-            this.loading = true
-            this.error = null
-
+        async load(page = 1) {
             try {
-                const data = await getNews()
-                this.items = data
-                this.lastLoadedAt = Date.now()
-            } catch (e) {
-                this.error = e instanceof Error ? e.message : 'Failed to load news'
+                this.isLoading = true;
+                this.error = null;
+
+                const res = await fetchNews({
+                    page,
+                    perPage: this.pagination.perPage,
+                    q: this.query,
+                    category: this.activeCategory === "all" ? undefined : this.activeCategory,
+                });
+
+                this.items = res.items;
+                this.pagination.page = res.page;
+                this.pagination.perPage = res.perPage;
+                this.pagination.total = res.total;
+                this.pagination.lastPage = res.lastPage;
+            } catch (e: any) {
+                this.error = e?.message ?? "Failed to load news";
             } finally {
-                this.loading = false
+                this.isLoading = false;
             }
         },
+
+        setCategory(cat: NewsCategory | "all") {
+            this.activeCategory = cat;
+            this.load(1);
+        },
+
+        setQuery(q: string) {
+            this.query = q;
+            // ne reload odmah dok kucaš? može debounce kasnije
+        },
     },
-})
+});

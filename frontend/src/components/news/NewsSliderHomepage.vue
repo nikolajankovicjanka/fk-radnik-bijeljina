@@ -2,8 +2,7 @@
     <section class="news-section">
         <h2 class="section-title">LATEST NEWS</h2>
 
-        <div class="news-slider">
-            <!-- custom arrows -->
+        <div class="news-slider">>
             <button ref="prevEl" class="news-nav news-prev">
                 <ChevronLeft :size="22" />
             </button>
