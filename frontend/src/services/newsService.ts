@@ -2,6 +2,25 @@ import type { NewsItem, NewsCategory } from "@/types/news";
 
 const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
+function categoryLabel(c?: string) {
+    switch (c) {
+        case "first_team": return "PRVI TIM";
+        case "youth": return "JUNIORI";
+        case "women": return "ŽENSKI TIM";
+        case "club": return "KLUB";
+        default: return "VIJESTI";
+    }
+}
+
+function formatDate(iso?: string | null) {
+    if (!iso) return "";
+    return new Date(iso).toLocaleDateString("sr-RS", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+    });
+}
+
 type LaravelPaginated<T> = {
     current_page: number;
     data: T[];
@@ -14,12 +33,12 @@ type ApiNews = {
     id: number;
     title: string;
     slug: string;
+    category: "club" | "first_team" | "youth" | "women";
     excerpt: string | null;
     content: string | null;
     image: string | null;
     published_at: string | null;
-    category?: NewsCategory;     // kad dodamo na backendu
-    tags?: string[];            // kasnije
+    tags?: string[];
 };
 
 export async function fetchNews(params: {
@@ -42,11 +61,14 @@ export async function fetchNews(params: {
     const items: NewsItem[] = json.data.map((n) => ({
         id: String(n.id),
         title: n.title,
-        excerpt: n.excerpt ?? "",
         slug: n.slug,
-        date: n.published_at ? new Date(n.published_at).toLocaleDateString("sr-RS") : "",
+        excerpt: n.excerpt ?? "",
+        content: n.content ?? "",
+        publishedAt: n.published_at ?? "",
+        date: formatDate(n.published_at),
         image: n.image ? `${API}/storage/${n.image}` : "/news/fk-radnik-prozivka.jpg",
-        category: n.category ?? "club",
+        category: (n.category ?? "club") as any,
+        categoryLabel: categoryLabel(n.category),
         tags: n.tags ?? undefined,
     }));
 
@@ -62,4 +84,33 @@ export async function fetchNews(params: {
 export async function getNews(perPage = 9): Promise<NewsItem[]> {
     const res = await fetchNews({ page: 1, perPage });
     return res.items;
+}
+
+export async function getNewsBySlug(slug: string): Promise<NewsItem> {
+    const res = await fetch(`${API}/api/news/${encodeURIComponent(slug)}`, {
+        headers: { Accept: "application/json" },
+    });
+
+    if (!res.ok) throw new Error(`Failed to fetch news: ${res.status}`);
+
+    const n = (await res.json()) as ApiNews;
+
+    return {
+        id: String(n.id),
+        title: n.title,
+        slug: n.slug,
+
+        excerpt: n.excerpt ?? "",
+        content: n.content ?? "",
+
+        publishedAt: n.published_at ?? "",
+        date: formatDate(n.published_at),
+
+        image: n.image ? `${API}/storage/${n.image}` : "/news/fk-radnik-prozivka.jpg",
+
+        category: (n.category ?? "club") as any,
+        categoryLabel: categoryLabel(n.category),
+
+        tags: n.tags ?? undefined,
+    };
 }

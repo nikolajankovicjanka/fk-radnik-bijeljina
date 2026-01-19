@@ -1,27 +1,31 @@
 <template>
-    <article class="card-news">
-        <div class="image-wrapper">
-            <img :src="item.image" alt="" />
+    <RouterLink
+            class="c-card"
+            :to="{ name: 'NewsSingle', params: { slug: item.slug } }"
+    >
+        <div class="c-media">
+            <img :src="item.image" :alt="item.title" loading="lazy" />
         </div>
 
-        <div class="content">
-            <h3>{{ item.title }}</h3>
-            <span class="date">{{ item.date }}</span>
-            <button class="button-news">READ MORE</button>
+        <div class="c-body">
+            <h3 class="c-title">{{ item.title }}</h3>
+
+            <p v-if="item.excerpt" class="c-desc">
+                {{ item.excerpt }}
+            </p>
         </div>
-    </article>
+
+        <div class="c-meta">
+            <span class="c-category">{{ item.categoryLabel }}</span>
+            <span class="c-time">{{ item.date }}</span>
+        </div>
+    </RouterLink>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-    item: {
-        title: string
-        image: string
-        date: string
-    }
-}>()
+import type { NewsItem } from "@/types/news"
+defineProps<{ item: NewsItem }>()
 </script>
 
 <style scoped>
-
 </style>
