@@ -1,37 +1,5 @@
-<template>
-    <section class="news-section">
-        <h2 class="section-title">LATEST NEWS</h2>
-
-        <div class="news-slider">>
-            <button ref="prevEl" class="news-nav news-prev">
-                <ChevronLeft :size="22" />
-            </button>
-
-            <button ref="nextEl" class="news-nav news-next">
-                <ChevronRight :size="22" />
-            </button>
-
-            <Swiper
-                    :modules="[Navigation, Pagination]"
-                    :slides-per-view="3"
-                    :space-between="24"
-                    :loop="true"
-                    :navigation="navigationOptions"
-                    :pagination="{ clickable: true }"
-                    :breakpoints="breakpoints"
-                    class="news-swiper"
-                    @swiper="onSwiper"
-            >
-                <SwiperSlide v-for="item in news" :key="item.id">
-                    <NewsCardHomepage :item="item" />
-                </SwiperSlide>
-            </Swiper>
-        </div>
-    </section>
-</template>
-
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { ref, onMounted, nextTick } from "vue"
 import { Swiper, SwiperSlide } from "swiper/vue"
 import { Navigation, Pagination } from "swiper/modules"
 import { ChevronLeft, ChevronRight } from "lucide-vue-next"
@@ -40,39 +8,37 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 
 import NewsCardHomepage from "./NewsCardHomepage.vue"
-import { getNews } from "../../services/newsService.ts"
-import type { NewsItem } from "/../../src/types/news.ts"
+import { getNews } from "../../services/newsService"
+import type { NewsItem } from "@/types/news"
 
 const news = ref<NewsItem[]>([])
 const isLoading = ref(true)
 
 const breakpoints = {
-    0: { slidesPerView: 1 },
-    640: { slidesPerView: 1.2 },
-    768: { slidesPerView: 2 },
-    1024: { slidesPerView: 3 },
+    0: { slidesPerView: 1, spaceBetween: 14 },
+    640: { slidesPerView: 1.2, spaceBetween: 16 },
+    768: { slidesPerView: 2, spaceBetween: 18 },
+    1024: { slidesPerView: 3, spaceBetween: 24 },
 }
 
 const prevEl = ref<HTMLElement | null>(null)
 const nextEl = ref<HTMLElement | null>(null)
 const swiperInstance = ref<any>(null)
 
-const navigationOptions = ref({
-    prevEl: null as any,
-    nextEl: null as any,
-})
-
 function onSwiper(swiper: any) {
     swiperInstance.value = swiper
+}
+
+function onBeforeInit(swiper: any) {
+    swiper.params.navigation = swiper.params.navigation || {}
+    swiper.params.navigation.prevEl = prevEl.value
+    swiper.params.navigation.nextEl = nextEl.value
 }
 
 async function loadNews() {
     try {
         isLoading.value = true
         news.value = await getNews()
-    } catch (e) {
-        console.error("Failed to load news:", e)
-        news.value = []
     } finally {
         isLoading.value = false
     }
@@ -80,12 +46,8 @@ async function loadNews() {
 
 onMounted(async () => {
     await loadNews()
+    await nextTick()
 
-    // poveži custom dugmad tek kad postoje u DOM-u
-    navigationOptions.value.prevEl = prevEl.value
-    navigationOptions.value.nextEl = nextEl.value
-
-    // re-init navigation (bitno u Vue jer refovi stižu kasnije)
     if (swiperInstance.value?.navigation) {
         swiperInstance.value.navigation.destroy()
         swiperInstance.value.navigation.init()
@@ -94,6 +56,37 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<template>
+    <section class="n-section">
+        <div class="n-header">
+            <h2 class="n-title">LATEST NEWS <span class="n-title-arrow">→</span></h2>
 
-</style>
+            <div class="n-controls">
+                <button ref="prevEl" class="n-nav" type="button" aria-label="Previous">
+                    <ChevronLeft :size="20" />
+                </button>
+                <button ref="nextEl" class="n-nav n-nav--primary" type="button" aria-label="Next">
+                    <ChevronRight :size="20" />
+                </button>
+            </div>
+        </div>
+
+        <div class="n-slider">
+            <Swiper
+                    :modules="[Navigation]"
+                    :slides-per-view="3"
+                    :space-between="24"
+                    :loop="news.length > 3"
+            :pagination="{ clickable: true }"
+            :breakpoints="breakpoints"
+            class="n-swiper"
+            @swiper="onSwiper"
+            :onBeforeInit="onBeforeInit"
+            >
+            <SwiperSlide v-for="item in news" :key="item.id" class="n-slide">
+                <NewsCardHomepage :item="item" />
+            </SwiperSlide>
+            </Swiper>
+        </div>
+    </section>
+</template>

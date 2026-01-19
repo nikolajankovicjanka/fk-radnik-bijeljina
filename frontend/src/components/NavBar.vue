@@ -1,5 +1,49 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+type LangOption = {
+    code: string
+    label: string
+    flag: string
+}
+
+const languages: LangOption[] = [
+    { code: 'sr-Latn', label: 'Srpski (latinica)', flag: '🇷🇸' },
+    { code: 'sr-Cyrl', label: 'Srpski (ćirilica)', flag: '🇷🇸' },
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'fr', label: 'Français', flag: '🇫🇷' },
+    { code: 'es', label: 'Español', flag: '🇪🇸' },
+    { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+]
+
+const isLangOpen = ref(false)
+const selectedLang = ref<LangOption>(languages[0])
+
+function toggleLang() {
+    isLangOpen.value = !isLangOpen.value
+}
+
+function onClickOutside(e: MouseEvent) {
+    const target = e.target as HTMLElement
+    if (!target.closest('.lang-dropdown')) {
+        isLangOpen.value = false
+    }
+}
+
+onMounted(() => {
+    const saved = localStorage.getItem('fk_lang')
+    if (saved) {
+        const found = languages.find(l => l.code === saved)
+        if (found) selectedLang.value = found
+    }
+
+    // bitno: pointerdown hvata ranije od click
+    window.addEventListener('pointerdown', onClickOutside)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('pointerdown', onClickOutside)
+})
 
 const navItems = [
     { label: 'Home', to: '/' },
@@ -16,8 +60,10 @@ const toggleMobileMenu = () => {
     isMobileMenuOpen.value = !isMobileMenuOpen.value
 }
 
+
 const closeMobileMenu = () => {
     isMobileMenuOpen.value = false
+    isLangOpen.value = false
 }
 </script>
 
@@ -31,37 +77,69 @@ const closeMobileMenu = () => {
                         class="h-12 w-auto"
                 />
                 <span class="text-white font-semibold tracking-wide uppercase text-sm">
-                    FK Radnik Bijeljina
+                    FK Radnik SoccerBet
                 </span>
             </div>
 
             <!-- CENTER: Desktop Navigation -->
             <ul class="hidden lg:flex items-center gap-8 text-sm font-semibold uppercase">
                 <li v-for="item in navItems" :key="item.label">
+
+                    <!-- HOME: mora biti exact -->
                     <RouterLink
-                            :to="item.to"
-                            class="text-white/80 hover:text-blue-400 transition"
-                            active-class="text-blue-400"
+                            v-if="item.to === '/'"
+                            to="/"
+                            class="nav-link"
+                            active-class="nav-link--active"
+                            exact-active-class="nav-link--active"
                     >
                         {{ item.label }}
                     </RouterLink>
+
+                    <!-- OSTALI LINKOVI -->
+                    <RouterLink
+                            v-else
+                            :to="item.to"
+                            class="nav-link"
+                            active-class="nav-link--active"
+                    >
+                        {{ item.label }}
+                    </RouterLink>
+
                 </li>
             </ul>
 
-            <!-- RIGHT: Desktop Actions -->
-            <div class="hidden lg:flex items-center gap-4">
-                <!-- Search -->
-                <button class="text-white/80 hover:text-blue-400 transition">
-                    🔍
+            <div class="hidden lg:block relative lang-dropdown">
+                <button
+                        type="button"
+                        @click="toggleLang"
+                        class="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-2 rounded-md border border-white/15"
+                        aria-haspopup="listbox"
+                        :aria-expanded="isLangOpen"
+                >
+                    <span class="text-base">{{ selectedLang.flag }}</span>
+                    <span class="hidden xl:inline">{{ selectedLang.label }}</span>
+                    <span class="xl:hidden">{{ selectedLang.code.toUpperCase() }}</span>
+                    <span class="opacity-80">▾</span>
                 </button>
 
-                <!-- Login -->
-                <RouterLink
-                        to="/login"
-                        class="bg-blue-800 hover:bg-blue-600 transition text-white text-sm font-semibold px-4 py-2 rounded-md"
+                <div
+                        v-show="isLangOpen"
+                        class="absolute right-0 mt-2 w-56 rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
+                        role="listbox"
                 >
-                    Login / Register
-                </RouterLink>
+                    <button
+                            v-for="lang in languages"
+                            :key="lang.code"
+                            type="button"
+                            @click="selectLang(lang)"
+                            class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/85 hover:bg-white/10 transition text-left"
+                            :class="selectedLang.code === lang.code ? 'bg-white/10 text-white' : ''"
+                    >
+                        <span class="text-base">{{ lang.flag }}</span>
+                        <span>{{ lang.label }}</span>
+                    </button>
+                </div>
             </div>
 
             <!-- MOBILE: Burger Button & Actions -->
@@ -160,18 +238,40 @@ const closeMobileMenu = () => {
                         </li>
                     </ul>
 
-                    <!-- Mobile Login Button -->
-                    <div class="mt-8 px-4">
-                        <RouterLink
-                                to="/login"
-                                @click="closeMobileMenu"
-                                class="block w-full text-center bg-blue-500 hover:bg-blue-600
-                                   transition text-white text-sm font-semibold
-                                   px-4 py-3 rounded-md uppercase tracking-wider"
+                    <div class="mt-6 relative lang-dropdown">
+                        <button
+                                type="button"
+                                @pointerdown.stop="toggleLang"
+                                class="w-full flex items-center justify-between gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-3 rounded-md border border-white/15"
+                                aria-haspopup="listbox"
+                                :aria-expanded="isLangOpen"
                         >
-                            Login / Register
-                        </RouterLink>
+    <span class="flex items-center gap-2">
+      <span class="text-base">{{ selectedLang.flag }}</span>
+      <span>{{ selectedLang.label }}</span>
+    </span>
+                            <span class="opacity-80">▾</span>
+                        </button>
+
+                        <div
+                                v-show="isLangOpen"
+                                class="mt-2 w-full rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
+                                role="listbox"
+                        >
+                            <button
+                                    v-for="lang in languages"
+                                    :key="lang.code"
+                                    type="button"
+                                    @pointerdown.stop="selectLang(lang)"
+                                    class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/85 hover:bg-white/10 transition text-left"
+                                    :class="selectedLang.code === lang.code ? 'bg-white/10 text-white' : ''"
+                            >
+                                <span class="text-base">{{ lang.flag }}</span>
+                                <span>{{ lang.label }}</span>
+                            </button>
+                        </div>
                     </div>
+
                     <div class="mt-12 px-4 text-white/60 text-xs text-center">
                         <p>FK Radnik Bijeljina</p>
                         <p class="mt-1">© 2024 Sva prava zadržana</p>
@@ -188,27 +288,48 @@ const closeMobileMenu = () => {
     position: relative;
 }
 
-.router-link-active::after {
-    content: '';
+.nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 6px 0; /* malo prostora da linija ne "lijepi" */
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    transition: color 200ms ease;
+}
+
+.nav-link:hover {
+    color: #ffffff;
+}
+
+/* bijela linija */
+.nav-link::after {
+    content: "";
     position: absolute;
-    bottom: -2px;
-    left: 0;
+    left: 50%;
+    bottom: -6px;          /* podešavaš visinu ispod teksta */
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    border-radius: 1px;
+    background: #ffffff;
+    border-radius: 2px;
+
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform 220ms ease;
 }
 
-/* Mobile menu scroll if needed */
-@media (max-height: 600px) {
-    .fixed.h-screen {
-        overflow-y: auto;
-    }
+/* hover: širi se iz centra */
+.nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
 }
 
-/* Better hover effects */
-.hover\:bg-blue-400:hover {
-    transform: translateY(-1px);
-    transition: all 0.2s ease;
+/* active link: linija stalno vidljiva */
+.nav-link--active {
+    color: #ffffff;
+}
+
+.nav-link--active::after {
+    transform: translateX(-50%) scaleX(1);
 }
 </style>

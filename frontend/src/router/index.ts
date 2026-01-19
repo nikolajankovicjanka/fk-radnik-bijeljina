@@ -22,6 +22,12 @@ const routes = [
                 component: () => import('@/pages/News.vue'),
             },
             {
+                path: "news/:slug",
+                name: "NewsSingle",
+                component: () => import("@/pages/NewsSingle.vue"),
+                props: true
+            },
+            {
                 path: 'fixtures',
                 name: 'Fixtures',
                 component: () => import('@/pages/Fixtures.vue'),

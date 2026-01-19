@@ -15,7 +15,7 @@ import Footer from '../components/Footer.vue'
 
 <style>
 .router-view-wrapper {
-    padding-top: 1rem; /* Dodajte ako želite spacing ispod navbar-a */
+    padding-top: 1rem;
 }
 .empty-page-content {
     display: flex;
