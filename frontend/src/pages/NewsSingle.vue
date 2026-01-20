@@ -1,6 +1,5 @@
 <template>
     <article class="news-single">
-        <!-- LOADING -->
         <section v-if="isLoading" class="content">
             <div class="container">Loading...</div>
         </section>

@@ -4,10 +4,7 @@
             <HeroSlider />
         </div>
     </section>
-
     <MainPartnersBar />
-
-    <!-- NEWS: centered container -->
     <section class="relative bg-[#ffffff]">
         <div class="container mx-auto px-4">
             <NewsSliderHomepage />
@@ -30,7 +27,7 @@
             secondaryText="Kontakt"
     />
 
-
+    <SponsorsSection />
 
 </template>
 
@@ -41,9 +38,11 @@ import NewsSliderHomepage from '../components/news/NewsSliderHomepage.vue'
 import MatchTabs from '../components/matches/MatchTabs.vue'
 import SeasonTicketsPromo from "../components/SeasonTicketsPromo.vue";
 import MainPartnersBar from "../components/MainPartnersBar.vue";
+import SponsorsSection from "../components/SponsorsSection.vue";
 
 export default defineComponent({
     components: {
+        SponsorsSection,
         MainPartnersBar,
         MatchTabs,
         HeroSlider,
