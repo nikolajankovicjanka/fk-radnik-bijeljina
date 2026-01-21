@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { useNewsStore } from "/stores/news";
+import { useNewsStore } from "/src/stores/news";
 import NewsCardHomepage from "../components/news/NewsCardHomepage.vue";
 
 const store = useNewsStore();

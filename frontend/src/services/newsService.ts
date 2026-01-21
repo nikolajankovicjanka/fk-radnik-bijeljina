@@ -1,14 +1,19 @@
+// frontend/src/services/newsService.ts
 import type { NewsItem, NewsCategory } from "@/types/news";
-
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
+import { api } from "@/services/api";
 
 function categoryLabel(c?: string) {
     switch (c) {
-        case "first_team": return "PRVI TIM";
-        case "youth": return "JUNIORI";
-        case "women": return "ŽENSKI TIM";
-        case "club": return "KLUB";
-        default: return "VIJESTI";
+        case "first_team":
+            return "PRVI TIM";
+        case "youth":
+            return "JUNIORI";
+        case "women":
+            return "ŽENSKI TIM";
+        case "club":
+            return "KLUB";
+        default:
+            return "VIJESTI";
     }
 }
 
@@ -41,43 +46,51 @@ type ApiNews = {
     tags?: string[];
 };
 
+function mapApiNewsToItem(n: ApiNews): NewsItem {
+    // axios baseURL koristimo direktno preko api.defaults.baseURL
+    const API = api.defaults.baseURL ?? "";
+
+    return {
+        id: String(n.id),
+        title: n.title,
+        slug: n.slug,
+
+        excerpt: n.excerpt ?? "",
+        content: n.content ?? "",
+
+        publishedAt: n.published_at ?? "",
+        date: formatDate(n.published_at),
+
+        image: n.image ? `${API}/storage/${n.image}` : "/news/fk-radnik-prozivka.jpg",
+
+        category: (n.category ?? "club") as any,
+        categoryLabel: categoryLabel(n.category),
+
+        tags: n.tags ?? undefined,
+    };
+}
+
 export async function fetchNews(params: {
     page?: number;
     perPage?: number;
     q?: string;
     category?: NewsCategory;
 }) {
-    const url = new URL(`${API}/api/news`);
-    url.searchParams.set("per_page", String(params.perPage ?? 9));
-    url.searchParams.set("page", String(params.page ?? 1));
-    if (params.q) url.searchParams.set("q", params.q);
-    if (params.category) url.searchParams.set("category", params.category);
-
-    const res = await fetch(url.toString(), { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`Failed to fetch news: ${res.status}`);
-
-    const json = (await res.json()) as LaravelPaginated<ApiNews>;
-
-    const items: NewsItem[] = json.data.map((n) => ({
-        id: String(n.id),
-        title: n.title,
-        slug: n.slug,
-        excerpt: n.excerpt ?? "",
-        content: n.content ?? "",
-        publishedAt: n.published_at ?? "",
-        date: formatDate(n.published_at),
-        image: n.image ? `${API}/storage/${n.image}` : "/news/fk-radnik-prozivka.jpg",
-        category: (n.category ?? "club") as any,
-        categoryLabel: categoryLabel(n.category),
-        tags: n.tags ?? undefined,
-    }));
+    const { data } = await api.get<LaravelPaginated<ApiNews>>("/api/news", {
+        params: {
+            per_page: params.perPage ?? 9,
+            page: params.page ?? 1,
+            q: params.q || undefined,
+            category: params.category || undefined,
+        },
+    });
 
     return {
-        items,
-        page: json.current_page,
-        perPage: json.per_page,
-        total: json.total,
-        lastPage: json.last_page,
+        items: data.data.map(mapApiNewsToItem),
+        page: data.current_page,
+        perPage: data.per_page,
+        total: data.total,
+        lastPage: data.last_page,
     };
 }
 
@@ -87,30 +100,6 @@ export async function getNews(perPage = 9): Promise<NewsItem[]> {
 }
 
 export async function getNewsBySlug(slug: string): Promise<NewsItem> {
-    const res = await fetch(`${API}/api/news/${encodeURIComponent(slug)}`, {
-        headers: { Accept: "application/json" },
-    });
-
-    if (!res.ok) throw new Error(`Failed to fetch news: ${res.status}`);
-
-    const n = (await res.json()) as ApiNews;
-
-    return {
-        id: String(n.id),
-        title: n.title,
-        slug: n.slug,
-
-        excerpt: n.excerpt ?? "",
-        content: n.content ?? "",
-
-        publishedAt: n.published_at ?? "",
-        date: formatDate(n.published_at),
-
-        image: n.image ? `${API}/storage/${n.image}` : "/news/fk-radnik-prozivka.jpg",
-
-        category: (n.category ?? "club") as any,
-        categoryLabel: categoryLabel(n.category),
-
-        tags: n.tags ?? undefined,
-    };
+    const { data } = await api.get<ApiNews>(`/api/news/${encodeURIComponent(slug)}`);
+    return mapApiNewsToItem(data);
 }

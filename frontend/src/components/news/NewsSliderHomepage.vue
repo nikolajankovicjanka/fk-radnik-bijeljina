@@ -1,59 +1,59 @@
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from "vue"
-import { Swiper, SwiperSlide } from "swiper/vue"
-import { Navigation, Pagination } from "swiper/modules"
-import { ChevronLeft, ChevronRight } from "lucide-vue-next"
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
+import { ref, onMounted, nextTick } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Pagination } from "swiper/modules";
+import { ChevronLeft, ChevronRight } from "lucide-vue-next";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
-import NewsCardHomepage from "./NewsCardHomepage.vue"
-import { getNews } from "../../services/newsService"
-import type { NewsItem } from "@/types/news"
+import NewsCardHomepage from "./NewsCardHomepage.vue";
+import { getNews } from "@/services/newsService";
+import type { NewsItem } from "@/types/news";
 
-const news = ref<NewsItem[]>([])
-const isLoading = ref(true)
+const news = ref<NewsItem[]>([]);
+const isLoading = ref(true);
 
 const breakpoints = {
     0: { slidesPerView: 1, spaceBetween: 14 },
     640: { slidesPerView: 1.2, spaceBetween: 16 },
     768: { slidesPerView: 2, spaceBetween: 18 },
     1024: { slidesPerView: 3, spaceBetween: 24 },
-}
+};
 
-const prevEl = ref<HTMLElement | null>(null)
-const nextEl = ref<HTMLElement | null>(null)
-const swiperInstance = ref<any>(null)
+const prevEl = ref<HTMLElement | null>(null);
+const nextEl = ref<HTMLElement | null>(null);
+const swiperInstance = ref<any>(null);
 
 function onSwiper(swiper: any) {
-    swiperInstance.value = swiper
+    swiperInstance.value = swiper;
 }
 
 function onBeforeInit(swiper: any) {
-    swiper.params.navigation = swiper.params.navigation || {}
-    swiper.params.navigation.prevEl = prevEl.value
-    swiper.params.navigation.nextEl = nextEl.value
+    swiper.params.navigation = swiper.params.navigation || {};
+    swiper.params.navigation.prevEl = prevEl.value;
+    swiper.params.navigation.nextEl = nextEl.value;
 }
 
 async function loadNews() {
     try {
-        isLoading.value = true
-        news.value = await getNews()
+        isLoading.value = true;
+        news.value = await getNews(9);
     } finally {
-        isLoading.value = false
+        isLoading.value = false;
     }
 }
 
 onMounted(async () => {
-    await loadNews()
-    await nextTick()
+    await loadNews();
+    await nextTick();
 
     if (swiperInstance.value?.navigation) {
-        swiperInstance.value.navigation.destroy()
-        swiperInstance.value.navigation.init()
-        swiperInstance.value.navigation.update()
+        swiperInstance.value.navigation.destroy();
+        swiperInstance.value.navigation.init();
+        swiperInstance.value.navigation.update();
     }
-})
+});
 </script>
 
 <template>
@@ -73,19 +73,18 @@ onMounted(async () => {
 
         <div class="n-slider">
             <Swiper
-                    :modules="[Navigation]"
+                    :modules="[Navigation, Pagination]"
                     :slides-per-view="3"
                     :space-between="24"
                     :loop="news.length > 3"
-            :pagination="{ clickable: true }"
-            :breakpoints="breakpoints"
-            class="n-swiper"
-            @swiper="onSwiper"
-            :onBeforeInit="onBeforeInit"
+                    :breakpoints="breakpoints"
+                    class="n-swiper"
+                    @swiper="onSwiper"
+                    :onBeforeInit="onBeforeInit"
             >
-            <SwiperSlide v-for="item in news" :key="item.id" class="n-slide">
-                <NewsCardHomepage :item="item" />
-            </SwiperSlide>
+                <SwiperSlide v-for="item in news" :key="item.id" class="n-slide">
+                    <NewsCardHomepage :item="item" />
+                </SwiperSlide>
             </Swiper>
         </div>
     </section>
