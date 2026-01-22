@@ -5,8 +5,6 @@
             <div class="sp-head">
                 <h2 class="sp-title">Officijalni partneri</h2>
             </div>
-
-            <!-- White card with logos -->
             <div class="sp-card">
                 <a
                         v-for="s in sponsors"
@@ -18,7 +16,8 @@
                         :aria-label="s.name"
                         :title="s.name"
                 >
-                    <img :src="s.logo" :alt="s.name" class="sp-logo" loading="lazy" />
+                    <img :src="s.logo" :alt="s.name" class="sp-logo"
+                         loading="lazy"/>
                 </a>
             </div>
         </div>
@@ -28,13 +27,12 @@
 <script setup lang="ts">
 type Sponsor = { name: string; logo: string; url?: string }
 
-// dok ne dobijes ostale, dupliramo
 const sponsors: Sponsor[] = [
-    { name: "SoccerBet", logo: "/sponsors/soccerbet-trim.png", url: "#" },
-    { name: "Pass", logo: "/sponsors/pass-logo.png", url: "#" },
-    { name: "autoputevi", logo: "/sponsors/autoputevi-h70.png", url: "#" },
-    { name: "SoccerBet", logo: "/sponsors/soccerbet-h70.png", url: "#" },
-    { name: "Kelme", logo: "/sponsors/kelme-trim.png", url: "#" },
+    {name: 'SoccerBet', logo: '/sponsors/soccerbet-trim.png', url: '#'},
+    {name: 'Pass', logo: '/sponsors/pass-logo.png', url: '#'},
+    {name: 'autoputevi', logo: '/sponsors/autoputevi-h70.png', url: '#'},
+    {name: 'SoccerBet', logo: '/sponsors/soccerbet-h70.png', url: '#'},
+    {name: 'Kelme', logo: '/sponsors/kelme-trim.png', url: '#'},
 ]
 </script>
 
@@ -42,7 +40,7 @@ const sponsors: Sponsor[] = [
 .sp {
     width: 100%;
     padding: 56px 0 64px;
-    background: radial-gradient(900px 420px at 50% 20%, rgba(255,255,255,0.10), rgba(255,255,255,0) 60%),
+    background: radial-gradient(900px 420px at 50% 20%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0) 60%),
     linear-gradient(180deg, #3332c9 0%, #071f36 100%);
 }
 
@@ -60,7 +58,7 @@ const sponsors: Sponsor[] = [
 
 .sp-title {
     margin: 0;
-    color: rgba(255,255,255,0.92);
+    color: rgba(255, 255, 255, 0.92);
     font-weight: 300;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -69,7 +67,7 @@ const sponsors: Sponsor[] = [
 
 .sp-sub {
     margin: 10px 0 0;
-    color: rgba(255,255,255,0.78);
+    color: rgba(255, 255, 255, 0.78);
     font-size: 0.95rem;
 }
 
@@ -85,12 +83,10 @@ const sponsors: Sponsor[] = [
     justify-content: center;
     gap: 22px;
 
-    box-shadow:
-            0 18px 40px rgba(0,0,0,0.28),
-            0 1px 0 rgba(255,255,255,0.55) inset;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.55) inset;
     margin: 0 auto;
 }
-
 
 .sp-item {
     width: 100%;
@@ -99,7 +95,8 @@ const sponsors: Sponsor[] = [
     padding: 6px 0;
     border-radius: 12px;
     text-decoration: none;
-    transition: transform 160ms ease, opacity 160ms ease;
+    transition: transform 160ms ease,
+    opacity 160ms ease;
     opacity: 0.9;
 }
 
@@ -110,7 +107,7 @@ const sponsors: Sponsor[] = [
 
 /* Logo sizing */
 .sp-logo {
-    height: 56px;                  /* vizuelno jače */
+    height: 56px; /* vizuelno jače */
     width: auto;
     max-width: 260px;
     object-fit: contain;
