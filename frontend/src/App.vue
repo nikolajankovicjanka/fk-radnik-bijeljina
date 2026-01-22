@@ -1,18 +1,18 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+  import { defineComponent } from 'vue'
 
-export default defineComponent({
-    name: 'App'
-})
+  export default defineComponent({
+    name: 'App',
+  })
 </script>
 
 <template>
-    <router-view />
+  <router-view />
 </template>
 
 <style>
-body {
+  body {
     margin: 0;
     font-family: system-ui, sans-serif;
-}
+  }
 </style>
