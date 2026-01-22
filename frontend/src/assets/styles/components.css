@@ -191,6 +191,15 @@
     display: inline-block;
 }
 
+.section-title-revers {
+    color: white;
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    border-radius: 1rem;
+    margin: 0;
+    display: inline-block;
+}
+
 .news-controls {
     display: flex;
     gap: 12px;
