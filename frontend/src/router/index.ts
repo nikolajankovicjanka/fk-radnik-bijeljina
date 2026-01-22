@@ -1,10 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainLayout from '../layouts/MainLayout.vue'
+import { useNewsStore }  from '../stores/news.ts'
+import { useGamesStore } from "../stores/games.ts";
 
 const routes = [
     {
         path: '/',
         component: MainLayout,
+        beforeEnter: async () => {
+            const newsStore = useNewsStore()
+            const gamesStore = useGamesStore()
+            await Promise.all([
+                newsStore.load(1),
+                gamesStore.load(50),
+            ])
+        },
         children: [
             {
                 path: '',
