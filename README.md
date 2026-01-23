@@ -1,5 +1,25 @@
-# Vue 3 + TypeScript + Vite
+# Vue 3 + TypeScript + Vite - Laravel 10 - Filament - Admin
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Moderna web aplikacija za FK Radnik Bijeljina s admin panelom za upravljanje sadržajem.
+Frontend: Vue 3 + TypeScript + Vite (brza razvojna iskustva)
+Backend: Laravel 10 REST API
+Admin Panel: Filament PHP (moderni admin interface)
+State Management: Pinia (Vue store)
+Routing: Vue Router
+UI Components: Tailwind CSS + custom dizajn
+Database: MySQL
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+Frontend (Vue 3)
+bash
+cd frontend
+npm install
+npm run dev
+
+Backend (Laravel 10)
+bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
