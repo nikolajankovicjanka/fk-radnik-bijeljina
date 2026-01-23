@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\GamesController;
+use App\Http\Controllers\Api\PlayersController;
 
 
 /*
@@ -24,8 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/{slug}', [NewsController::class, 'show']);
 Route::get('/fixtures', [GamesController::class, 'fixtures']);
-Route::get('/results',  [GamesController::class, 'results']);
+Route::get('/results', [GamesController::class, 'results']);
 Route::get('/next-match', [GamesController::class, 'nextMatch']);
 
 Route::get('/games', [GamesController::class, 'index']);
 Route::get('/games/{id}', [GamesController::class, 'show']);
+
+Route::get('/players', [PlayersController::class, 'index']);
+Route::get('/players/{player}', [PlayersController::class, 'show']);
