@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import MainLayout from '../layouts/MainLayout.vue'
-import {useNewsStore} from '../stores/news.ts'
-import {useGamesStore} from '../stores/games.ts'
+import {useNewsStore} from "@/stores/news"
+import {useGamesStore} from "@/stores/games"
+import {usePlayersStore} from "@/stores/players"
 
 const routes = [
     {
@@ -10,7 +11,13 @@ const routes = [
         beforeEnter: async () => {
             const newsStore = useNewsStore()
             const gamesStore = useGamesStore()
-            await Promise.all([newsStore.load(1), gamesStore.load(50)])
+            const playersStore = usePlayersStore()
+
+            await Promise.all([
+                newsStore.load(1),
+                gamesStore.load(50),
+                playersStore.load(200),
+            ])
         },
         children: [
             {
@@ -57,6 +64,7 @@ const routes = [
         ],
     },
 ]
+
 
 const router = createRouter({
     history: createWebHistory(),
