@@ -10,16 +10,15 @@ UI Components: Tailwind CSS + custom dizajn
 Database: MySQL
 
 Frontend (Vue 3)
-bash
-cd frontend
-npm install
-npm run dev
+-cd frontend
+-npm install
+-npm run dev
 
 Backend (Laravel 10)
-bash
-cd backend
-composer install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-php artisan serve
+
+-cd backend
+-composer install
+-cp .env.example .env
+-php artisan key:generate
+-php artisan migrate --seed
+-php artisan serve
