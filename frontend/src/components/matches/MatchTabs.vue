@@ -1,9 +1,8 @@
 <template>
     <section class="w-full py-16 bg-[#071f36]">
-        <h2 class="section-title-revers">LATEST RESULTS / NEXT MATCH</h2>
+        <h2 class="section-title-revers mb-3">LATEST RESULTS / NEXT MATCH</h2>
 
         <div class="container mx-auto px-4">
-            <!-- Tabs (pill) -->
             <div class="flex justify-center mb-10">
                 <div class="rounded-full bg-white/95 p-1 shadow-[0_14px_30px_rgba(0,0,0,0.22)]">
                     <div class="flex gap-1">

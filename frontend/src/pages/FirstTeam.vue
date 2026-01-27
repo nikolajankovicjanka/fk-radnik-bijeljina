@@ -70,7 +70,7 @@ const nextMatchCard = computed(() => {
         },
         time: formatTime(g.kickoff_at),
         date: formatDate(g.kickoff_at),
-        competition: g.round ? `Kolo ${g.round}` : "Liga",
+        competition: g.round ? `Kolo ${g.round}` : "WWin Liga Premier Liga",
     }
 })
 
@@ -202,8 +202,6 @@ onMounted(async () => {
                 <h2 class="text-2xl font-extrabold tracking-tight text-[#071f36] mb-2">
                     Naredna utakmica
                 </h2>
-                <p class="text-slate-500 mb-6">Najvažniji meč u narednom
-                    periodu</p>
             </div>
 
             <div>
