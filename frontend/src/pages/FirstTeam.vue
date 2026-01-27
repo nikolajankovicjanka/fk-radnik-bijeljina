@@ -8,7 +8,6 @@ const TEAM: TeamType = "first_team"
 
 import NewsCardHomepage from "@/components/news/NewsCardHomepage.vue"
 import MatchCardNext from "@/components/matches/MatchCardNext.vue"
-import {storeToRefs} from "pinia";
 
 
 const newsStore = useNewsStore()
@@ -27,6 +26,70 @@ function formatDate(iso: string) {
 
 const players = computed(() => playersStore.activeByTeam(TEAM))
 
+type SectionKey = "GK" | "DEF" | "MID" | "ATT"
+
+const SECTION_META: Record<SectionKey, {
+    title: string;
+    positions: PlayerPosition[]
+}> = {
+    GK: {
+        title: "GOLMANI",
+        positions: ["GK"],
+    },
+    DEF: {
+        title: "ODBRANA",
+        positions: ["CB", "LB", "RB"],
+    },
+    MID: {
+        title: "VEZNI RED",
+        positions: ["DM", "CM", "AM", "LM", "RM"],
+    },
+    ATT: {
+        title: "NAPADAČI",
+        positions: ["FC"],
+    },
+}
+
+function posOrder(pos: PlayerPosition) {
+    const order: PlayerPosition[] = [
+        "GK",
+        "CB", "LB", "RB",
+        "DM", "CM", "AM", "LM", "RM",
+        "FC",
+    ]
+    return order.indexOf(pos)
+}
+
+const playersBySection = computed(() => {
+    const list = (players.value ?? []).slice()
+
+    list.sort((a, b) => {
+        const po = posOrder(a.position) - posOrder(b.position)
+        if (po !== 0) return po
+        return (a.shirt_number ?? 999) - (b.shirt_number ?? 999)
+    })
+
+    const groups: Record<SectionKey, typeof list> = {
+        GK: [],
+        DEF: [],
+        MID: [],
+        ATT: []
+    }
+
+    for (const p of list) {
+        if (SECTION_META.GK.positions.includes(p.position)) groups.GK.push(p)
+        else if (SECTION_META.DEF.positions.includes(p.position)) groups.DEF.push(p)
+        else if (SECTION_META.MID.positions.includes(p.position)) groups.MID.push(p)
+        else if (SECTION_META.ATT.positions.includes(p.position)) groups.ATT.push(p)
+    }
+
+    return (Object.keys(SECTION_META) as SectionKey[]).map((key) => ({
+        key,
+        title: SECTION_META[key].title,
+        players: groups[key],
+    }))
+})
+
 function formatTime(iso: string) {
     const d = new Date(iso)
     return d.toLocaleTimeString("sr-RS", {hour: "2-digit", minute: "2-digit"})
@@ -35,7 +98,6 @@ function formatTime(iso: string) {
 function clubLogoUrl(path?: string | null) {
     const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
     if (!path) return "/FK_Radnik_logo.png"
-    // backend ti vraća: "clubs/xxx.png"
     return `${API}/storage/${path}`
 }
 
@@ -135,39 +197,79 @@ onMounted(async () => {
         <section class="mx-auto max-w-7xl px-4 py-12">
             <h2 class="n-title">PRVI TIM <span class="n-title-arrow">→</span>
             </h2>
-            <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-                <article
-                        v-for="p in players"
-                        :key="p.id"
-                        class="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-lg"
-                >
-                    <!-- SLIKA -->
-                    <img
-                            :src="p.photo ?? '/players/placeholder.png'"
-                            :alt="p.name"
-                            class="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    <!-- OVERLAY -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-
-                    <!-- BROJ -->
-                    <div class="absolute top-3 left-3">
-                        <div class="text-3xl font-black text-white/90">
-                            #{{ p.shirt_number ?? "—" }}
-                        </div>
+            <div class="mt-8 space-y-10">
+                <section
+                        v-for="sec in playersBySection"
+                        :key="sec.key"
+                        class="space-y-4">
+                    <div class="flex items-end justify-between gap-4">
+                        <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1650be]">
+                            {{ sec.title }}
+                        </h3>
                     </div>
 
-                    <!-- IME -->
-                    <div class="absolute bottom-3 left-3 right-3">
-                        <div class="text-lg font-black text-white truncate">
-                            {{ p.name }}
-                        </div>
-                        <div class="text-sm font-bold text-white/80 uppercase tracking-wide">
-                            {{ p.position ?? "Player" }}
-                        </div>
+                    <div v-if="sec.players.length === 0"
+                         class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-slate-500">
+                        Nema igrača u ovoj grupi.
                     </div>
-                </article>
+
+                    <div v-else
+                         class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                        <article
+                                v-for="p in sec.players"
+                                :key="p.id"
+                                class="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-lg bg-white"
+                        >
+                            <!-- IMAGE -->
+                            <img
+                                    :src="p.photo ?? '/players/placeholder.png'"
+                                    :alt="p.name"
+                                    class="h-[360px] sm:h-[420px] w-full
+                                     object-cover object-top
+                                     transition duration-500
+                                     group-hover:scale-[1.03] group-hover:blur-[2px]"
+                            />
+                            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent"></div>
+                            <div class="absolute inset-x-0 bottom-0 pb-4 px-4 text-centertransition duration-300 group-hover:opacity-0">
+                                <div class="relative inline-block">
+                                  <span class="text-base sm:text-lg font-extrabold text-white drop-shadow">
+                                    {{ p.name }}
+                                  </span>
+
+                                    <span class="absolute left-0 -bottom-1 h-[3px] w-full  bg-[#3332c9]
+                                           origin-left scale-x-0
+                                           transition-transform duration-500 ease-out
+                                           group-hover:scale-x-100"></span>
+                                </div>
+                            </div>
+
+                            <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center
+                                     opacity-0 transition duration-300 group-hover:opacity-100">
+                                <div class="absolute inset-0 bg-black/45"></div>
+
+                                <div class="relative text-center px-4">
+                                    <div class="mt-2 text-6xl sm:text-7xl font-black tracking-tight text-white drop-shadow">
+                                        {{ p.shirt_number ?? "—" }}
+                                    </div>
+                                    <div class="mt-1 text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white/85">
+                                        {{ p.position ?? "Player" }}
+                                    </div>
+                                </div>
+
+                                <div class="relative inline-block">
+                                      <span class="text-lg sm:text-xl font-extrabold text-white drop-shadow">
+                                        {{ p.name }}
+                                      </span>
+
+                                    <span class="absolute left-0 -bottom-1 h-[3px] w-full bg-[#3332c9]
+                                               origin-left scale-x-0
+                                               transition-transform duration-500 ease-out
+                                      group-hover:scale-x-100"></span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
             </div>
         </section>
 
