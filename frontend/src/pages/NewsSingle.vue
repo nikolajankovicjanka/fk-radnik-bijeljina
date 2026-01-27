@@ -1,5 +1,5 @@
 <template>
-    <article class="news-single h-[220px] w-full object-cover object-top">
+    <article class="news-single w-full object-cover object-top">
         <section v-if="isLoading" class="content">
             <div class="container">Loading...</div>
         </section>
@@ -89,7 +89,7 @@ watch(
 /* HERO */
 .hero {
     position: relative;
-    min-height: 520px;
+    min-height: 600px;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -104,9 +104,9 @@ watch(
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: 45% 35%;
 }
 
-/* dark overlay like Chelsea */
 .hero-overlay {
     position: absolute;
     inset: 0;
@@ -138,7 +138,7 @@ watch(
     font-weight: 900;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #ffd24a; /* Chelsea-ish yellow accent; promijeni u brend */
+    color: #ffd24a;
 }
 
 .time {
@@ -174,7 +174,6 @@ watch(
     background: rgba(255, 255, 255, 0.22);
 }
 
-/* CONTENT */
 .content-news {
     padding: 34px 0 70px;
 }
@@ -205,7 +204,6 @@ watch(
     border-radius: 12px;
 }
 
-/* Responsive */
 @media (max-width: 640px) {
     .hero {
         min-height: 480px;
@@ -218,7 +216,5 @@ watch(
     .time {
         display: none;
     }
-
-    /* kao često na mobile */
 }
 </style>

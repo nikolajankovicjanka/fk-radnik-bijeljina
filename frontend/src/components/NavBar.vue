@@ -139,9 +139,7 @@ const closeMobileMenu = () => {
 
             <!-- MOBILE: Burger Button & Actions -->
             <div class="flex lg:hidden items-center gap-4">
-                <!-- Search Button (Mobile) -->
-                <button class="text-white/80 hover:text-blue-400 transition">🔍
-                </button>
+
 
                 <!-- Burger Menu Button -->
                 <button
