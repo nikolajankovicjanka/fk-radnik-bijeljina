@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {computed, onMounted} from "vue"
+import {computed, onMounted, watch} from "vue"
 import {useNewsStore} from "@/stores/news"
 import {useGamesStore, type TeamType, type Game} from "@/stores/games"
 import {usePlayersStore} from "@/stores/players"
+import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
 
 const TEAM: TeamType = "first_team"
 
@@ -13,6 +14,20 @@ import MatchCardNext from "@/components/matches/MatchCardNext.vue"
 const newsStore = useNewsStore()
 const gamesStore = useGamesStore()
 const playersStore = usePlayersStore()
+
+const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
+    rootMargin: "0px 0px -15% 0px",
+    threshold: 0.12,
+    once: true,
+    visibleClass: "is-visible",
+})
+
+const {setRef: setCardEl, refresh: refreshCards} = useRevealOnScroll({
+    rootMargin: "0px 0px -10% 0px",
+    threshold: 0.12,
+    once: true,
+    visibleClass: "is-visible",
+})
 
 
 function formatDate(iso: string) {
@@ -144,11 +159,22 @@ const upcomingFive = computed<Game[]>(() => {
         .slice(0, 5)
 })
 
+watch(
+    () => playersBySection.value.map(s => s.players.length).join("|"),
+    async () => {
+        await refreshSections()
+        await refreshCards()
+    }
+)
+
 onMounted(async () => {
     newsStore.activeCategory = 'first_team'
     if (!newsStore.items.length) await newsStore.load(1)
     if (!gamesStore.items.length) await gamesStore.load(50)
     if (!playersStore.items.length) await playersStore.load(200)
+
+    await refreshSections()
+    await refreshCards()
 })
 </script>
 
@@ -168,24 +194,20 @@ onMounted(async () => {
             <div class="absolute inset-x-0 bottom-0">
                 <div class="mx-auto max-w-7xl px-4 pb-10 text-white">
                     <div class="flex items-end justify-between gap-6">
-                        <div>
-                            <div class="text-xs font-black tracking-[0.22em] uppercase opacity-90">
+                        <div class="rounded-3xl bg-black/40 backdrop-blur-md  border border-white/15 shadow-xl  px-5 py-4 sm:px-7 sm:py-6">
+                            <div class="text-xs font-black tracking-[0.22em] uppercase text-white/90">
                                 FK RADNIK BIJELJINA
                             </div>
-                            <h1 class="mt-2 text-3xl sm:text-5xl font-extrabold tracking-tight">
+
+                            <h1 class="mt-2 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
                                 Prvi tim
                             </h1>
-                            <p class="mt-3 max-w-2xl text-white/90">
-                                Roster, vijesti i raspored utakmica — sve na
-                                jednom mjestu.
-                            </p>
                         </div>
 
                         <RouterLink
                                 to="/fixtures"
                                 class="hidden sm:inline-flex items-center justify-center rounded-xl bg-white/10 px-5 py-3
-                     font-bold hover:bg-white/15 transition border border-white/15"
-                        >
+                                        font-bold hover:bg-white/15 transition border border-white/15">
                             Svi mečevi →
                         </RouterLink>
                     </div>
@@ -201,7 +223,8 @@ onMounted(async () => {
                 <section
                         v-for="sec in playersBySection"
                         :key="sec.key"
-                        class="space-y-4">
+                        :ref="setSectionEl"
+                        class="space-y-4 reveal-section">
                     <div class="flex items-end justify-between gap-4">
                         <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1650be]">
                             {{ sec.title }}
@@ -218,7 +241,8 @@ onMounted(async () => {
                         <article
                                 v-for="p in sec.players"
                                 :key="p.id"
-                                class="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-lg bg-white"
+                                :ref="setCardEl"
+                                class="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-lg bg-white reveal-card"
                         >
                             <!-- IMAGE -->
                             <img
@@ -467,3 +491,28 @@ onMounted(async () => {
         </section>
     </main>
 </template>
+
+<style scoped>
+/* start hidden */
+.reveal-section,
+.reveal-card {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+    transition: opacity 650ms ease, transform 650ms ease, filter 650ms ease;
+    will-change: opacity, transform, filter;
+}
+
+/* when visible */
+.reveal-section.is-visible,
+.reveal-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+/* malo "stagger" feeling bez JS-a: kartice kasne mrvu */
+.reveal-card {
+    transition-delay: 80ms;
+}
+</style>
