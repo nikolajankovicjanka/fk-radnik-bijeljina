@@ -1,0 +1,21 @@
+/* start hidden */
+.reveal-section,
+.reveal-card {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(6px);
+    transition: opacity 650ms ease, transform 650ms ease, filter 650ms ease;
+    will-change: opacity, transform, filter;
+}
+
+/* when visible */
+.reveal-section.is-visible,
+.reveal-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+.reveal-card {
+    transition-delay: 80ms;
+}

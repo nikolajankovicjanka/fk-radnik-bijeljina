@@ -182,8 +182,7 @@ const closeMobileMenu = () => {
             ></div>
 
             <!-- MOBILE MENU CONTENT -->
-            <div
-                    :class="[
+            <div :class="[
           'fixed top-0 right-0 h-screen w-64 sm:w-72',
           'bg-gradient-to-b from-[#061A2F] to-[#0B2D4F]',
           'transform transition-transform duration-300 ease-in-out z-50',
@@ -203,7 +202,6 @@ const closeMobileMenu = () => {
                     </button>
                 </div>
 
-                <!-- Mobile Navigation Links -->
                 <div class="p-4">
                     <ul class="space-y-1">
                         <li v-for="item in navItems" :key="item.label">
@@ -267,7 +265,7 @@ const closeMobileMenu = () => {
 </template>
 
 <style scoped>
-/* Smooth transitions for mobile menu */
+
 .router-link-active {
     position: relative;
 }
@@ -275,7 +273,7 @@ const closeMobileMenu = () => {
 .nav-link {
     position: relative;
     display: inline-block;
-    padding: 6px 0; /* malo prostora da linija ne "lijepi" */
+    padding: 6px 0;
     color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
     font-weight: 600;

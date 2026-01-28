@@ -9,6 +9,7 @@ const TEAM: TeamType = "first_team"
 
 import NewsCardHomepage from "@/components/news/NewsCardHomepage.vue"
 import MatchCardNext from "@/components/matches/MatchCardNext.vue"
+import PlayerCard from "@/components/players/PlayerCard.vue"
 
 
 const newsStore = useNewsStore()
@@ -116,15 +117,6 @@ function clubLogoUrl(path?: string | null) {
     return `${API}/storage/${path}`
 }
 
-function getFirstName(fullName: string) {
-    const parts = fullName.split(' ')
-    return parts[0] || fullName
-}
-
-function getLastName(fullName: string) {
-    const parts = fullName.split(' ')
-    return parts.slice(1).join(' ') || ''
-}
 
 const firstTeamNews = computed(() =>
     (newsStore.items ?? []).filter((n) => n.category === TEAM).slice(0, 6)
@@ -215,6 +207,23 @@ onMounted(async () => {
             </div>
         </section>
 
+        <!-- NEXT MATCH CARD -->
+        <section class="mx-auto max-w-7xl px-4 py-12">
+            <div>
+                <h2 class="n-title mb-4"> Naredna utakmica <span
+                        class="n-title-arrow">→</span>
+                </h2>
+            </div>
+
+            <div>
+                <div v-if="!nextMatchCard"
+                     class="rounded-2xl border border-slate-100 p-8 text-slate-500 text-center">
+                    Trenutno nema zakazanih utakmica.
+                </div>
+                <MatchCardNext v-else :match="nextMatchCard"/>
+            </div>
+        </section>
+
 
         <section class="mx-auto max-w-7xl px-4 py-12">
             <h2 class="n-title">PRVI TIM <span class="n-title-arrow">→</span>
@@ -238,66 +247,17 @@ onMounted(async () => {
 
                     <div v-else
                          class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-                        <article
+                        <PlayerCard
                                 v-for="p in sec.players"
                                 :key="p.id"
-                                :ref="setCardEl"
-                                class="group relative overflow-hidden rounded-2xl border border-gray-200 shadow-lg bg-white reveal-card"
-                        >
-                            <!-- IMAGE -->
-                            <img
-                                    :src="p.photo ?? '/players/placeholder.png'"
-                                    :alt="p.name"
-                                    class="h-[360px] sm:h-[420px] w-full
-                                     object-cover object-top
-                                     transition duration-500
-                                     group-hover:scale-[1.03] group-hover:blur-[2px]"
-                            />
-                            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent"></div>
-                            <div class="absolute inset-x-0 bottom-0 pb-4 px-4 text-centertransition duration-300 group-hover:opacity-0">
-                                <div class="relative inline-block">
-                                  <span class="text-base sm:text-lg font-extrabold text-white drop-shadow">
-                                    {{ p.name }}
-                                  </span>
-
-                                    <span class="absolute left-0 -bottom-1 h-[3px] w-full  bg-[#3332c9]
-                                           origin-left scale-x-0
-                                           transition-transform duration-500 ease-out
-                                           group-hover:scale-x-100"></span>
-                                </div>
-                            </div>
-
-                            <div class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center
-                                     opacity-0 transition duration-300 group-hover:opacity-100">
-                                <div class="absolute inset-0 bg-black/45"></div>
-
-                                <div class="relative text-center px-4">
-                                    <div class="mt-2 text-6xl sm:text-7xl font-black tracking-tight text-white drop-shadow">
-                                        {{ p.shirt_number ?? "—" }}
-                                    </div>
-                                    <div class="mt-1 text-xs sm:text-sm font-extrabold uppercase tracking-[0.25em] text-white/85">
-                                        {{ p.position ?? "Player" }}
-                                    </div>
-                                </div>
-
-                                <div class="relative inline-block">
-                                      <span class="text-lg sm:text-xl font-extrabold text-white drop-shadow">
-                                        {{ p.name }}
-                                      </span>
-
-                                    <span class="absolute left-0 -bottom-1 h-[3px] w-full bg-[#3332c9]
-                                               origin-left scale-x-0
-                                               transition-transform duration-500 ease-out
-                                      group-hover:scale-x-100"></span>
-                                </div>
-                            </div>
-                        </article>
+                                :player="p"
+                                :setCardEl="setCardEl"
+                        />
                     </div>
                 </section>
             </div>
         </section>
 
-        <!-- NEWS (samo first_team) -->
         <section class="bg-slate-50">
             <div class="mx-auto max-w-7xl px-4 py-12">
                 <div class="flex items-end justify-between gap-4">
@@ -321,198 +281,8 @@ onMounted(async () => {
                 </div>
             </div>
         </section>
-
-        <!-- NEXT MATCH CARD -->
-        <section class="mx-auto max-w-7xl px-4 py-12">
-            <div>
-                <h2 class="text-2xl font-extrabold tracking-tight text-[#071f36] mb-2">
-                    Naredna utakmica
-                </h2>
-            </div>
-
-            <div>
-                <div v-if="!nextMatchCard"
-                     class="rounded-2xl border border-slate-100 p-8 text-slate-500 text-center">
-                    Trenutno nema zakazanih utakmica.
-                </div>
-                <MatchCardNext v-else :match="nextMatchCard"/>
-            </div>
-        </section>
-
-        <!-- UPCOMING MATCHES - FULL WIDTH -->
-        <section class="bg-slate-50 py-12">
-            <div class="mx-auto max-w-7xl px-4">
-                <div class="flex items-end justify-between gap-4 mb-8">
-                    <div>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#071f36]">
-                            Naredni mečevi
-                        </h2>
-                        <p class="mt-2 text-slate-500">Kalendar utakmica za prvi
-                            tim</p>
-                    </div>
-                    <RouterLink to="/fixtures"
-                                class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-[#0A2D6B] hover:underline">
-                        Pogledaj kompletan raspored
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
-                    </RouterLink>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                    <article
-                            v-for="g in upcomingFive"
-                            :key="g.id"
-                            class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition overflow-hidden"
-                    >
-                        <!-- DATE HEADER -->
-                        <div class="bg-[#071f36] text-white px-4 py-2">
-                            <div class="text-sm font-bold">
-                                {{ formatDate(g.kickoff_at) }}
-                            </div>
-                            <div class="text-xs opacity-90">
-                                {{ formatTime(g.kickoff_at) }}
-                            </div>
-                        </div>
-
-                        <!-- MATCH CONTENT -->
-                        <div class="p-4">
-                            <!-- TEAMS -->
-                            <div class="space-y-4">
-                                <!-- HOME TEAM -->
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <img
-                                                :src="clubLogoUrl(g.home_club?.logo)"
-                                                class="h-8 w-8 object-contain"
-                                                alt=""
-                                        />
-                                        <div class="font-bold text-gray-900 truncate">
-                                            {{ g.home_club?.name }}
-                                        </div>
-                                    </div>
-                                    <div class="text-sm font-bold text-gray-500">
-                                        Domaćin
-                                    </div>
-                                </div>
-
-                                <!-- VS SEPARATOR -->
-                                <div class="flex items-center justify-center">
-                                    <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                                        vs
-                                    </div>
-                                </div>
-
-                                <!-- AWAY TEAM -->
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <img
-                                                :src="clubLogoUrl(g.away_club?.logo)"
-                                                class="h-8 w-8 object-contain"
-                                                alt=""
-                                        />
-                                        <div class="font-bold text-gray-900 truncate">
-                                            {{ g.away_club?.name }}
-                                        </div>
-                                    </div>
-                                    <div class="text-sm font-bold text-gray-500">
-                                        Gost
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- MATCH INFO -->
-                            <div class="mt-4 pt-4 border-t border-gray-100">
-                                <div class="flex justify-between text-sm">
-                                    <div class="text-gray-600">
-                                        <span class="font-bold">Stadion:</span>
-                                        <span class="ml-1">{{
-                                                g.stadium || 'TBD'
-                                            }}</span>
-                                    </div>
-                                    <div v-if="g.round"
-                                         class="font-bold text-[#0A2D6B]">
-                                        Kolo {{ g.round }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- ACTIONS -->
-                            <div class="mt-4 flex gap-2">
-                                <RouterLink
-                                        :to="`/match/${g.id}`"
-                                        class="flex-1 text-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 text-sm transition"
-                                >
-                                    Detalji
-                                </RouterLink>
-                                <button
-                                        type="button"
-                                        class="flex-1 text-center rounded-lg bg-[#0A2D6B] hover:bg-[#0A2D6B]/90 text-white font-bold py-2 text-sm transition"
-                                >
-                                    Ulaznice
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- EMPTY STATE -->
-                    <div v-if="upcomingFive.length === 0"
-                         class="col-span-full text-center py-12">
-                        <div class="text-gray-400 mb-4">
-                            <svg class="w-16 h-16 mx-auto" fill="none"
-                                 stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round" stroke-width="1.5"
-                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                        </div>
-                        <p class="text-gray-500">Trenutno nema narednih
-                            utakmica.</p>
-                    </div>
-                </div>
-
-                <!-- MOBILE VIEW ALL LINK -->
-                <div class="mt-8 text-center sm:hidden">
-                    <RouterLink to="/fixtures"
-                                class="inline-flex items-center gap-2 text-sm font-bold text-[#0A2D6B] hover:underline">
-                        Svi mečevi
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
-                    </RouterLink>
-                </div>
-            </div>
-        </section>
     </main>
 </template>
 
 <style scoped>
-/* start hidden */
-.reveal-section,
-.reveal-card {
-    opacity: 0;
-    transform: translateY(18px);
-    filter: blur(6px);
-    transition: opacity 650ms ease, transform 650ms ease, filter 650ms ease;
-    will-change: opacity, transform, filter;
-}
-
-/* when visible */
-.reveal-section.is-visible,
-.reveal-card.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-}
-
-/* malo "stagger" feeling bez JS-a: kartice kasne mrvu */
-.reveal-card {
-    transition-delay: 80ms;
-}
 </style>
