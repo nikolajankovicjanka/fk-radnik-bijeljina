@@ -26,9 +26,23 @@ const routes = [
                 component: () => import('@/pages/Home.vue'),
             },
             {
-                path: 'first-team',
-                name: 'First Team',
-                component: () => import('@/pages/FirstTeam.vue'),
+                path: "first-team",
+                name: "First Team",
+                component: () => import("@/pages/FirstTeam.vue"),
+                beforeEnter: async () => {
+                    const newsStore = useNewsStore()
+                    const gamesStore = useGamesStore()
+                    const playersStore = usePlayersStore()
+
+                    if (newsStore.activeCategory !== "first_team") {
+                        newsStore.activeCategory = "first_team"
+                        await newsStore.load(1)
+                    } else if (!newsStore.items.length) {
+                        await newsStore.load(1)
+                    }
+                    if (!gamesStore.items.length) await gamesStore.load(50)
+                    if (!playersStore.items.length) await playersStore.load(200)
+                },
             },
             {
                 path: 'club',
