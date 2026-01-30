@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import {ref, onMounted, nextTick} from 'vue'
+import {ref, onMounted, nextTick, watch} from 'vue'
 import {Swiper, SwiperSlide} from 'swiper/vue'
-import {Navigation, Pagination} from 'swiper/modules'
+import {Navigation} from 'swiper/modules'
 import {ChevronLeft, ChevronRight} from 'lucide-vue-next'
 import 'swiper/css'
 import 'swiper/css/navigation'
-import 'swiper/css/pagination'
 
 import NewsCardHomepage from './NewsCardHomepage.vue'
-import {getNews} from '../../services/newsService'
+import {getNews} from '@/services/newsService'
 import type {NewsItem} from '@/types/news'
+
+const props = withDefaults(defineProps<{
+    title?: string
+    category?: string | null
+    limit?: number
+}>(), {
+    title: 'LATEST NEWS',
+    category: null,
+    limit: 12,
+})
 
 const news = ref<NewsItem[]>([])
 const isLoading = ref(true)
@@ -38,7 +47,11 @@ function onBeforeInit(swiper: any) {
 async function loadNews() {
     try {
         isLoading.value = true
-        news.value = await getNews()
+        const all = await getNews()
+
+        news.value = all
+            .filter(n => !props.category || n.category === props.category)
+            .slice(0, props.limit)
     } finally {
         isLoading.value = false
     }
@@ -54,13 +67,23 @@ onMounted(async () => {
         swiperInstance.value.navigation.update()
     }
 })
+
+watch(
+    () => props.category,
+    async () => {
+        await loadNews()
+        await nextTick()
+        swiperInstance.value?.update()
+    }
+)
 </script>
 
 <template>
     <section class="n-section">
         <div class="n-header">
-            <h2 class="n-title mb-3">LATEST NEWS <span
-                    class="n-title-arrow">→</span></h2>
+            <h2 class="n-title mb-3">
+                {{ title }} <span class="n-title-arrow">→</span>
+            </h2>
 
             <div class="n-controls">
                 <button ref="prevEl" class="n-nav" type="button"
@@ -76,11 +99,11 @@ onMounted(async () => {
 
         <div class="n-slider">
             <Swiper
+                    v-if="news.length"
                     :modules="[Navigation]"
                     :slides-per-view="3"
                     :space-between="24"
                     :loop="news.length > 3"
-                    :pagination="{ clickable: true }"
                     :breakpoints="breakpoints"
                     class="n-swiper"
                     @swiper="onSwiper"
@@ -91,6 +114,13 @@ onMounted(async () => {
                     <NewsCardHomepage :item="item"/>
                 </SwiperSlide>
             </Swiper>
+
+            <div
+                    v-else-if="!isLoading"
+                    class="rounded-2xl border border-slate-200 bg-white p-8 text-slate-500 text-center"
+            >
+                Trenutno nema vijesti.
+            </div>
         </div>
     </section>
 </template>
