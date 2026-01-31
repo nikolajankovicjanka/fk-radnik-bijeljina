@@ -1,7 +1,6 @@
-// stores/games.ts
-import {defineStore} from 'pinia'
-import type {Game, TeamType} from '@/types/game'
-import {fetchGames} from '@/services/gamesServices'
+import type {Game, TeamType, GameStatus, Club} from "@/types/game"
+
+const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
 
 type LaravelPaginated<T> = {
     current_page: number
@@ -11,79 +10,49 @@ type LaravelPaginated<T> = {
     last_page: number
 }
 
-export const useGamesStore = defineStore('games', {
-    state: () => ({
-        items: [] as Game[],
-        isLoading: false,
-        error: null as string | null,
-        loadedAt: null as number | null,
-        pagination: {
-            page: 1,
-            perPage: 50,
-            total: 0,
-            lastPage: 1,
-        },
-    }),
+function clubLogoUrl(path?: string | null) {
+    if (!path) return "/FK_Radnik_logo.png"
+    if (path.startsWith("http://") || path.startsWith("https://")) return path
+    return `${API}/storage/${path}`
+}
 
-    getters: {
-        byTeam: state => (team: TeamType) => state.items.filter(g => g.team_type === team),
+function normalizeClub(c: Club): Club {
+    return {
+        ...c,
+        logo: c.logo ? clubLogoUrl(c.logo) : null,
+    }
+}
 
-        lastFinished: state => (team: TeamType) => {
-            const list = state.items
-                .filter(
-                    g =>
-                        g.team_type === team &&
-                        (g.status === 'finished' || (g.home_score !== null && g.away_score !== null))
-                )
-                .sort((a, b) => +new Date(b.kickoff_at) - +new Date(a.kickoff_at))
+export async function fetchGames(params?: {
+    page?: number
+    perPage?: number
+    team_type?: TeamType
+    status?: GameStatus
+    order?: "asc" | "desc"
+}) {
+    const url = new URL(`${API}/api/games`)
+    url.searchParams.set("page", String(params?.page ?? 1))
+    url.searchParams.set("per_page", String(params?.perPage ?? 50))
+    if (params?.team_type) url.searchParams.set("team_type", params.team_type)
+    if (params?.status) url.searchParams.set("status", params.status)
+    if (params?.order) url.searchParams.set("order", params.order)
 
-            return list[0] ?? null
-        },
+    const res = await fetch(url.toString(), {headers: {Accept: "application/json"}})
+    if (!res.ok) throw new Error(`Failed to fetch games: ${res.status}`)
 
-        nextUpcoming: state => (team: TeamType) => {
-            const now = new Date()
-            const list = state.items
-                .filter(
-                    g => g.team_type === team && g.status !== 'finished' && new Date(g.kickoff_at) >= now
-                )
-                .sort((a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at))
+    const json = (await res.json()) as LaravelPaginated<Game>
 
-            return list[0] ?? null
-        },
-    },
+    const items = json.data.map((g) => ({
+        ...g,
+        home_club: normalizeClub(g.home_club),
+        away_club: normalizeClub(g.away_club),
+    }))
 
-    actions: {
-        async load(perPage = 50, force = false) {
-            // cache: ako je već učitano u zadnjih 60s, ne diraj
-            if (!force && this.loadedAt && Date.now() - this.loadedAt < 60_000) {
-                console.log('Games cache hit, skipping load')
-                return
-            }
-
-            try {
-                this.isLoading = true
-                this.error = null
-
-                // KORISTI SERVICE umjesto direktnog fetch!
-                const response = await fetchGames({perPage})
-
-                this.items = response.data
-                this.pagination = {
-                    page: response.current_page,
-                    perPage: response.per_page,
-                    total: response.total,
-                    lastPage: response.last_page,
-                }
-                this.loadedAt = Date.now()
-
-                console.log('Games loaded successfully:', this.items.length)
-            } catch (e: any) {
-                this.error = e?.message ?? 'Failed to load games'
-                this.items = []
-                console.error('Error loading games:', e)
-            } finally {
-                this.isLoading = false
-            }
-        },
-    },
-})
+    return {
+        items,
+        page: json.current_page,
+        perPage: json.per_page,
+        total: json.total,
+        lastPage: json.last_page,
+    }
+}

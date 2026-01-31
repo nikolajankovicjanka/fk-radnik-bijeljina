@@ -8,21 +8,10 @@ class Game extends Model
 {
     protected $table = 'matches';
 
-    protected $fillable = [
-        'team_type',
-        'home_club_id',
-        'away_club_id',
-        'home_score',
-        'away_score',
-        'kickoff_at',
-        'status',
-        'stadium',
-        'round',
-    ];
+    protected $fillable = ['team_type', 'home_club_id', 'away_club_id', 'home_score', 'away_score', 'kickoff_at',
+                           'status', 'stadium', 'round', 'competition',];
 
-    protected $casts = [
-        'kickoff_at' => 'datetime',
-    ];
+    protected $casts = ['kickoff_at' => 'datetime',];
 
     public function homeClub()
     {

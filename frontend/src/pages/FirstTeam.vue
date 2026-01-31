@@ -111,12 +111,6 @@ function formatTime(iso: string) {
     return d.toLocaleTimeString("sr-RS", {hour: "2-digit", minute: "2-digit"})
 }
 
-function clubLogoUrl(path?: string | null) {
-    const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
-    if (!path) return "/FK_Radnik_logo.png"
-    return `${API}/storage/${path}`
-}
-
 
 const firstTeamNews = computed(() =>
     (newsStore.items ?? []).filter((n) => n.category === TEAM).slice(0, 6)
@@ -131,15 +125,15 @@ const nextMatchCard = computed(() => {
     return {
         home: {
             name: g.home_club?.name ?? "Domaćin",
-            logo: clubLogoUrl(g.home_club?.logo)
+            logo: g.home_club?.logo ?? "/FK_Radnik_logo.png",
         },
         away: {
             name: g.away_club?.name ?? "Gost",
-            logo: clubLogoUrl(g.away_club?.logo)
+            logo: g.away_club?.logo ?? "/FK_Radnik_logo.png",
         },
         time: formatTime(g.kickoff_at),
         date: formatDate(g.kickoff_at),
-        competition: g.round ? `Kolo ${g.round}` : "WWin Liga Premier Liga",
+        competition: g.competition ?? (g.round ? `Kolo ${g.round}` : "WWin Liga Premier Liga"),
     }
 })
 
