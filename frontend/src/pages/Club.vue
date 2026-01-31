@@ -7,8 +7,6 @@ import NewsSliderHomepage from "@/components/news/NewsSliderHomepage.vue"
 import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
 
 const newsStore = useNewsStore()
-
-// Reveal (opciono, ali lijepo da sekcije “uđu”)
 const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     rootMargin: "0px 0px -15% 0px",
     threshold: 0.12,
@@ -17,7 +15,6 @@ const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
 })
 
 const clubNews = computed(() => {
-    // promijeni "club" ako ti je drugačije u bazi/store-u
     return (newsStore.items ?? []).filter(n => n.category === "club").slice(0, 9)
 })
 
@@ -31,10 +28,8 @@ onMounted(async () => {
 
 <template>
     <main class="bg-white">
-        <!-- HERO (Chelsea style) -->
         <section class="relative overflow-hidden bg-[#071f36]">
             <div class="absolute inset-0">
-                <!-- suptilan gradient / tekstura -->
                 <div class="h-full w-full bg-gradient-to-b from-[#0A2D6B] via-[#071f36] to-[#071f36]"/>
             </div>
 
@@ -187,65 +182,4 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-/* Reveal (isti princip kao na FirstTeam) */
-.reveal-section {
-    opacity: 0;
-    transform: translateY(18px);
-    filter: blur(6px);
-    transition: opacity 650ms ease, transform 650ms ease, filter 650ms ease;
-    will-change: opacity, transform, filter;
-}
-
-.reveal-section.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-}
-
-/* Chelsea-like cards */
-.club-card {
-    display: block;
-    overflow: hidden;
-    border-radius: 1.25rem;
-    background: white;
-}
-
-.club-card-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    object-position: center;
-    transform: scale(1);
-    transition: transform 450ms ease;
-}
-
-.club-card:hover .club-card-img {
-    transform: scale(1.04);
-}
-
-.club-card-body {
-    padding: 18px 18px 20px;
-}
-
-.club-card-title {
-    font-size: 1.75rem;
-    line-height: 1.25rem;
-    font-weight: 800;
-    color: #1448a1;
-}
-
-.club-card-text {
-    margin-top: 10px;
-    color: rgb(71 85 105);
-    font-size: 0.95rem;
-    line-height: 1.4rem;
-}
-
-.club-card-cta {
-    margin-top: 14px;
-    font-weight: 800;
-    color: #071f36;
-    display: inline-flex;
-    gap: 8px;
-}
 </style>

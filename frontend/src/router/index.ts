@@ -61,9 +61,17 @@ const routes = [
                 props: true,
             },
             {
-                path: 'fixtures',
-                name: 'Fixtures',
-                component: () => import('@/pages/Fixtures.vue'),
+                path: "fixtures",
+                name: "Fixtures",
+                component: () => import("@/pages/Fixtures.vue"),
+                beforeEnter: async () => {
+                    const gamesStore = useGamesStore()
+
+                    await Promise.all([
+                        gamesStore.loadFinished("first_team", 1, 1, "replace"),
+                        gamesStore.loadScheduled("first_team"),
+                    ])
+                },
             },
             {
                 path: 'youth-team',

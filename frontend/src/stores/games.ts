@@ -1,97 +1,191 @@
-import { defineStore } from 'pinia'
+import {defineStore} from "pinia"
+import type {Game, TeamType} from "@/types/game"
+import {fetchGames} from "@/services/gamesServices"
 
-export type TeamType = 'first_team' | 'youth' | 'women'
-export type GameStatus = 'scheduled' | 'live' | 'finished'
-
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
-
-type ApiClub = {
-  id: number
-  name: string
-  slug: string
-  logo: string | null
+type Pagination = {
+    page: number
+    perPage: number
+    total: number
+    lastPage: number
 }
 
-export type Game = {
-  id: number
-  team_type: TeamType
-  status: GameStatus
-  home_score: number | null
-  away_score: number | null
-  kickoff_at: string
-  stadium: string | null
-  round: string | null
-  home_club: ApiClub
-  away_club: ApiClub
-}
+const TEAMS: TeamType[] = ["first_team", "youth", "women"]
 
-type LaravelPaginated<T> = {
-  current_page: number
-  data: T[]
-  per_page: number
-  total: number
-  last_page: number
-}
+export const useGamesStore = defineStore("games", {
+    state: () => ({
+        finishedByTeam: {
+            first_team: [] as Game[],
+            youth: [] as Game[],
+            women: [] as Game[],
+        } as Record<TeamType, Game[]>,
 
-export const useGamesStore = defineStore('games', {
-  state: () => ({
-    items: [] as Game[],
-    isLoading: false,
-    error: null as string | null,
-    loadedAt: null as number | null, // za cache
-  }),
+        scheduledByTeam: {
+            first_team: [] as Game[],
+            youth: [] as Game[],
+            women: [] as Game[],
+        } as Record<TeamType, Game[]>,
 
-  getters: {
-    byTeam: state => (team: TeamType) => state.items.filter(g => g.team_type === team),
+        finishedPaginationByTeam: {
+            first_team: {page: 1, perPage: 3, total: 0, lastPage: 1},
+            youth: {page: 1, perPage: 3, total: 0, lastPage: 1},
+            women: {page: 1, perPage: 3, total: 0, lastPage: 1},
+        } as Record<TeamType, Pagination>,
 
-    lastFinished: state => (team: TeamType) => {
-      const list = state.items
-        .filter(
-          g =>
-            g.team_type === team &&
-            (g.status === 'finished' || (g.home_score !== null && g.away_score !== null))
-        )
-        .sort((a, b) => +new Date(b.kickoff_at) - +new Date(a.kickoff_at))
+        isLoadingFinishedByTeam: {
+            first_team: false,
+            youth: false,
+            women: false,
+        } as Record<TeamType, boolean>,
 
-      return list[0] ?? null
+        isLoadingScheduledByTeam: {
+            first_team: false,
+            youth: false,
+            women: false,
+        } as Record<TeamType, boolean>,
+
+        error: null as string | null,
+    }),
+
+    getters: {
+        items: (state) => {
+            const all = [
+                ...state.finishedByTeam.first_team,
+                ...state.finishedByTeam.youth,
+                ...state.finishedByTeam.women,
+                ...state.scheduledByTeam.first_team,
+                ...state.scheduledByTeam.youth,
+                ...state.scheduledByTeam.women,
+            ]
+            const map = new Map<number, Game>()
+            for (const g of all) map.set(g.id, g)
+            return Array.from(map.values())
+        },
+        lastFinished: (state) => (team: TeamType) => {
+            const list = [...(state.finishedByTeam[team] ?? [])].sort(
+                (a, b) => +new Date(b.kickoff_at) - +new Date(a.kickoff_at)
+            )
+            return list[0] ?? null
+        },
+        nextUpcoming: (state) => (team: TeamType) => {
+            const now = new Date()
+            const list = (state.scheduledByTeam[team] ?? [])
+                .filter((g) => new Date(g.kickoff_at) >= now)
+                .sort((a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at))
+
+            return list[0] ?? null
+        },
+        upcomingAll: (state) => (team: TeamType) => state.scheduledByTeam[team] ?? [],
+        upcomingByMonth: (state) => (team: TeamType) => {
+            const items = [...(state.scheduledByTeam[team] ?? [])].sort(
+                (a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at)
+            )
+
+            const keyOf = (iso: string) => {
+                const d = new Date(iso)
+                return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+            }
+
+            const titleOf = (iso: string) => {
+                const d = new Date(iso)
+                const fmt = new Intl.DateTimeFormat("sr-RS", {
+                    month: "long",
+                    year: "numeric"
+                })
+                const t = fmt.format(d)
+                return t.charAt(0).toUpperCase() + t.slice(1)
+            }
+
+            const map = new Map<string, { title: string; items: Game[] }>()
+            for (const m of items) {
+                const key = keyOf(m.kickoff_at)
+                if (!map.has(key)) map.set(key, {
+                    title: titleOf(m.kickoff_at),
+                    items: []
+                })
+                map.get(key)!.items.push(m)
+            }
+
+            return Array.from(map.entries())
+                .sort((a, b) => a[0].localeCompare(b[0]))
+                .map(([key, v]) => ({key, title: v.title, items: v.items}))
+        },
+        canLoadMoreResults: (state) => (team: TeamType) =>
+            state.finishedPaginationByTeam[team].page < state.finishedPaginationByTeam[team].lastPage,
+
+        lastResults: (state) => (team: TeamType) => state.finishedByTeam[team] ?? [],
     },
 
-    nextUpcoming: state => (team: TeamType) => {
-      const now = new Date()
-      const list = state.items
-        .filter(
-          g => g.team_type === team && g.status !== 'finished' && new Date(g.kickoff_at) >= now
-        )
-        .sort((a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at))
+    actions: {
+        async load(perPage = 50, force = false) {
+            // učitaj sve timove (tabovi na Home)
+            await Promise.all([
+                ...TEAMS.map((t) => this.loadScheduled(t)),
+                ...TEAMS.map((t) => this.loadFinished(t, 1, 3, "replace")),
+            ])
+        },
 
-      return list[0] ?? null
+        async loadFinished(team: TeamType, page = 1, perPage = 3, mode: "replace" | "append" = "replace") {
+            try {
+                this.isLoadingFinishedByTeam[team] = true
+                this.error = null
+
+                const res = await fetchGames({
+                    team_type: team,
+                    status: "finished",
+                    order: "desc",
+                    page,
+                    perPage,
+                })
+
+                if (mode === "replace") {
+                    this.finishedByTeam[team] = res.items
+                } else {
+                    const existing = new Set(this.finishedByTeam[team].map((x) => x.id))
+                    const toAdd = res.items.filter((x) => !existing.has(x.id))
+                    this.finishedByTeam[team] = [...this.finishedByTeam[team], ...toAdd]
+                }
+
+                this.finishedPaginationByTeam[team] = {
+                    page: res.page,
+                    perPage: res.perPage,
+                    total: res.total,
+                    lastPage: res.lastPage,
+                }
+            } catch (e: any) {
+                this.error = e?.message ?? "Failed to load finished games"
+                if (mode === "replace") this.finishedByTeam[team] = []
+            } finally {
+                this.isLoadingFinishedByTeam[team] = false
+            }
+        },
+
+        async loadMoreFinished(team: TeamType) {
+            const pag = this.finishedPaginationByTeam[team]
+            const next = pag.page + 1
+            if (next > pag.lastPage) return
+            await this.loadFinished(team, next, pag.perPage, "append")
+        },
+
+        async loadScheduled(team: TeamType) {
+            try {
+                this.isLoadingScheduledByTeam[team] = true
+                this.error = null
+
+                const res = await fetchGames({
+                    team_type: team,
+                    status: "scheduled",
+                    order: "asc",
+                    page: 1,
+                    perPage: 200,
+                })
+
+                this.scheduledByTeam[team] = res.items
+            } catch (e: any) {
+                this.error = e?.message ?? "Failed to load scheduled games"
+                this.scheduledByTeam[team] = []
+            } finally {
+                this.isLoadingScheduledByTeam[team] = false
+            }
+        },
     },
-  },
-
-  actions: {
-    async load(perPage = 50, force = false) {
-      // cache: ako je već učitano u zadnjih 60s, ne diraj
-      if (!force && this.loadedAt && Date.now() - this.loadedAt < 60_000) return
-
-      try {
-        this.isLoading = true
-        this.error = null
-
-        const url = new URL(`${API}/api/games`)
-        url.searchParams.set('per_page', String(perPage))
-
-        const res = await fetch(url.toString(), { headers: { Accept: 'application/json' } })
-        if (!res.ok) throw new Error(`Failed to fetch games: ${res.status}`)
-
-        const json = (await res.json()) as LaravelPaginated<Game>
-        this.items = json.data
-        this.loadedAt = Date.now()
-      } catch (e: any) {
-        this.error = e?.message ?? 'Failed to load games'
-        this.items = []
-      } finally {
-        this.isLoading = false
-      }
-    },
-  },
 })
