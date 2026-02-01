@@ -26,9 +26,9 @@ export const useGamesStore = defineStore("games", {
         } as Record<TeamType, Game[]>,
 
         finishedPaginationByTeam: {
-            first_team: {page: 1, perPage: 3, total: 0, lastPage: 1},
-            youth: {page: 1, perPage: 3, total: 0, lastPage: 1},
-            women: {page: 1, perPage: 3, total: 0, lastPage: 1},
+            first_team: {page: 1, perPage: 5, total: 0, lastPage: 1},
+            youth: {page: 1, perPage: 5, total: 0, lastPage: 1},
+            women: {page: 1, perPage: 5, total: 0, lastPage: 1},
         } as Record<TeamType, Pagination>,
 
         isLoadingFinishedByTeam: {

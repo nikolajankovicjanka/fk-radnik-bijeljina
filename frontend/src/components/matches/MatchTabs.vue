@@ -24,10 +24,7 @@
 
             <!-- Cards -->
             <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-7">
-                <MatchCardLast
-                        v-if="lastMatch"
-                        :match="lastMatch"
-                />
+                <MatchCardLast v-if="lastMatch" :match="lastMatch"/>
                 <div
                         v-else
                         class="rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
@@ -35,10 +32,7 @@
                     Nema odigranih utakmica za ovu selekciju.
                 </div>
 
-                <MatchCardNext
-                        v-if="nextMatch"
-                        :match="nextMatch"
-                />
+                <MatchCardNext v-if="nextMatch" :match="nextMatch"/>
                 <div
                         v-else
                         class="rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
@@ -47,7 +41,6 @@
                 </div>
             </div>
 
-            <!-- Optional: error/info -->
             <p v-if="gamesStore.error"
                class="mt-6 text-red-300 text-sm text-center">
                 {{ gamesStore.error }}
@@ -103,6 +96,10 @@ function scoreText(g: Game) {
     return `${hs} : ${as}`
 }
 
+function safeLogo(logo: string | null | undefined) {
+    return logo ?? "/FK_Radnik_logo.png"
+}
+
 const lastGame = computed(() => gamesStore.lastFinished(activeTeamType.value))
 const nextGame = computed(() => gamesStore.nextUpcoming(activeTeamType.value))
 
@@ -111,17 +108,12 @@ const lastMatch = computed<LastMatch | null>(() => {
     if (!g) return null
 
     return {
-        home: {
-            name: g.home_club.name,
-            logo: g.home_club.logo ?? "/FK_Radnik_logo.png"
-        },
-        away: {
-            name: g.away_club.name,
-            logo: g.away_club.logo ?? "/FK_Radnik_logo.png"
-        },
+        home: {name: g.home_club.name, logo: safeLogo(g.home_club.logo)},
+        away: {name: g.away_club.name, logo: safeLogo(g.away_club.logo)},
         score: scoreText(g),
         date: formatDate(g.kickoff_at),
-        competition: g.competition ?? g.round ?? "—",
+        competition: g.competition ?? "—",
+        round: g.round ?? "—",
     }
 })
 
@@ -130,18 +122,13 @@ const nextMatch = computed<NextMatch | null>(() => {
     if (!g) return null
 
     return {
-        home: {
-            name: g.home_club.name,
-            logo: g.home_club.logo ?? "/FK_Radnik_logo.png"
-        },
-        away: {
-            name: g.away_club.name,
-            logo: g.away_club.logo ?? "/FK_Radnik_logo.png"
-        },
+        home: {name: g.home_club.name, logo: safeLogo(g.home_club.logo)},
+        away: {name: g.away_club.name, logo: safeLogo(g.away_club.logo)},
         time: formatTime(g.kickoff_at),
         date: formatDate(g.kickoff_at),
-        competition: g.competition ?? g.round ?? "—",
+        competition: g.competition ?? "—",
+        round: g.round ?? "—",
+        stadium: g.stadium ?? null,
     }
 })
 </script>
-

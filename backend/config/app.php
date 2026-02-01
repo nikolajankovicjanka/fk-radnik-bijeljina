@@ -70,7 +70,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => env('APP_TIMEZONE', 'Europe/Sarajevo'),
 
     /*
     |--------------------------------------------------------------------------
@@ -139,9 +139,7 @@ return [
     |
     */
 
-    'maintenance' => [
-        'driver' => 'file',
-        // 'store' => 'redis',
+    'maintenance' => ['driver' => 'file',// 'store' => 'redis',
     ],
 
     /*
@@ -155,21 +153,17 @@ return [
     |
     */
 
-    'providers' => ServiceProvider::defaultProviders()->merge([
-        /*
+    'providers' => ServiceProvider::defaultProviders()->merge([/*
          * Package Service Providers...
          */
 
-        /*
-         * Application Service Providers...
-         */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\RouteServiceProvider::class,
-    ])->toArray(),
+                                                               /*
+                                                                * Application Service Providers...
+                                                                */ App\Providers\AppServiceProvider::class, App\Providers\AuthServiceProvider::class,
+                                                               // App\Providers\BroadcastServiceProvider::class,
+                                                               App\Providers\EventServiceProvider::class,
+                                                               App\Providers\Filament\AdminPanelProvider::class,
+                                                               App\Providers\RouteServiceProvider::class,])->toArray(),
 
     /*
     |--------------------------------------------------------------------------
@@ -182,8 +176,7 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        // 'Example' => App\Facades\Example::class,
+    'aliases' => Facade::defaultAliases()->merge([// 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
 ];
