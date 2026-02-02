@@ -17,11 +17,10 @@ onMounted(() => store.load(1))
         <div class="relative mx-auto max-w-7xl px-4 py-16 sm:py-20">
             <div class="max-w-3xl">
                 <h1 class="text-white text-4xl sm:text-6xl font-extrabold tracking-tight">
-                    Vijesti
+                    {{ $t('pages.newsPage.heroTitle') }}
                 </h1>
                 <p class="mt-5 text-white/85 text-base sm:text-lg leading-relaxed">
-                    Sve vijesti vezane za prvi tim, klub, omladinske selekcije
-                    i ženski tim Fk Radnika
+                    {{ $t('pages.newsPage.heroDesc') }}
                 </p>
             </div>
         </div>
@@ -33,11 +32,26 @@ onMounted(() => store.load(1))
                     :value="store.activeCategory"
                     @change="store.setCategory(($event.target as HTMLSelectElement).value as any)"
             >
-                <option value="all">Sve</option>
-                <option value="club">Klub</option>
-                <option value="first_team">Prvi tim</option>
-                <option value="youth">Omladinske selekcije</option>
-                <option value="women">Ženski tim</option>
+                <option value="all">{{
+                        $t('pages.newsPage.categories.all')
+                    }}
+                </option>
+                <option value="club">{{
+                        $t('pages.newsPage.categories.club')
+                    }}
+                </option>
+                <option value="first_team">{{
+                        $t('pages.newsPage.categories.first_team')
+                    }}
+                </option>
+                <option value="youth">{{
+                        $t('pages.newsPage.categories.youth')
+                    }}
+                </option>
+                <option value="women">{{
+                        $t('pages.newsPage.categories.women')
+                    }}
+                </option>
             </select>
         </div>
 

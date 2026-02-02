@@ -15,7 +15,7 @@ const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
 })
 
 const clubNews = computed(() => {
-    return (newsStore.items ?? []).filter(n => n.category === "club").slice(0, 9)
+    return (newsStore.items ?? []).filter((n) => n.category === "club").slice(0, 9)
 })
 
 onMounted(async () => {
@@ -36,12 +36,10 @@ onMounted(async () => {
             <div class="relative mx-auto max-w-7xl px-4 py-16 sm:py-20">
                 <div class="max-w-3xl">
                     <h1 class="text-white text-4xl sm:text-6xl font-extrabold tracking-tight">
-                        O klubu
+                        {{ $t("pages.clubPage.heroTitle") }}
                     </h1>
                     <p class="mt-5 text-white/85 text-base sm:text-lg leading-relaxed">
-                        Osnovne informacije o FK Radnik Bijeljina, upravi kluba,
-                        istoriji i
-                        svemu što čini klub.
+                        {{ $t("pages.clubPage.heroDesc") }}
                     </p>
                 </div>
             </div>
@@ -57,72 +55,76 @@ onMounted(async () => {
                 <RouterLink to="/general-information" class="club-card">
                     <img
                             src="/club/fk-radnik-general.jpg"
-                            alt="Osnovne informacije"
+                            :alt="$t('pages.clubPage.cards.general.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Osnovne informacije</h3>
+                        <h3 class="club-card-title">
+                            {{ $t("pages.clubPage.cards.general.title") }}</h3>
                         <p class="club-card-text">
-                            Stadion, boje kluba, organizacija, dokumenti i
-                            ključne informacije.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.general.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
 
                 <RouterLink to="/club-board" class="club-card">
                     <img
                             src="/club/fk-radnik-uprava.webp"
-                            alt="Uprava kluba"
+                            :alt="$t('pages.clubPage.cards.board.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Uprava kluba</h3>
+                        <h3 class="club-card-title">
+                            {{ $t("pages.clubPage.cards.board.title") }}</h3>
                         <p class="club-card-text">
-                            Uprava, rukovodstvo i organizaciona struktura kluba.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.board.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
 
                 <RouterLink to="/club-history" class="club-card">
                     <img
                             src="/club/fk-radnik-stadion.jpg"
-                            alt="Istorija Radnika"
+                            :alt="$t('pages.clubPage.cards.history.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Istorija Radnika</h3>
+                        <h3 class="club-card-title">
+                            {{ $t("pages.clubPage.cards.history.title") }}</h3>
                         <p class="club-card-text">
-                            Najvažniji trenuci, uspjesi i priča kluba kroz
-                            decenije.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.history.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
             </div>
         </section>
-
-        <!-- SECTION 2: Club news -->
+        
         <section class="bg-slate-50">
             <div class="mx-auto max-w-7xl px-4 py-12">
-                <NewsSliderHomepage
-                        title="Vijesti o klubu"
-                        category="club"
-                        :limit="9"
-                />
+                <NewsSliderHomepage :title="$t('pages.clubPage.clubNewsTitle')"
+                                    category="club" :limit="9"/>
 
                 <div class="mt-8 text-center sm:hidden">
                     <RouterLink
                             :to="{ name: 'News', query: { category: 'club' } }"
                             class="inline-flex items-center gap-2 text-sm font-bold text-[#0A2D6B] hover:underline"
                     >
-                        Sve vijesti →
+                        {{ $t("pages.clubPage.allNews") }} →
                     </RouterLink>
                 </div>
             </div>
         </section>
 
+        <!-- SECTION 3: community/extra -->
         <section
                 :ref="setSectionEl"
                 class="mx-auto max-w-7xl px-4 py-12 reveal-section"
@@ -132,48 +134,56 @@ onMounted(async () => {
                 <RouterLink to="/club-supporters" class="club-card">
                     <img
                             src="/club/fk-radnik-navijaci.jpg"
-                            alt="Radnikovi navijači"
+                            :alt="$t('pages.clubPage.cards.supporters.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Radnikovi navijači</h3>
+                        <h3 class="club-card-title">
+                            {{
+                                $t("pages.clubPage.cards.supporters.title")
+                            }}</h3>
                         <p class="club-card-text">
-                            Priča o navijačima, tribini i atmosferi koja nosi
-                            klub.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.supporters.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
 
                 <RouterLink to="/club-stadium" class="club-card">
                     <img
                             src="/club/fk-radnik-stadion.jpg"
-                            alt="Stadion Radnika"
+                            :alt="$t('clubPage.cards.stadium.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Stadion Radnika</h3>
+                        <h3 class="club-card-title">
+                            {{ $t("pages.clubPage.cards.stadium.title") }}</h3>
                         <p class="club-card-text">
-                            Informacije o stadionu, lokaciji, kapacitetu i
-                            istoriji.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.stadium.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
 
                 <RouterLink to="/club-legends" class="club-card">
                     <img
                             src="/club/fk-radnik-general.jpg"
-                            alt="Radnikove legende"
+                            :alt="$t('clubPage.cards.legends.alt')"
                             class="club-card-img"
                     />
                     <div class="club-card-body">
-                        <h3 class="club-card-title">Radnikove legende</h3>
+                        <h3 class="club-card-title">
+                            {{ $t("pages.clubPage.cards.legends.title") }}</h3>
                         <p class="club-card-text">
-                            Igrači, treneri i ljudi koji su ostavili trag u
-                            klubu.
-                        </p>
-                        <div class="club-card-cta">Saznaj više →</div>
+                            {{ $t("pages.clubPage.cards.legends.desc") }}</p>
+                        <div class="club-card-cta">{{
+                                $t("pages.clubPage.learnMore")
+                            }} →
+                        </div>
                     </div>
                 </RouterLink>
             </div>
@@ -181,5 +191,4 @@ onMounted(async () => {
     </main>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

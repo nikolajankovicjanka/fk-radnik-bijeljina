@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import {computed, onMounted, watch} from "vue"
+import {i18n} from "@/i18n"
+
 import {useNewsStore} from "@/stores/news"
 import {useGamesStore, type TeamType, type Game} from "@/stores/games"
 import {usePlayersStore} from "@/stores/players"
 import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
 
-const TEAM: TeamType = "first_team"
-
 import NewsCardHomepage from "@/components/news/NewsCardHomepage.vue"
 import MatchCardNext from "@/components/matches/MatchCardNext.vue"
 import PlayerCard from "@/components/players/PlayerCard.vue"
 
+const TEAM: TeamType = "first_team"
 
 const newsStore = useNewsStore()
 const gamesStore = useGamesStore()
@@ -30,13 +31,26 @@ const {setRef: setCardEl, refresh: refreshCards} = useRevealOnScroll({
     visibleClass: "is-visible",
 })
 
+const toDateLocale = (loc: string) => {
+    if (loc === "sr-Latn") return "sr-Latn-RS"
+    if (loc === "sr-Cyrl") return "sr-Cyrl-RS"
+    return loc
+}
 
 function formatDate(iso: string) {
     const d = new Date(iso)
-    return d.toLocaleDateString("sr-RS", {
+    return d.toLocaleDateString(toDateLocale(i18n.global.locale.value), {
         day: "2-digit",
         month: "long",
-        year: "numeric"
+        year: "numeric",
+    })
+}
+
+function formatTime(iso: string) {
+    const d = new Date(iso)
+    return d.toLocaleTimeString(toDateLocale(i18n.global.locale.value), {
+        hour: "2-digit",
+        minute: "2-digit",
     })
 }
 
@@ -44,24 +58,27 @@ const players = computed(() => playersStore.activeByTeam(TEAM))
 
 type SectionKey = "GK" | "DEF" | "MID" | "ATT"
 
-const SECTION_META: Record<SectionKey, {
-    title: string;
-    positions: PlayerPosition[]
-}> = {
+const SECTION_META: Record<
+    SectionKey,
+    {
+        titleKey: string
+        positions: PlayerPosition[]
+    }
+> = {
     GK: {
-        title: "GOLMANI",
+        titleKey: "pages.firstTeam.gk",
         positions: ["GK"],
     },
     DEF: {
-        title: "ODBRANA",
+        titleKey: "pages.firstTeam.def",
         positions: ["CB", "LB", "RB"],
     },
     MID: {
-        title: "VEZNI RED",
+        titleKey: "pages.firstTeam.mid",
         positions: ["DM", "CM", "AM", "LM", "RM"],
     },
     ATT: {
-        title: "NAPADAČI",
+        titleKey: "pages.firstTeam.att",
         positions: ["FC"],
     },
 }
@@ -69,8 +86,14 @@ const SECTION_META: Record<SectionKey, {
 function posOrder(pos: PlayerPosition) {
     const order: PlayerPosition[] = [
         "GK",
-        "CB", "LB", "RB",
-        "DM", "CM", "AM", "LM", "RM",
+        "CB",
+        "LB",
+        "RB",
+        "DM",
+        "CM",
+        "AM",
+        "LM",
+        "RM",
         "FC",
     ]
     return order.indexOf(pos)
@@ -89,7 +112,7 @@ const playersBySection = computed(() => {
         GK: [],
         DEF: [],
         MID: [],
-        ATT: []
+        ATT: [],
     }
 
     for (const p of list) {
@@ -101,16 +124,10 @@ const playersBySection = computed(() => {
 
     return (Object.keys(SECTION_META) as SectionKey[]).map((key) => ({
         key,
-        title: SECTION_META[key].title,
+        titleKey: SECTION_META[key].titleKey,
         players: groups[key],
     }))
 })
-
-function formatTime(iso: string) {
-    const d = new Date(iso)
-    return d.toLocaleTimeString("sr-RS", {hour: "2-digit", minute: "2-digit"})
-}
-
 
 const firstTeamNews = computed(() =>
     (newsStore.items ?? []).filter((n) => n.category === TEAM).slice(0, 6)
@@ -122,31 +139,27 @@ const nextMatchCard = computed(() => {
     const g = nextMatch.value
     if (!g) return null
 
+    const roundText = g.round ? `${i18n.global.t("matches.round")} ${g.round}` : null
+    const competitionText =
+        g.competition ?? roundText ?? i18n.global.t("matches.defaultCompetition")
+
     return {
         home: {
-            name: g.home_club?.name ?? "Domaćin",
+            name: g.home_club?.name ?? i18n.global.t("matches.homeTeam"),
             logo: g.home_club?.logo ?? "/FK_Radnik_logo.png",
         },
         away: {
-            name: g.away_club?.name ?? "Gost",
+            name: g.away_club?.name ?? i18n.global.t("matches.awayTeam"),
             logo: g.away_club?.logo ?? "/FK_Radnik_logo.png",
         },
         time: formatTime(g.kickoff_at),
         date: formatDate(g.kickoff_at),
-        competition: g.competition ?? (g.round ? `Kolo ${g.round}` : "WWin Liga Premier Liga"),
+        competition: competitionText,
     }
 })
 
-const upcomingFive = computed<Game[]>(() => {
-    const now = new Date()
-    return (gamesStore.items ?? [])
-        .filter((g) => g.team_type === TEAM && new Date(g.kickoff_at) >= now)
-        .sort((a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at))
-        .slice(0, 5)
-})
-
 watch(
-    () => playersBySection.value.map(s => s.players.length).join("|"),
+    () => playersBySection.value.map((s) => s.players.length).join("|"),
     async () => {
         await refreshSections()
         await refreshCards()
@@ -154,7 +167,7 @@ watch(
 )
 
 onMounted(async () => {
-    newsStore.activeCategory = 'first_team'
+    newsStore.activeCategory = "first_team"
     if (!newsStore.items.length) await newsStore.load(1)
     if (!gamesStore.items.length) await gamesStore.load(50)
     if (!playersStore.items.length) await playersStore.load(200)
@@ -171,7 +184,7 @@ onMounted(async () => {
             <div class="h-[320px] sm:h-[420px] w-full">
                 <img
                         src="/logo/First_team.JPG"
-                        alt="Prvi tim"
+                        :alt="$t('pages.firstTeam.heroAlt')"
                         class="h-full w-full object-cover"
                 />
             </div>
@@ -180,21 +193,23 @@ onMounted(async () => {
             <div class="absolute inset-x-0 bottom-0">
                 <div class="mx-auto max-w-7xl px-4 pb-10 text-white">
                     <div class="flex items-end justify-between gap-6">
-                        <div class="rounded-3xl bg-black/40 backdrop-blur-md  border border-white/15 shadow-xl  px-5 py-4 sm:px-7 sm:py-6">
+                        <div
+                                class="rounded-3xl bg-black/40 backdrop-blur-md border border-white/15 shadow-xl px-5 py-4 sm:px-7 sm:py-6"
+                        >
                             <div class="text-xs font-black tracking-[0.22em] uppercase text-white/90">
-                                FK RADNIK BIJELJINA
+                                <h1>{{ $t("club.name") }}</h1>
                             </div>
 
-                            <h1 class="mt-2 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-                                Prvi tim
-                            </h1>
+                            <h2 class="mt-2 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+                                {{ $t("pages.firstTeam.title") }}
+                            </h2>
                         </div>
 
                         <RouterLink
                                 to="/fixtures"
-                                class="hidden sm:inline-flex items-center justify-center rounded-xl bg-white/10 px-5 py-3
-                                        font-bold hover:bg-white/15 transition border border-white/15">
-                            Svi mečevi →
+                                class="hidden sm:inline-flex items-center justify-center rounded-xl bg-white/10 px-5 py-3 font-bold hover:bg-white/15 transition border border-white/15"
+                        >
+                            {{ $t("pages.firstTeam.allMatches") }} →
                         </RouterLink>
                     </div>
                 </div>
@@ -204,39 +219,48 @@ onMounted(async () => {
         <!-- NEXT MATCH CARD -->
         <section class="mx-auto max-w-7xl px-4 py-12">
             <div>
-                <h2 class="n-title mb-4"> Naredna utakmica <span
-                        class="n-title-arrow">→</span>
+                <h2 class="n-title mb-4">
+                    {{ $t("pages.firstTeam.nextMatch") }}
+                    <span class="n-title-arrow">→</span>
                 </h2>
             </div>
 
             <div>
-                <div v-if="!nextMatchCard"
-                     class="rounded-2xl border border-slate-100 p-8 text-slate-500 text-center">
-                    Trenutno nema zakazanih utakmica.
+                <div
+                        v-if="!nextMatchCard"
+                        class="rounded-2xl border border-slate-100 p-8 text-slate-500 text-center"
+                >
+                    {{ $t("pages.firstTeam.noScheduled") }}
                 </div>
                 <MatchCardNext v-else :match="nextMatchCard"/>
             </div>
         </section>
 
-
+        <!-- SQUAD -->
         <section class="mx-auto max-w-7xl px-4 py-12">
-            <h2 class="n-title">PRVI TIM <span class="n-title-arrow">→</span>
+            <h2 class="n-title">
+                {{ $t("pages.firstTeam.squadTitle") }}
+                <span class="n-title-arrow">→</span>
             </h2>
+
             <div class="mt-8 space-y-10">
                 <section
                         v-for="sec in playersBySection"
                         :key="sec.key"
                         :ref="setSectionEl"
-                        class="space-y-4 reveal-section">
+                        class="space-y-4 reveal-section"
+                >
                     <div class="flex items-end justify-between gap-4">
                         <h3 class="text-xl sm:text-2xl font-extrabold tracking-tight text-[#1650be]">
-                            {{ sec.title }}
+                            {{ $t(sec.titleKey) }}
                         </h3>
                     </div>
 
-                    <div v-if="sec.players.length === 0"
-                         class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-slate-500">
-                        Nema igrača u ovoj grupi.
+                    <div
+                            v-if="sec.players.length === 0"
+                            class="rounded-xl border border-slate-200 bg-slate-50 p-6 text-slate-500"
+                    >
+                        {{ $t("pages.firstTeam.noPlayersInGroup") }}
                     </div>
 
                     <div v-else
@@ -252,12 +276,14 @@ onMounted(async () => {
             </div>
         </section>
 
+        <!-- NEWS -->
         <section class="bg-slate-50">
             <div class="mx-auto max-w-7xl px-4 py-12">
                 <div class="flex items-end justify-between gap-4">
                     <div>
-                        <h2 class="n-title">PRVI TIM - vijesti <span
-                                class="n-title-arrow">→</span>
+                        <h2 class="n-title">
+                            {{ $t("pages.firstTeam.newsTitle") }}
+                            <span class="n-title-arrow">→</span>
                         </h2>
                     </div>
 
@@ -265,7 +291,7 @@ onMounted(async () => {
                             :to="{ name: 'News', query: { category: 'all' } }"
                             class="hidden sm:inline-flex rounded-xl bg-[#071f36] px-5 py-3 text-white font-bold hover:brightness-110 transition"
                     >
-                        Sve vijesti →
+                        {{ $t("pages.firstTeam.allNews") }} →
                     </RouterLink>
                 </div>
 
@@ -278,5 +304,4 @@ onMounted(async () => {
     </main>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

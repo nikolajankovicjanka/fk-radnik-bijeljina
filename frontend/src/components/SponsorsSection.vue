@@ -2,7 +2,7 @@
     <section class="sp" aria-label="Sponsors">
         <div class="sp-inner">
             <div class="sp-head">
-                <h2 class="n-title mb-3">OFICIJALNI PARTNERI</h2>
+                <h2 class="n-title mb-3">{{ $t('home.sponsors.sponsors') }}</h2>
             </div>
 
             <div class="sponsors-grid">

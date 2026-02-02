@@ -97,11 +97,10 @@ const upcomingCardsByMonth = computed(() =>
             <div class="relative mx-auto max-w-7xl px-4 py-16 sm:py-20">
                 <div class="max-w-3xl">
                     <h1 class="text-white text-4xl sm:text-6xl font-extrabold tracking-tight">
-                        FK Radnik Soccerbet
+                        {{ $t('pages.fixtures.heroTitle') }}
                     </h1>
                     <p class="mt-5 text-white/85 text-base sm:text-lg leading-relaxed">
-                        Pregled odigranih i narednih utakmica
-                        Bijeljinskog Radnika
+                        {{ $t('pages.fixtures.heroDesc') }}
                     </p>
                 </div>
             </div>
@@ -111,7 +110,8 @@ const upcomingCardsByMonth = computed(() =>
         <section class="mx-auto max-w-7xl px-4 py-12">
             <div class="flex items-end justify-between gap-4">
                 <h2 class="n-title">
-                    Posljednji rezultati <span class="n-title-arrow">→</span>
+                    {{ $t('pages.fixtures.lastResults') }} <span
+                        class="n-title-arrow">→</span>
                 </h2>
 
                 <button
@@ -121,7 +121,7 @@ const upcomingCardsByMonth = computed(() =>
                         :disabled="gamesStore.isLoadingFinishedByTeam?.[TEAM]"
                         @click="gamesStore.loadMoreFinished(TEAM)"
                 >
-                    Učitaj još →
+                    {{ $t('common.loadMore') }}
                 </button>
             </div>
 
@@ -138,7 +138,7 @@ const upcomingCardsByMonth = computed(() =>
                         v-else
                         class="rounded-2xl border border-slate-200 bg-slate-50 p-8 text-slate-500 text-center"
                 >
-                    Nema rezultata.
+                    {{ $t('pages.fixtures.noResults') }}
                 </div>
             </div>
 
@@ -151,7 +151,7 @@ const upcomingCardsByMonth = computed(() =>
                         :disabled="gamesStore.isLoadingFinishedByTeam?.[TEAM]"
                         @click="gamesStore.loadMoreFinished(TEAM)"
                 >
-                    Učitaj još →
+                    {{ $t('common.loadMore') }} ->
                 </button>
             </div>
         </section>
@@ -159,6 +159,10 @@ const upcomingCardsByMonth = computed(() =>
         <!-- UPCOMING -->
         <section class="bg-slate-50">
             <div class="mx-auto max-w-7xl px-4 py-12">
+                <h2 class="n-title">
+                    {{ $t('pages.fixtures.naredniMecevi') }} <span
+                        class="n-title-arrow">→</span>
+                </h2>
                 <section v-for="grp in upcomingCardsByMonth" :key="grp.key"
                          class="space-y-6">
                     <h3 class="text-2xl mt-5 font-extrabold tracking-tight text-[#1650be]">

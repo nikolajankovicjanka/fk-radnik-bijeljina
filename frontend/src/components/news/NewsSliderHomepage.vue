@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, nextTick, watch} from 'vue'
+import {ref, onMounted, nextTick, watch, computed} from 'vue'
 import {Swiper, SwiperSlide} from 'swiper/vue'
 import {Navigation} from 'swiper/modules'
 import {ChevronLeft, ChevronRight} from 'lucide-vue-next'
@@ -10,15 +10,18 @@ import NewsCardHomepage from './NewsCardHomepage.vue'
 import {getNews} from '@/services/newsService'
 import type {NewsItem} from '@/types/news'
 
-const props = withDefaults(defineProps<{
-    title?: string
-    category?: string | null
-    limit?: number
-}>(), {
-    title: 'LATEST NEWS',
-    category: null,
-    limit: 12,
-})
+const props = withDefaults(
+    defineProps<{
+        title?: string
+        category?: string | null
+        limit?: number
+    }>(),
+    {
+        title: undefined, // ⬅️ bitno: da možemo fallback na $t
+        category: null,
+        limit: 12,
+    }
+)
 
 const news = ref<NewsItem[]>([])
 const isLoading = ref(true)
@@ -76,22 +79,35 @@ watch(
         swiperInstance.value?.update()
     }
 )
+
+// samo da template bude čist
+const titleText = computed(() => props.title) // ako nije proslijeđen, koristićemo $t u template-u
 </script>
 
 <template>
     <section class="n-section">
         <div class="n-header">
             <h2 class="n-title mb-3">
-                {{ title }} <span class="n-title-arrow">→</span>
+                {{ titleText ?? $t('home.news.title') }} <span
+                    class="n-title-arrow">→</span>
             </h2>
 
             <div class="n-controls">
-                <button ref="prevEl" class="n-nav" type="button"
-                        aria-label="Previous">
+                <button
+                        ref="prevEl"
+                        class="n-nav"
+                        type="button"
+                        :aria-label="$t('common.prev')"
+                >
                     <ChevronLeft :size="20"/>
                 </button>
-                <button ref="nextEl" class="n-nav n-nav--primary" type="button"
-                        aria-label="Next">
+
+                <button
+                        ref="nextEl"
+                        class="n-nav n-nav--primary"
+                        type="button"
+                        :aria-label="$t('common.next')"
+                >
                     <ChevronRight :size="20"/>
                 </button>
             </div>
@@ -119,7 +135,7 @@ watch(
                     v-else-if="!isLoading"
                     class="rounded-2xl border border-slate-200 bg-white p-8 text-slate-500 text-center"
             >
-                Trenutno nema vijesti.
+                {{ $t('home.news.empty') }}
             </div>
         </div>
     </section>
