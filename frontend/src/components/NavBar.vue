@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import {ref, onMounted, onBeforeUnmount} from 'vue'
+import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
+import {i18n, setLocale} from '@/i18n'
+import type {SupportedLocale} from '@/translation'
 
 type LangOption = {
-    code: string
+    code: SupportedLocale
     label: string
     flag: string
 }
@@ -17,7 +19,12 @@ const languages: LangOption[] = [
 ]
 
 const isLangOpen = ref(false)
-const selectedLang = ref<LangOption>(languages[0])
+const isMobileMenuOpen = ref(false)
+
+const selectedLang = computed<LangOption>(() => {
+    const code = i18n.global.locale.value as SupportedLocale
+    return languages.find(l => l.code === code) ?? languages[0]
+})
 
 function toggleLang() {
     isLangOpen.value = !isLangOpen.value
@@ -30,14 +37,23 @@ function onClickOutside(e: MouseEvent) {
     }
 }
 
-onMounted(() => {
-    const saved = localStorage.getItem('fk_lang')
-    if (saved) {
-        const found = languages.find(l => l.code === saved)
-        if (found) selectedLang.value = found
-    }
+function toggleMobileMenu() {
+    isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
 
-    // bitno: pointerdown hvata ranije od click
+function closeMobileMenu() {
+    isMobileMenuOpen.value = false
+    isLangOpen.value = false
+}
+
+function selectLang(lang: LangOption) {
+    setLocale(lang.code)          // ✅ mijenja locale + localStorage
+    isLangOpen.value = false
+    // opcionalno: zatvori mobile menu kad izabere jezik
+    // isMobileMenuOpen.value = false
+}
+
+onMounted(() => {
     window.addEventListener('pointerdown', onClickOutside)
 })
 
@@ -46,25 +62,14 @@ onBeforeUnmount(() => {
 })
 
 const navItems = [
-    {label: 'Home', to: '/'},
-    {label: 'First team', to: '/first-team'},
-    {label: 'Club', to: '/club'},
-    {label: 'News', to: '/news'},
-    {label: 'Matches', to: '/fixtures'},
-    {label: 'Youth', to: '/youth-team'},
-    {label: 'Women', to: '/women-team'},
-]
-
-const isMobileMenuOpen = ref(false)
-
-const toggleMobileMenu = () => {
-    isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
-
-const closeMobileMenu = () => {
-    isMobileMenuOpen.value = false
-    isLangOpen.value = false
-}
+    {key: 'home', to: '/'},
+    {key: 'firstTeam', to: '/first-team'},
+    {key: 'club', to: '/club'},
+    {key: 'news', to: '/news'},
+    {key: 'matches', to: '/fixtures'},
+    {key: 'youth', to: '/youth-team'},
+    {key: 'women', to: '/women-team'},
+] as const
 </script>
 
 <template>
@@ -80,7 +85,7 @@ const closeMobileMenu = () => {
 
             <!-- CENTER: Desktop Navigation -->
             <ul class="hidden lg:flex items-center gap-8 text-sm font-semibold uppercase">
-                <li v-for="item in navItems" :key="item.label">
+                <li v-for="item in navItems" :key="item.to">
                     <!-- HOME: mora biti exact -->
                     <RouterLink
                             v-if="item.to === '/'"
@@ -89,13 +94,13 @@ const closeMobileMenu = () => {
                             active-class="nav-link--active"
                             exact-active-class="nav-link--active"
                     >
-                        {{ item.label }}
+                        {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
 
                     <!-- OSTALI LINKOVI -->
                     <RouterLink v-else :to="item.to" class="nav-link"
                                 active-class="nav-link--active">
-                        {{ item.label }}
+                        {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
                 </li>
             </ul>
@@ -215,7 +220,7 @@ const closeMobileMenu = () => {
                 ]"
                                     active-class="bg-white/10 text-blue-400"
                             >
-                                {{ item.label }}
+                                {{ $t(`nav.${item.key}`) }}
                             </RouterLink>
                         </li>
                     </ul>
