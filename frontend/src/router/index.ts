@@ -46,9 +46,46 @@ const routes = [
             },
             {
                 path: 'club',
-                name: 'Club',
-                component: () => import('@/pages/Club.vue'),
+                component: () => import('@/pages/club/ClubLayout.vue'),
+                children: [
+                    {
+                        path: '',
+                        name: 'Club',
+                        component: () => import('@/pages/club/ClubIndex.vue'),
+                    },
+                    {
+                        path: 'general-information',
+                        name: 'ClubGeneralInformation',
+                        component: () => import('@/pages/club/GeneralInformation.vue'),
+                    },
+                    {
+                        path: 'club-board',
+                        name: 'ClubBoard',
+                        component: () => import('@/pages/club/ClubBoard.vue'),
+                    },
+                    {
+                        path: 'club-history',
+                        name: 'ClubHistory',
+                        component: () => import('@/pages/club/ClubHistory.vue'),
+                    },
+                    {
+                        path: 'club-supporters',
+                        name: 'ClubSupporters',
+                        component: () => import('@/pages/club/ClubSupporters.vue'),
+                    },
+                    {
+                        path: 'club-stadium',
+                        name: 'ClubStadium',
+                        component: () => import('@/pages/club/ClubStadium.vue'),
+                    },
+                    {
+                        path: 'club-legends',
+                        name: 'ClubLegends',
+                        component: () => import('@/pages/club/ClubLegends.vue'),
+                    },
+                ],
             },
+
             {
                 path: 'news',
                 name: 'News',
