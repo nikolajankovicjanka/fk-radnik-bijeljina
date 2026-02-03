@@ -52,36 +52,64 @@ const routes = [
                         path: '',
                         name: 'Club',
                         component: () => import('@/pages/club/ClubIndex.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.heroTitle',
+                            heroDescKey: 'pages.clubPage.heroDesc',
+                        },
                     },
                     {
                         path: 'general-information',
                         name: 'ClubGeneralInformation',
                         component: () => import('@/pages/club/GeneralInformation.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.general.title',
+                            heroDescKey: 'pages.clubPage.cards.general.desc',
+                        },
                     },
                     {
                         path: 'club-board',
                         name: 'ClubBoard',
                         component: () => import('@/pages/club/ClubBoard.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.board.title',
+                            heroDescKey: 'pages.clubPage.cards.board.desc',
+                        },
                     },
                     {
                         path: 'club-history',
                         name: 'ClubHistory',
                         component: () => import('@/pages/club/ClubHistory.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.history.title',
+                            heroDescKey: 'pages.clubPage.cards.history.desc',
+                        },
                     },
                     {
                         path: 'club-supporters',
                         name: 'ClubSupporters',
                         component: () => import('@/pages/club/ClubSupporters.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.supporters.title',
+                            heroDescKey: 'pages.clubPage.cards.supporters.desc',
+                        },
                     },
                     {
                         path: 'club-stadium',
                         name: 'ClubStadium',
                         component: () => import('@/pages/club/ClubStadium.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.stadium.title',
+                            heroDescKey: 'pages.clubPage.cards.stadium.desc',
+                        },
                     },
                     {
                         path: 'club-legends',
                         name: 'ClubLegends',
                         component: () => import('@/pages/club/ClubLegends.vue'),
+                        meta: {
+                            heroTitleKey: 'pages.clubPage.cards.legends.title',
+                            heroDescKey: 'pages.clubPage.cards.legends.desc',
+                        },
                     },
                 ],
             },

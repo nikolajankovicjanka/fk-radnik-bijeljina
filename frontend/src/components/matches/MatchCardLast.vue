@@ -42,7 +42,7 @@
                             class="mx-auto inline-flex items-center justify-center rounded-xl border-2 border-gray-200 bg-gray-50/50 px-5 py-4 w-full max-w-[120px] hover:border-[#0A2D6B]/20 transition-colors"
                     >
             <span class="text-3xl font-black text-[#0A2D6B] leading-none">
-              {{ match.score }}
+              {{ displayScore }}
             </span>
                     </div>
 
@@ -142,6 +142,11 @@ const toDateLocale = (loc: string) => {
     if (loc === 'sr-Cyrl') return 'sr-Cyrl-RS'
     return loc
 }
+const displayScore = computed(() => {
+    const raw = props.match.score ?? ''
+    return raw.replace(/\s*:\s*/g, ':').trim()
+})
+
 
 const formattedDate = computed(() => {
     if (!props.match.kickoff_at) return props.match.date

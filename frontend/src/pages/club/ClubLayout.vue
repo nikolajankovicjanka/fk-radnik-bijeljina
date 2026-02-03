@@ -1,5 +1,103 @@
+<script setup lang="ts">
+import {computed} from "vue"
+import {useRoute} from "vue-router"
+import {useI18n} from "vue-i18n"
+
+const route = useRoute()
+const {t} = useI18n()
+
+const heroTitle = computed(() => {
+    const key = route.meta.heroTitleKey as string | undefined
+    return key ? t(key) : t("pages.clubPage.heroTitle")
+})
+
+const heroDesc = computed(() => {
+    const key = route.meta.heroDescKey as string | undefined
+    return key ? t(key) : t("pages.clubPage.heroDesc")
+})
+</script>
+
 <template>
-    <main class="bg-white px-2">
+    <main class="bg-white">
+        <!-- shared hero for all /club routes -->
+        <header class="club-hero">
+            <div class="club-hero__bg"></div>
+
+            <div class="club-hero__inner mx-auto max-w-7xl px-4">
+                <h1>{{ heroTitle }}</h1>
+                <p>{{ heroDesc }}</p>
+            </div>
+        </header>
+
+        <!-- child pages -->
         <router-view/>
     </main>
 </template>
+
+<style scoped>
+.club-hero {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(64px, 8vw, 120px) 0 clamp(96px, 10vw, 140px);
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+
+}
+
+.club-hero__inner {
+    position: relative;
+    z-index: 3;
+    max-width: 980px;
+}
+
+.club-hero__inner h1 {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-size: clamp(40px, 5vw, 64px);
+    margin: 0 0 10px;
+}
+
+.club-hero__inner p {
+    margin: 0;
+    max-width: 620px;
+    color: rgba(255, 255, 255, .88);
+    font-size: clamp(14px, 1.4vw, 16px);
+}
+
+.club-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: radial-gradient(1200px 700px at 20% 35%, rgba(70, 140, 255, .28), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(900px 600px at 85% 40%, rgba(0, 180, 255, .14), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, #0b2a55 0%, #081f40 55%, #061a35 100%);
+    transform: translateZ(0);
+}
+
+.club-hero::before {
+    content: "";
+    position: absolute;
+    inset: -120px -200px;
+    z-index: 2;
+    background: repeating-linear-gradient(-20deg,
+    rgba(255, 255, 255, .08) 0px,
+    rgba(255, 255, 255, .08) 1px,
+    rgba(255, 255, 255, 0) 1px,
+    rgba(255, 255, 255, 0) 46px
+    );
+    opacity: .55;
+    pointer-events: none;
+}
+
+.club-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(closest-side at 50% 40%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .32) 85%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: .22;
+}
+</style>

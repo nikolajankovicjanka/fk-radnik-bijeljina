@@ -20,6 +20,7 @@ const languages: LangOption[] = [
 
 const isLangOpen = ref(false)
 const isMobileMenuOpen = ref(false)
+const isScrolled = ref(false)
 
 const selectedLang = computed<LangOption>(() => {
     const code = i18n.global.locale.value as SupportedLocale
@@ -32,9 +33,7 @@ function toggleLang() {
 
 function onClickOutside(e: MouseEvent) {
     const target = e.target as HTMLElement
-    if (!target.closest('.lang-dropdown')) {
-        isLangOpen.value = false
-    }
+    if (!target.closest('.lang-dropdown')) isLangOpen.value = false
 }
 
 function toggleMobileMenu() {
@@ -47,18 +46,23 @@ function closeMobileMenu() {
 }
 
 function selectLang(lang: LangOption) {
-    setLocale(lang.code)          // ✅ mijenja locale + localStorage
+    setLocale(lang.code)
     isLangOpen.value = false
-    // opcionalno: zatvori mobile menu kad izabere jezik
-    // isMobileMenuOpen.value = false
+}
+
+function onScroll() {
+    isScrolled.value = window.scrollY > 8
 }
 
 onMounted(() => {
     window.addEventListener('pointerdown', onClickOutside)
+    window.addEventListener('scroll', onScroll, {passive: true})
+    onScroll()
 })
 
 onBeforeUnmount(() => {
     window.removeEventListener('pointerdown', onClickOutside)
+    window.removeEventListener('scroll', onScroll)
 })
 
 const navItems = [
@@ -73,20 +77,19 @@ const navItems = [
 </script>
 
 <template>
-    <header class="w-full bg-gradient-to-r from-[#061A2F] via-[#275a8e] to-[#061A2F]">
-        <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
+    <header :class="['nav-radnik', isScrolled && 'nav-radnik--scrolled']">
+        <nav class="nav-inner max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
             <div class="flex items-center gap-3">
                 <img src="/logo/FK_Radnik_logo.png" alt="FK Radnik Bijeljina"
                      class="h-12 w-auto"/>
-                <span class="text-white font-semibold tracking-wide uppercase text-sm">
+                <span class="text-white/90 font-semibold tracking-wide uppercase text-sm">
           FK Radnik SoccerBet
         </span>
             </div>
 
             <!-- CENTER: Desktop Navigation -->
-            <ul class="hidden lg:flex items-center gap-8 text-sm font-semibold uppercase">
+            <ul class="hidden lg:flex items-center gap-8 text-[13px] font-semibold uppercase">
                 <li v-for="item in navItems" :key="item.to">
-                    <!-- HOME: mora biti exact -->
                     <RouterLink
                             v-if="item.to === '/'"
                             to="/"
@@ -97,19 +100,23 @@ const navItems = [
                         {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
 
-                    <!-- OSTALI LINKOVI -->
-                    <RouterLink v-else :to="item.to" class="nav-link"
-                                active-class="nav-link--active">
+                    <RouterLink
+                            v-else
+                            :to="item.to"
+                            class="nav-link"
+                            active-class="nav-link--active"
+                    >
                         {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
                 </li>
             </ul>
 
+            <!-- Desktop language -->
             <div class="hidden lg:block relative lang-dropdown">
                 <button
                         type="button"
                         @click="toggleLang"
-                        class="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-2 rounded-md border border-white/15"
+                        class="lang-btn"
                         aria-haspopup="listbox"
                         :aria-expanded="isLangOpen"
                 >
@@ -125,7 +132,7 @@ const navItems = [
 
                 <div
                         v-show="isLangOpen"
-                        class="absolute right-0 mt-2 w-56 rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
+                        class="lang-menu absolute right-0 mt-2 w-56 z-50"
                         role="listbox"
                 >
                     <button
@@ -142,11 +149,8 @@ const navItems = [
                 </div>
             </div>
 
-            <!-- MOBILE: Burger Button & Actions -->
+            <!-- MOBILE: Burger -->
             <div class="flex lg:hidden items-center gap-4">
-
-
-                <!-- Burger Menu Button -->
                 <button
                         @click="toggleMobileMenu"
                         class="text-white p-2 focus:outline-none"
@@ -159,7 +163,6 @@ const navItems = [
                             stroke="currentColor"
                             viewBox="0 0 24 24"
                     >
-                        <!-- Burger Icon Lines -->
                         <path
                                 v-if="!isMobileMenuOpen"
                                 stroke-linecap="round"
@@ -167,7 +170,6 @@ const navItems = [
                                 stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16"
                         />
-                        <!-- Close Icon (X) -->
                         <path
                                 v-else
                                 stroke-linecap="round"
@@ -179,23 +181,21 @@ const navItems = [
                 </button>
             </div>
 
-            <!-- MOBILE MENU OVERLAY -->
+            <!-- MOBILE overlay -->
             <div
                     v-if="isMobileMenuOpen"
                     @click="closeMobileMenu"
-                    class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    class="fixed inset-0 bg-black/50 z-[9998] lg:hidden"
             ></div>
 
-            <!-- MOBILE MENU CONTENT -->
+            <!-- MOBILE drawer -->
             <div :class="[
-          'fixed top-0 right-0 h-screen w-64 sm:w-72',
-          'bg-gradient-to-b from-[#061A2F] to-[#0B2D4F]',
-          'transform transition-transform duration-300 ease-in-out z-50',
-          'lg:hidden shadow-2xl',
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
-        ]"
-            >
-                <!-- Mobile Menu Header -->
+  'fixed top-0 right-0 h-screen w-64 sm:w-72',
+  'bg-gradient-to-b from-[#061A2F] to-[#0B2D4F]',
+  'transform transition-transform duration-300 ease-in-out',
+  'lg:hidden shadow-2xl z-[9999] isolate',
+  isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
+]">
                 <div class="flex items-center justify-between p-6 border-b border-white/10">
                     <div class="flex items-center gap-3">
                         <img src="/logo/FK_Radnik_logo.png"
@@ -209,7 +209,7 @@ const navItems = [
 
                 <div class="p-4">
                     <ul class="space-y-1">
-                        <li v-for="item in navItems" :key="item.label">
+                        <li v-for="item in navItems" :key="item.to">
                             <RouterLink
                                     :to="item.to"
                                     @click="closeMobileMenu"
@@ -229,7 +229,7 @@ const navItems = [
                         <button
                                 type="button"
                                 @pointerdown.stop="toggleLang"
-                                class="w-full flex items-center justify-between gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-3 rounded-md border border-white/15"
+                                class="lang-btn w-full justify-between"
                                 aria-haspopup="listbox"
                                 :aria-expanded="isLangOpen"
                         >
@@ -242,7 +242,7 @@ const navItems = [
 
                         <div
                                 v-show="isLangOpen"
-                                class="mt-2 w-full rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
+                                class="lang-menu mt-2 w-full z-50"
                                 role="listbox"
                         >
                             <button
@@ -270,53 +270,4 @@ const navItems = [
 </template>
 
 <style scoped>
-
-.router-link-active {
-    position: relative;
-}
-
-.nav-link {
-    position: relative;
-    display: inline-block;
-    padding: 6px 0;
-    color: rgba(255, 255, 255, 0.8);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    transition: color 200ms ease;
-}
-
-.nav-link:hover {
-    color: #ffffff;
-}
-
-/* bijela linija */
-.nav-link::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -6px; /* podešavaš visinu ispod teksta */
-    width: 100%;
-    height: 2px;
-    background: #ffffff;
-    border-radius: 2px;
-
-    transform: translateX(-50%) scaleX(0);
-    transform-origin: center;
-    transition: transform 220ms ease;
-}
-
-/* hover: širi se iz centra */
-.nav-link:hover::after {
-    transform: translateX(-50%) scaleX(1);
-}
-
-/* active link: linija stalno vidljiva */
-.nav-link--active {
-    color: #ffffff;
-}
-
-.nav-link--active::after {
-    transform: translateX(-50%) scaleX(1);
-}
 </style>
