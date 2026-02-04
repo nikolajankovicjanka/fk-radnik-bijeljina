@@ -90,12 +90,10 @@ const upcomingCardsByMonth = computed(() =>
 <template>
     <main class="bg-white">
         <section class="relative overflow-hidden bg-[#071f36]">
-            <div class="absolute inset-0">
-                <div class="h-full w-full bg-gradient-to-b from-[#0A2D6B] via-[#071f36] to-[#071f36]"/>
-            </div>
+            <header class="club-hero">
+                <div class="club-hero__bg"></div>
 
-            <div class="relative mx-auto max-w-7xl px-4 py-16 sm:py-20">
-                <div class="max-w-3xl">
+                <div class="club-hero__inner mx-auto max-w-7xl px-4">
                     <h1 class="text-white text-4xl sm:text-6xl font-extrabold tracking-tight">
                         {{ $t('pages.fixtures.heroTitle') }}
                     </h1>
@@ -103,9 +101,9 @@ const upcomingCardsByMonth = computed(() =>
                         {{ $t('pages.fixtures.heroDesc') }}
                     </p>
                 </div>
-            </div>
+            </header>
         </section>
-
+        
         <!-- LAST RESULTS -->
         <section class="mx-auto max-w-7xl px-4 py-12">
             <div class="flex items-end justify-between gap-4">
