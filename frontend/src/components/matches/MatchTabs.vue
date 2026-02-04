@@ -121,21 +121,27 @@ const nextMatch = computed<NextMatch | null>(() => {
             </div>
 
             <!-- Cards -->
-            <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-7">
-                <MatchCardLast v-if="lastMatch" :match="lastMatch"/>
-                <div
-                        v-else
-                        class="rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
-                >
-                    {{ $t('home.matchesTabs.emptyLast') }}
+            <div class="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-7 items-stretch">
+                <div class="h-full">
+                    <MatchCardLast v-if="lastMatch" :match="lastMatch"
+                                   class="h-full"/>
+                    <div
+                            v-else
+                            class="h-full rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
+                    >
+                        {{ $t('home.matchesTabs.emptyLast') }}
+                    </div>
                 </div>
 
-                <MatchCardNext v-if="nextMatch" :match="nextMatch"/>
-                <div
-                        v-else
-                        class="rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
-                >
-                    {{ $t('home.matchesTabs.emptyNext') }}
+                <div class="h-full">
+                    <MatchCardNext v-if="nextMatch" :match="nextMatch"
+                                   class="h-full"/>
+                    <div
+                            v-else
+                            class="h-full rounded-2xl bg-white/5 border border-white/10 p-6 text-white/70"
+                    >
+                        {{ $t('home.matchesTabs.emptyNext') }}
+                    </div>
                 </div>
             </div>
 

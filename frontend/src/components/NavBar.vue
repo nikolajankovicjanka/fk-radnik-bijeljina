@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
-import {i18n, setLocale} from '@/i18n'
-import type {SupportedLocale} from '@/translation'
+import {ref, onMounted, onBeforeUnmount, computed} from "vue"
+import {i18n, setLocale} from "@/i18n"
+import type {SupportedLocale} from "@/translation"
 
 type LangOption = {
     code: SupportedLocale
@@ -10,20 +10,21 @@ type LangOption = {
 }
 
 const languages: LangOption[] = [
-    {code: 'sr-Latn', label: 'Srpski (latinica)', flag: '🇷🇸'},
-    {code: 'sr-Cyrl', label: 'Srpski (ćirilica)', flag: '🇷🇸'},
-    {code: 'en', label: 'English', flag: '🇬🇧'},
-    {code: 'fr', label: 'Français', flag: '🇫🇷'},
-    {code: 'es', label: 'Español', flag: '🇪🇸'},
-    {code: 'de', label: 'Deutsch', flag: '🇩🇪'},
+    {code: "sr-Latn", label: "Srpski (latinica)", flag: "🇷🇸"},
+    {code: "sr-Cyrl", label: "Srpski (ćirilica)", flag: "🇷🇸"},
+    {code: "en", label: "English", flag: "🇬🇧"},
+    {code: "fr", label: "Français", flag: "🇫🇷"},
+    {code: "es", label: "Español", flag: "🇪🇸"},
+    {code: "de", label: "Deutsch", flag: "🇩🇪"},
 ]
 
 const isLangOpen = ref(false)
 const isMobileMenuOpen = ref(false)
+const isScrolled = ref(false)
 
 const selectedLang = computed<LangOption>(() => {
     const code = i18n.global.locale.value as SupportedLocale
-    return languages.find(l => l.code === code) ?? languages[0]
+    return languages.find((l) => l.code === code) ?? languages[0]
 })
 
 function toggleLang() {
@@ -32,9 +33,7 @@ function toggleLang() {
 
 function onClickOutside(e: MouseEvent) {
     const target = e.target as HTMLElement
-    if (!target.closest('.lang-dropdown')) {
-        isLangOpen.value = false
-    }
+    if (!target.closest(".lang-dropdown")) isLangOpen.value = false
 }
 
 function toggleMobileMenu() {
@@ -47,46 +46,53 @@ function closeMobileMenu() {
 }
 
 function selectLang(lang: LangOption) {
-    setLocale(lang.code)          // ✅ mijenja locale + localStorage
+    setLocale(lang.code)
     isLangOpen.value = false
-    // opcionalno: zatvori mobile menu kad izabere jezik
-    // isMobileMenuOpen.value = false
+}
+
+function onScroll() {
+    isScrolled.value = window.scrollY > 8
 }
 
 onMounted(() => {
-    window.addEventListener('pointerdown', onClickOutside)
+    window.addEventListener("pointerdown", onClickOutside)
+    window.addEventListener("scroll", onScroll, {passive: true})
+    onScroll()
 })
 
 onBeforeUnmount(() => {
-    window.removeEventListener('pointerdown', onClickOutside)
+    window.removeEventListener("pointerdown", onClickOutside)
+    window.removeEventListener("scroll", onScroll)
 })
 
 const navItems = [
-    {key: 'home', to: '/'},
-    {key: 'firstTeam', to: '/first-team'},
-    {key: 'club', to: '/club'},
-    {key: 'news', to: '/news'},
-    {key: 'matches', to: '/fixtures'},
-    {key: 'youth', to: '/youth-team'},
-    {key: 'women', to: '/women-team'},
+    {key: "home", to: "/"},
+    {key: "firstTeam", to: "/first-team"},
+    {key: "club", to: "/club"},
+    {key: "news", to: "/news"},
+    {key: "matches", to: "/fixtures"},
+    {key: "youth", to: "/youth-team"},
+    {key: "women", to: "/women-team"},
 ] as const
 </script>
 
 <template>
-    <header class="w-full bg-gradient-to-r from-[#061A2F] via-[#275a8e] to-[#061A2F]">
-        <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
+    <header :class="['nav-radnik', isScrolled && 'nav-radnik--scrolled']">
+        <div class="nav-bg" aria-hidden="true"></div>
+
+        <nav class="nav-inner max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
+            <!-- LEFT: Brand -->
             <div class="flex items-center gap-3">
                 <img src="/logo/FK_Radnik_logo.png" alt="FK Radnik Bijeljina"
                      class="h-12 w-auto"/>
-                <span class="text-white font-semibold tracking-wide uppercase text-sm">
+                <span class="text-white/90 font-semibold tracking-wide uppercase text-sm">
           FK Radnik SoccerBet
         </span>
             </div>
 
             <!-- CENTER: Desktop Navigation -->
-            <ul class="hidden lg:flex items-center gap-8 text-sm font-semibold uppercase">
+            <ul class="hidden lg:flex items-center gap-8 text-[13px] font-semibold uppercase">
                 <li v-for="item in navItems" :key="item.to">
-                    <!-- HOME: mora biti exact -->
                     <RouterLink
                             v-if="item.to === '/'"
                             to="/"
@@ -97,19 +103,23 @@ const navItems = [
                         {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
 
-                    <!-- OSTALI LINKOVI -->
-                    <RouterLink v-else :to="item.to" class="nav-link"
-                                active-class="nav-link--active">
+                    <RouterLink
+                            v-else
+                            :to="item.to"
+                            class="nav-link"
+                            active-class="nav-link--active"
+                    >
                         {{ $t(`nav.${item.key}`) }}
                     </RouterLink>
                 </li>
             </ul>
 
+            <!-- Desktop language -->
             <div class="hidden lg:block relative lang-dropdown">
                 <button
                         type="button"
                         @click="toggleLang"
-                        class="flex items-center gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-2 rounded-md border border-white/15"
+                        class="lang-btn"
                         aria-haspopup="listbox"
                         :aria-expanded="isLangOpen"
                 >
@@ -123,18 +133,14 @@ const navItems = [
                     <span class="opacity-80">▾</span>
                 </button>
 
-                <div
-                        v-show="isLangOpen"
-                        class="absolute right-0 mt-2 w-56 rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
-                        role="listbox"
-                >
+                <div v-show="isLangOpen" class="lang-menu" role="listbox">
                     <button
                             v-for="lang in languages"
                             :key="lang.code"
                             type="button"
                             @click="selectLang(lang)"
-                            class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/85 hover:bg-white/10 transition text-left"
-                            :class="selectedLang.code === lang.code ? 'bg-white/10 text-white' : ''"
+                            class="lang-item"
+                            :class="selectedLang.code === lang.code ? 'is-active' : ''"
                     >
                         <span class="text-base">{{ lang.flag }}</span>
                         <span>{{ lang.label }}</span>
@@ -142,11 +148,8 @@ const navItems = [
                 </div>
             </div>
 
-            <!-- MOBILE: Burger Button & Actions -->
+            <!-- MOBILE: Burger -->
             <div class="flex lg:hidden items-center gap-4">
-
-
-                <!-- Burger Menu Button -->
                 <button
                         @click="toggleMobileMenu"
                         class="text-white p-2 focus:outline-none"
@@ -159,7 +162,6 @@ const navItems = [
                             stroke="currentColor"
                             viewBox="0 0 24 24"
                     >
-                        <!-- Burger Icon Lines -->
                         <path
                                 v-if="!isMobileMenuOpen"
                                 stroke-linecap="round"
@@ -167,7 +169,6 @@ const navItems = [
                                 stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16"
                         />
-                        <!-- Close Icon (X) -->
                         <path
                                 v-else
                                 stroke-linecap="round"
@@ -178,145 +179,93 @@ const navItems = [
                     </svg>
                 </button>
             </div>
+        </nav>
 
-            <!-- MOBILE MENU OVERLAY -->
-            <div
-                    v-if="isMobileMenuOpen"
-                    @click="closeMobileMenu"
-                    class="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            ></div>
+        <!-- MOBILE overlay -->
+        <div
+                v-if="isMobileMenuOpen"
+                @click="closeMobileMenu"
+                class="fixed inset-0 bg-black/50 z-[9998] lg:hidden"
+        ></div>
 
-            <!-- MOBILE MENU CONTENT -->
-            <div :class="[
-          'fixed top-0 right-0 h-screen w-64 sm:w-72',
-          'bg-gradient-to-b from-[#061A2F] to-[#0B2D4F]',
-          'transform transition-transform duration-300 ease-in-out z-50',
-          'lg:hidden shadow-2xl',
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
-        ]"
-            >
-                <!-- Mobile Menu Header -->
-                <div class="flex items-center justify-between p-6 border-b border-white/10">
-                    <div class="flex items-center gap-3">
-                        <img src="/logo/FK_Radnik_logo.png"
-                             alt="FK Radnik Bijeljina" class="h-10 w-auto"/>
-                        <span class="text-white font-semibold text-sm"> FK Radnik </span>
-                    </div>
-                    <button @click="closeMobileMenu"
-                            class="text-white/80 hover:text-white p-1">✕
+        <!-- MOBILE drawer -->
+        <div
+                :class="[
+        'fixed top-0 right-0 h-screen w-64 sm:w-72',
+        'transform transition-transform duration-300 ease-in-out',
+        'lg:hidden shadow-2xl z-[9999] isolate',
+        isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
+      ]"
+                class="mobile-drawer"
+        >
+            <div class="flex items-center justify-between p-6 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <img src="/logo/FK_Radnik_logo.png"
+                         alt="FK Radnik Bijeljina" class="h-10 w-auto"/>
+                    <span class="text-white font-semibold text-sm"> FK Radnik </span>
+                </div>
+                <button @click="closeMobileMenu"
+                        class="text-white/80 hover:text-white p-1">✕
+                </button>
+            </div>
+
+            <div class="p-4">
+                <ul class="space-y-1">
+                    <li v-for="item in navItems" :key="item.to">
+                        <RouterLink
+                                :to="item.to"
+                                @click="closeMobileMenu"
+                                :class="[
+                'block py-3 px-4 rounded-lg text-white/80',
+                'hover:bg-white/10 hover:text-white transition',
+                'text-sm font-medium uppercase tracking-wide',
+              ]"
+                                active-class="bg-white/10 text-blue-400"
+                        >
+                            {{ $t(`nav.${item.key}`) }}
+                        </RouterLink>
+                    </li>
+                </ul>
+
+                <div class="mt-6 relative lang-dropdown">
+                    <button
+                            type="button"
+                            @pointerdown.stop="toggleLang"
+                            class="lang-btn w-full justify-between"
+                            aria-haspopup="listbox"
+                            :aria-expanded="isLangOpen"
+                    >
+            <span class="flex items-center gap-2">
+              <span class="text-base">{{ selectedLang.flag }}</span>
+              <span class="text-white/90">{{ selectedLang.label }}</span>
+            </span>
+                        <span class="opacity-80 text-white">▾</span>
                     </button>
+
+                    <div v-show="isLangOpen" class="lang-menu mt-2 w-full"
+                         role="listbox">
+                        <button
+                                v-for="lang in languages"
+                                :key="lang.code"
+                                type="button"
+                                @pointerdown.stop="selectLang(lang)"
+                                class="lang-item"
+                                :class="selectedLang.code === lang.code ? 'is-active' : ''"
+                        >
+                            <span class="text-base">{{ lang.flag }}</span>
+                            <span>{{ lang.label }}</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="p-4">
-                    <ul class="space-y-1">
-                        <li v-for="item in navItems" :key="item.label">
-                            <RouterLink
-                                    :to="item.to"
-                                    @click="closeMobileMenu"
-                                    :class="[
-                  'block py-3 px-4 rounded-lg text-white/80',
-                  'hover:bg-white/10 hover:text-white transition',
-                  'text-sm font-medium uppercase tracking-wide',
-                ]"
-                                    active-class="bg-white/10 text-blue-400"
-                            >
-                                {{ $t(`nav.${item.key}`) }}
-                            </RouterLink>
-                        </li>
-                    </ul>
-
-                    <div class="mt-6 relative lang-dropdown">
-                        <button
-                                type="button"
-                                @pointerdown.stop="toggleLang"
-                                class="w-full flex items-center justify-between gap-2 bg-white/10 hover:bg-white/15 transition text-white text-sm font-semibold px-4 py-3 rounded-md border border-white/15"
-                                aria-haspopup="listbox"
-                                :aria-expanded="isLangOpen"
-                        >
-              <span class="flex items-center gap-2">
-                <span class="text-base">{{ selectedLang.flag }}</span>
-                <span>{{ selectedLang.label }}</span>
-              </span>
-                            <span class="opacity-80">▾</span>
-                        </button>
-
-                        <div
-                                v-show="isLangOpen"
-                                class="mt-2 w-full rounded-xl bg-[#061A2F] border border-white/10 shadow-2xl overflow-hidden z-50"
-                                role="listbox"
-                        >
-                            <button
-                                    v-for="lang in languages"
-                                    :key="lang.code"
-                                    type="button"
-                                    @pointerdown.stop="selectLang(lang)"
-                                    class="w-full flex items-center gap-3 px-4 py-3 text-sm text-white/85 hover:bg-white/10 transition text-left"
-                                    :class="selectedLang.code === lang.code ? 'bg-white/10 text-white' : ''"
-                            >
-                                <span class="text-base">{{ lang.flag }}</span>
-                                <span>{{ lang.label }}</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mt-12 px-4 text-white/60 text-xs text-center">
-                        <p>FK Radnik Bijeljina</p>
-                        <p class="mt-1">© 2024 Sva prava zadržana</p>
-                    </div>
+                <div class="mt-12 px-4 text-white/60 text-xs text-center">
+                    <p>FK Radnik Bijeljina</p>
+                    <p class="mt-1">© 2024 Sva prava zadržana</p>
                 </div>
             </div>
-        </nav>
+        </div>
     </header>
 </template>
 
 <style scoped>
-
-.router-link-active {
-    position: relative;
-}
-
-.nav-link {
-    position: relative;
-    display: inline-block;
-    padding: 6px 0;
-    color: rgba(255, 255, 255, 0.8);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    transition: color 200ms ease;
-}
-
-.nav-link:hover {
-    color: #ffffff;
-}
-
-/* bijela linija */
-.nav-link::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: -6px; /* podešavaš visinu ispod teksta */
-    width: 100%;
-    height: 2px;
-    background: #ffffff;
-    border-radius: 2px;
-
-    transform: translateX(-50%) scaleX(0);
-    transform-origin: center;
-    transition: transform 220ms ease;
-}
-
-/* hover: širi se iz centra */
-.nav-link:hover::after {
-    transform: translateX(-50%) scaleX(1);
-}
-
-/* active link: linija stalno vidljiva */
-.nav-link--active {
-    color: #ffffff;
-}
-
-.nav-link--active::after {
-    transform: translateX(-50%) scaleX(1);
-}
 </style>

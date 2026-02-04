@@ -28,29 +28,11 @@ onMounted(async () => {
 
 <template>
     <main class="bg-white">
-        <section class="relative overflow-hidden bg-[#071f36]">
-            <div class="absolute inset-0">
-                <div class="h-full w-full bg-gradient-to-b from-[#0A2D6B] via-[#071f36] to-[#071f36]"/>
-            </div>
-
-            <div class="relative mx-auto max-w-7xl px-4 py-16 sm:py-20">
-                <div class="max-w-3xl">
-                    <h1 class="text-white text-4xl sm:text-6xl font-extrabold tracking-tight">
-                        {{ $t("pages.clubPage.heroTitle") }}
-                    </h1>
-                    <p class="mt-5 text-white/85 text-base sm:text-lg leading-relaxed">
-                        {{ $t("pages.clubPage.heroDesc") }}
-                    </p>
-                </div>
-            </div>
-        </section>
-
         <!-- SECTION 1: 3 cards -->
         <section
                 :ref="setSectionEl"
-                class="mx-auto max-w-7xl px-4 py-12 reveal-section"
-                aria-label="Club overview links"
-        >
+                class="relative z-10 mx-auto max-w-7xl px-4 -mt-16 sm:-mt-20 reveal-section"
+                aria-label="Club overview links">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <RouterLink :to="{ name: 'ClubGeneralInformation' }"
                             class="club-card">

@@ -1,0 +1,188 @@
+.nav-radnik {
+    position: sticky;
+    top: 0;
+    z-index: 80;
+    overflow: visible;
+    background: transparent;
+}
+
+.nav-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    overflow: hidden;
+
+    background: radial-gradient(1200px 700px at 20% 35%, rgba(70, 140, 255, 0.28), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(900px 600px at 85% 40%, rgba(0, 180, 255, 0.14), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, #0b2a55 0%, #081f40 55%, #061a35 100%);
+    transform: translateZ(0);
+}
+
+.nav-bg::before {
+    content: "";
+    position: absolute;
+    inset: -120px -200px;
+    background: repeating-linear-gradient(
+            -20deg,
+            rgba(255, 255, 255, 0.08) 0px,
+            rgba(255, 255, 255, 0.08) 1px,
+            rgba(255, 255, 255, 0) 1px,
+            rgba(255, 255, 255, 0) 46px
+    );
+    opacity: 0.40;
+}
+
+.nav-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(closest-side at 50% 40%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.28) 85%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+    opacity: 0.16;
+}
+
+
+.nav-radnik--scrolled .nav-bg {
+    backdrop-filter: blur(10px);
+}
+
+.nav-inner {
+    position: relative;
+    z-index: 2;
+}
+
+.nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 8px 0;
+
+    color: rgba(255, 255, 255, 0.86);
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+
+    transition: color 200ms ease, transform 200ms ease;
+}
+
+.nav-link:hover {
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    width: 100%;
+    height: 2px;
+    border-radius: 999px;
+
+    background: linear-gradient(
+            90deg,
+            rgba(70, 140, 255, 0),
+            rgba(70, 140, 255, 0.8),
+            rgba(255, 255, 255, 0.95),
+            rgba(70, 140, 255, 0.8),
+            rgba(70, 140, 255, 0)
+    );
+
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+
+    box-shadow: 0 12px 30px rgba(70, 140, 255, 0.24);
+}
+
+.nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+    box-shadow: 0 16px 40px rgba(70, 140, 255, 0.36);
+}
+
+.nav-link--active {
+    color: #fff;
+}
+
+.nav-link--active::after {
+    transform: translateX(-50%) scaleX(1);
+    box-shadow: 0 18px 44px rgba(70, 140, 255, 0.42);
+}
+
+/* ===== LANG BUTTON (glass chip) ===== */
+.lang-dropdown {
+    position: relative;
+    z-index: 3;
+}
+
+.lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    color: #fff;
+
+    padding: 10px 14px;
+    border-radius: 12px;
+
+    transition: background 180ms ease, transform 180ms ease, border-color 180ms ease;
+    backdrop-filter: blur(10px);
+}
+
+.lang-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-1px);
+}
+
+.lang-menu {
+    border-radius: 14px;
+    background: rgba(6, 26, 53, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    z-index: 200;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: 240px;
+}
+
+.lang-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+    text-align: left;
+
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.86);
+    background: transparent;
+    border: none;
+
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.lang-item:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #fff;
+}
+
+.lang-item.is-active {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+}
+
+.mobile-drawer {
+    background: radial-gradient(1200px 700px at 20% 35%, rgba(70, 140, 255, 0.22), rgba(0, 0, 0, 0) 60%),
+    radial-gradient(900px 600px at 85% 40%, rgba(0, 180, 255, 0.12), rgba(0, 0, 0, 0) 55%),
+    linear-gradient(180deg, #0b2a55 0%, #081f40 55%, #061a35 100%);
+}

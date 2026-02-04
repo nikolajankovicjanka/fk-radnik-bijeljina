@@ -1,8 +1,6 @@
 <template>
-    <div
-            class="rounded-2xl bg-white shadow-[0_8px_25px_rgba(0,0,0,0.06)] overflow-hidden transition-all duration-300 hover:shadow-[0_15px_40px_rgba(10,45,107,0.15)] hover:-translate-y-1"
-    >
-        <div class="px-6 py-5 bg-gradient-to-r from-gray-50/50 to-white">
+    <div class="rounded-2xl bg-white shadow-[0_8px_25px_rgba(0,0,0,0.06)] overflow-hidden transition-all duration-300 hover:shadow-[0_15px_40px_rgba(10,45,107,0.15)] hover:-translate-y-1">
+        <div class="px-6 py-5 bg-gradient-to-r from-sky-50/100 to-white">
             <div class="text-center">
                 <div class="text-[14px] font-bold text-[#0A2D6B] uppercase tracking-wide mb-1">
                     {{ formattedRound }}
