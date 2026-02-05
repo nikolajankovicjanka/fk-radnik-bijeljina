@@ -12,6 +12,6 @@ export const messages = {
     de,
     fr,
     es,
-}
+} as const
 
 export type SupportedLocale = keyof typeof messages

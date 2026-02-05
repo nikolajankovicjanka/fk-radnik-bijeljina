@@ -5,7 +5,8 @@ import MatchCardNext from "./MatchCardNext.vue"
 import type {LastMatch} from "./MatchCardLast.vue"
 import type {NextMatch} from "./MatchCardNext.vue"
 
-import {useGamesStore, type TeamType, type Game} from "@/stores/games"
+import {useGamesStore} from "@/stores/games"
+import type {TeamType, Game} from "@/types/game"
 import {i18n} from "@/i18n"
 
 type TabKey = "first" | "junior" | "women"
@@ -70,8 +71,16 @@ const lastMatch = computed<LastMatch | null>(() => {
     if (!g) return null
 
     return {
-        home: {name: g.home_club.name, logo: safeLogo(g.home_club.logo)},
-        away: {name: g.away_club.name, logo: safeLogo(g.away_club.logo)},
+        home: {
+            id: g.home_club.id,
+            name: g.home_club.name,
+            logo: safeLogo(g.home_club.logo)
+        },
+        away: {
+            id: g.away_club.id,
+            name: g.away_club.name,
+            logo: safeLogo(g.away_club.logo)
+        },
         score: scoreText(g),
         date: formatDate(g.kickoff_at),
         competition: g.competition ?? "—",

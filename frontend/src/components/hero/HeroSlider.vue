@@ -57,10 +57,13 @@ const widths = computed(() => {
 const lefts = computed(() => {
     const arr: number[] = []
     let acc = 0
+
     for (let i = 0; i < panels.length; i++) {
         arr.push(acc)
-        acc += widths.value[i]
+        const w = widths.value[i] ?? 0
+        acc += w
     }
+
     return arr
 })
 
@@ -76,19 +79,26 @@ function go(to: string) {
 }
 
 function panelStyle(i: number) {
+    const p = panels[i]
+    if (!p) return {} as Record<string, string | number>
+
     const isFirst = i === 0
     const isLast = i === panels.length - 1
 
+    const w = widths.value[i] ?? 0
+    const left = lefts.value[i] ?? 0
+
     return {
-        backgroundImage: `url(${panels[i].image})`,
+        backgroundImage: `url(${p.image})`,
         zIndex: i === active.value ? 20 : 10 - Math.abs(i - active.value),
 
-        left: isFirst ? `-${edgeBleedPx}px` : isLast ? 'auto' : `${lefts.value[i]}%`,
+        left: isFirst ? `-${edgeBleedPx}px` : isLast ? 'auto' : `${left}%`,
         right: isLast ? `-${edgeBleedPx}px` : 'auto',
 
-        width: `calc(${widths.value[i]}% + ${isLast ? edgeBleedPx : bleedPx}px + ${isFirst ? edgeBleedPx : 0}px)`,
+        width: `calc(${w}% + ${isLast ? edgeBleedPx : bleedPx}px + ${isFirst ? edgeBleedPx : 0}px)`,
     } as Record<string, string | number>
 }
+
 </script>
 
 <template>

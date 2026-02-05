@@ -85,7 +85,6 @@ export default {
         kickoff: 'Kick-off',
         preview: 'Preview',
         tickets: 'Tickets',
-        defaultCompetition: 'WWin League BiH',
         roundNumber: 'Round {n}',
         draw: 'Draw',
     },

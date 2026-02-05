@@ -85,7 +85,6 @@ export default {
         kickoff: 'Comienzo',
         preview: 'Avance',
         tickets: 'Entradas',
-        defaultCompetition: 'Liga WWin BiH',
         roundNumber: 'Jornada {n}',
         draw: 'Sorteo',
     },

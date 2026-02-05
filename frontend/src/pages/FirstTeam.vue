@@ -3,10 +3,11 @@ import {computed, onMounted, watch} from "vue"
 import {i18n} from "@/i18n"
 
 import {useNewsStore} from "@/stores/news"
-import {useGamesStore, type TeamType, type Game} from "@/stores/games"
+import {useGamesStore} from "@/stores/games"
+import type {TeamType} from "@/types/game"
+import type {PlayerPosition} from "@/types/player"
 import {usePlayersStore} from "@/stores/players"
 import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
-
 import NewsCardHomepage from "@/components/news/NewsCardHomepage.vue"
 import MatchCardNext from "@/components/matches/MatchCardNext.vue"
 import PlayerCard from "@/components/players/PlayerCard.vue"

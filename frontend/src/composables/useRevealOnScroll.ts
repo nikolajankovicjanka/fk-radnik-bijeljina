@@ -1,4 +1,11 @@
-import {nextTick, onBeforeUnmount, onMounted, ref, type Ref} from "vue"
+import {
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    type Ref,
+    type ComponentPublicInstance
+} from "vue"
 
 type Options = {
     root?: Element | null
@@ -25,11 +32,21 @@ export function useRevealOnScroll(options: Options = {}) {
         visibleClass = "is-visible",
     } = options
 
-    function setRef(el: Element | null) {
-        if (!el) return
-        const node = el as HTMLElement
+    function normalizeEl(el: Element | ComponentPublicInstance | null): HTMLElement | null {
+        if (!el) return null
+        if (el instanceof HTMLElement) return el
+        // kad Vue pošalje component instance, uzmi njegov DOM element
+        const maybeEl = (el as any).$el
+        return maybeEl instanceof HTMLElement ? maybeEl : null
+    }
+
+    function setRef(el: Element | ComponentPublicInstance | null) {
+        const node = normalizeEl(el)
+        if (!node) return
+
         // prevent duplicates (Vue can call ref multiple times)
         if (!els.value.includes(node)) els.value.push(node)
+
         // if observer already exists (after mount), observe immediately
         if (io) io.observe(node)
     }
@@ -53,7 +70,6 @@ export function useRevealOnScroll(options: Options = {}) {
     }
 
     async function refresh() {
-        // helpful if DOM changes after async load
         await nextTick()
         if (!io) return
         els.value.forEach((el) => io!.observe(el))

@@ -85,7 +85,6 @@ export default {
         kickoff: 'Anpfiff',
         preview: 'Vorschau',
         tickets: 'Tickets',
-        defaultCompetition: 'WWin Liga BiH',
         roundNumber: 'Spieltag {n}',
         draw: 'Auslosung',
     },

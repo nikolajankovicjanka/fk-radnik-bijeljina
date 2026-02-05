@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, onMounted} from "vue"
+import {onMounted} from "vue"
 import {RouterLink} from "vue-router"
 import {useNewsStore} from "@/stores/news"
 
@@ -14,9 +14,6 @@ const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     visibleClass: "is-visible",
 })
 
-const clubNews = computed(() => {
-    return (newsStore.items ?? []).filter((n) => n.category === "club").slice(0, 9)
-})
 
 onMounted(async () => {
     newsStore.activeCategory = "club"

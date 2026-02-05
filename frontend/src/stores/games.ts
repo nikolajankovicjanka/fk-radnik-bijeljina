@@ -116,8 +116,7 @@ export const useGamesStore = defineStore("games", {
     },
 
     actions: {
-        async load(perPage = 50, force = false) {
-            // učitaj sve timove (tabovi na Home)
+        async load(_perPage = 50, _force = false) {
             await Promise.all([
                 ...TEAMS.map((t) => this.loadScheduled(t)),
                 ...TEAMS.map((t) => this.loadFinished(t, 1, 3, "replace")),

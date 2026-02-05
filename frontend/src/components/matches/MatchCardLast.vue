@@ -110,7 +110,7 @@ import {computed} from 'vue'
 import {i18n} from '@/i18n'
 
 export type Team = {
-    id: number
+    id?: number
     name: string
     short_name?: string
     logo?: string

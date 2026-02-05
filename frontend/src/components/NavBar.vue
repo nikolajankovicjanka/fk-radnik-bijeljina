@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, onMounted, onBeforeUnmount, computed} from "vue"
+import {computed, onBeforeUnmount, onMounted, ref} from "vue"
 import {i18n, setLocale} from "@/i18n"
 import type {SupportedLocale} from "@/translation"
 
@@ -9,14 +9,20 @@ type LangOption = {
     flag: string
 }
 
-const languages: LangOption[] = [
+const languages = [
     {code: "sr-Latn", label: "Srpski (latinica)", flag: "🇷🇸"},
     {code: "sr-Cyrl", label: "Srpski (ćirilica)", flag: "🇷🇸"},
     {code: "en", label: "English", flag: "🇬🇧"},
     {code: "fr", label: "Français", flag: "🇫🇷"},
     {code: "es", label: "Español", flag: "🇪🇸"},
     {code: "de", label: "Deutsch", flag: "🇩🇪"},
-]
+] as const satisfies ReadonlyArray<LangOption>
+
+const FALLBACK_LANG: LangOption = languages[0] ?? {
+    code: "en",
+    label: "English",
+    flag: "🇬🇧"
+}
 
 const isLangOpen = ref(false)
 const isMobileMenuOpen = ref(false)
@@ -24,7 +30,7 @@ const isScrolled = ref(false)
 
 const selectedLang = computed<LangOption>(() => {
     const code = i18n.global.locale.value as SupportedLocale
-    return languages.find((l) => l.code === code) ?? languages[0]
+    return languages.find((l) => l.code === code) ?? FALLBACK_LANG
 })
 
 function toggleLang() {

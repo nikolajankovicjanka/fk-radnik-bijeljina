@@ -85,7 +85,6 @@ export default {
         kickoff: 'Почетак',
         preview: 'Преглед',
         tickets: 'Улазнице',
-        defaultCompetition: 'WWin Лига БиХ',
         roundNumber: 'Коло {n}',
         draw: 'Жријеб',
     },
