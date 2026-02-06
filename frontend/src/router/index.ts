@@ -139,9 +139,46 @@ const routes = [
                 },
             },
             {
-                path: 'youth-team',
-                name: 'YouthTeam',
-                component: () => import('@/pages/YouthTeam.vue'),
+                path: "youth-team",
+                component: () => import("@/pages/youth/YouthLayout.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "YouthTeam",
+                        component: () => import("@/pages/youth/YouthIndex.vue"),
+                        meta: {
+                            heroTitleKey: "pages.youth.heroTitle",
+                            heroDescKey: "pages.youth.heroDesc",
+                        },
+                    },
+                    {
+                        path: "juniori",
+                        name: "JuniorTeam",
+                        component: () => import("@/pages/youth/JuniorTeam.vue"),
+                        meta: {
+                            heroTitleKey: "pages.youth.cards.juniori.title",
+                            heroDescKey: "pages.youth.cards.juniori.desc",
+                        },
+                    },
+                    {
+                        path: "kadeti",
+                        name: "KadetiTeam",
+                        component: () => import("@/pages/youth/KadetiTeam.vue"),
+                        meta: {
+                            heroTitleKey: "pages.youth.cards.kadeti.title",
+                            heroDescKey: "pages.youth.cards.kadeti.desc",
+                        },
+                    },
+                    {
+                        path: "pioniri",
+                        name: "PioniriTeam",
+                        component: () => import("@/pages/youth/PioniriTeam.vue"),
+                        meta: {
+                            heroTitleKey: "pages.youth.cards.pioniri.title",
+                            heroDescKey: "pages.youth.cards.pioniri.desc",
+                        },
+                    },
+                ],
             },
             {
                 path: 'women-team',
