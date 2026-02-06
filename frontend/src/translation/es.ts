@@ -166,6 +166,27 @@ export default {
                 youth: "Selecciones juveniles",
                 women: "Equipo femenino",
             },
+        },
+        youth: {
+            heroTitle: "Selecciones Juveniles",
+            heroDesc: "Plantillas, noticias y toda la información relacionada con las selecciones juveniles del FK Radnik",
+            cards: {
+                juniori: {
+                    title: "U19 - Juniors",
+                    desc: "Selección junior del FK Radnik",
+                    alt: "U19 - Juniors",
+                },
+                kadeti: {
+                    title: "U17 - Cadetes",
+                    desc: "Selección cadete del FK Radnik",
+                    alt: "U17 - Cadetes",
+                },
+                pioniri: {
+                    title: "U15 - Pioneros",
+                    desc: "U15 - Pioneros",
+                    alt: "U15 - Pioneros",
+                }
+            }
         }
     },
 

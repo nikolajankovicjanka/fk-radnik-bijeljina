@@ -117,11 +117,9 @@ export default {
             heroTitle: "O klubu",
             heroDesc:
                 "Osnovne informacije o FK Radnik Bijeljina, upravi kluba, istoriji i svemu što čini klub.",
-
             learnMore: "Saznaj više",
             clubNewsTitle: "Vijesti o klubu",
             allNews: "Sve vijesti",
-
             cards: {
                 general: {
                     title: "Osnovne informacije",
@@ -168,6 +166,27 @@ export default {
                 youth: "Omladinske selekcije",
                 women: "Ženski tim",
             },
+        },
+        youth: {
+            heroTitle: "Omladinske selekcije",
+            heroDesc: "Sastavi, vijesti i sve informacije vezane za omladisnke selekcije FK Radnika",
+            cards: {
+                juniori: {
+                    title: "U19 - Juniori",
+                    desc: "Juniorska selekcija FK Radnika",
+                    alt: "U19 - Juniori",
+                },
+                kadeti: {
+                    title: "U17 - Kadeti",
+                    desc: "Kadetska selekcija FK Radnika",
+                    alt: "U17 - Kadeti",
+                },
+                pioniri: {
+                    title: "U15 - Pioniri",
+                    desc: "U15 - Pioniri",
+                    alt: "U15 - Pioniri",
+                }
+            }
         }
     },
 

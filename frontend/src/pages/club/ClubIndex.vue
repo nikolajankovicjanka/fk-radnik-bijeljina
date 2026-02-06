@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import {onMounted} from "vue"
+import {computed, onMounted} from "vue"
 import {RouterLink} from "vue-router"
 import {useNewsStore} from "@/stores/news"
 
 import NewsSliderHomepage from "@/components/news/NewsSliderHomepage.vue"
 import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
+import SectionLinkCard from "@/components/SectionLinkCard.vue"
 
 const newsStore = useNewsStore()
+
 const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     rootMargin: "0px 0px -15% 0px",
     threshold: 0.12,
@@ -14,80 +16,85 @@ const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     visibleClass: "is-visible",
 })
 
+const topCards = computed(() => [
+    {
+        to: {name: "ClubGeneralInformation"},
+        imgSrc: "/club/fk-radnik-general.jpg",
+        imgAlt: (window as any)?.$t ? "" : "",
+        titleKey: "pages.clubPage.cards.general.title",
+        descKey: "pages.clubPage.cards.general.desc",
+        altKey: "pages.clubPage.cards.general.alt",
+    },
+    {
+        to: {name: "ClubBoard"},
+        imgSrc: "/club/fk-radnik-uprava.webp",
+        titleKey: "pages.clubPage.cards.board.title",
+        descKey: "pages.clubPage.cards.board.desc",
+        altKey: "pages.clubPage.cards.board.alt",
+    },
+    {
+        to: {name: "ClubHistory"},
+        imgSrc: "/club/fk-radnik-stadion.jpg",
+        titleKey: "pages.clubPage.cards.history.title",
+        descKey: "pages.clubPage.cards.history.desc",
+        altKey: "pages.clubPage.cards.history.alt",
+    },
+])
+
+const bottomCards = computed(() => [
+    {
+        to: {name: "ClubSupporters"},
+        imgSrc: "/club/fk-radnik-navijaci.jpg",
+        titleKey: "pages.clubPage.cards.supporters.title",
+        descKey: "pages.clubPage.cards.supporters.desc",
+        altKey: "pages.clubPage.cards.supporters.alt",
+    },
+    {
+        to: {name: "ClubStadium"},
+        imgSrc: "/club/fk-radnik-stadion.jpg",
+        titleKey: "pages.clubPage.cards.stadium.title",
+        descKey: "pages.clubPage.cards.stadium.desc",
+        altKey: "pages.clubPage.cards.stadium.alt",
+    },
+    {
+        to: {name: "ClubLegends"},
+        imgSrc: "/club/fk-radnik-general.jpg",
+        titleKey: "pages.clubPage.cards.legends.title",
+        descKey: "pages.clubPage.cards.legends.desc",
+        altKey: "pages.clubPage.cards.legends.alt",
+    },
+])
 
 onMounted(async () => {
     newsStore.activeCategory = "club"
     if (!newsStore.items.length) await newsStore.load(1)
-
     await refreshSections()
 })
 </script>
 
 <template>
     <main class="bg-white">
-        <!-- SECTION 1: 3 cards -->
+        <!-- SECTION 1 -->
         <section
                 :ref="setSectionEl"
                 class="relative z-10 mx-auto max-w-7xl px-4 -mt-16 sm:-mt-20 reveal-section"
-                aria-label="Club overview links">
+                aria-label="Club overview links"
+        >
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <RouterLink :to="{ name: 'ClubGeneralInformation' }"
-                            class="club-card">
-                    <img
-                            src="/club/fk-radnik-general.jpg"
-                            :alt="$t('pages.clubPage.cards.general.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{ $t("pages.clubPage.cards.general.title") }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.general.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
-
-                <RouterLink :to="{ name: 'ClubBoard' }" class="club-card">
-                    <img
-                            src="/club/fk-radnik-uprava.webp"
-                            :alt="$t('pages.clubPage.cards.board.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{ $t("pages.clubPage.cards.board.title") }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.board.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
-
-                <RouterLink :to="{ name: 'ClubHistory' }" class="club-card">
-                    <img
-                            src="/club/fk-radnik-stadion.jpg"
-                            :alt="$t('pages.clubPage.cards.history.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{ $t("pages.clubPage.cards.history.title") }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.history.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
+                <SectionLinkCard
+                        v-for="c in topCards"
+                        :key="String((c.to as any).name)"
+                        :to="c.to"
+                        :img-src="c.imgSrc"
+                        :img-alt="$t(c.altKey)"
+                        :title="$t(c.titleKey)"
+                        :desc="$t(c.descKey)"
+                        :cta="$t('pages.clubPage.learnMore')"
+                />
             </div>
         </section>
 
+        <!-- SECTION 2 -->
         <section class="bg-slate-50">
             <div class="mx-auto max-w-7xl px-4 py-12">
                 <NewsSliderHomepage :title="$t('pages.clubPage.clubNewsTitle')"
@@ -104,68 +111,23 @@ onMounted(async () => {
             </div>
         </section>
 
-        <!-- SECTION 3: community/extra -->
+        <!-- SECTION 3 -->
         <section
                 :ref="setSectionEl"
                 class="mx-auto max-w-7xl px-4 py-12 reveal-section"
                 aria-label="Club community links"
         >
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <RouterLink :to="{ name: 'ClubSupporters' }" class="club-card">
-                    <img
-                            src="/club/fk-radnik-navijaci.jpg"
-                            :alt="$t('pages.clubPage.cards.supporters.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{
-                                $t("pages.clubPage.cards.supporters.title")
-                            }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.supporters.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
-
-                <RouterLink :to="{ name: 'ClubStadium' }" class="club-card">
-                    <img
-                            src="/club/fk-radnik-stadion.jpg"
-                            :alt="$t('pages.clubPage.cards.stadium.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{ $t("pages.clubPage.cards.stadium.title") }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.stadium.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
-
-                <RouterLink :to="{ name: 'ClubLegends' }" class="club-card">
-                    <img
-                            src="/club/fk-radnik-general.jpg"
-                            :alt="$t('pages.clubPage.cards.legends.alt')"
-                            class="club-card-img"
-                    />
-                    <div class="club-card-body">
-                        <h3 class="club-card-title">
-                            {{ $t("pages.clubPage.cards.legends.title") }}</h3>
-                        <p class="club-card-text">
-                            {{ $t("pages.clubPage.cards.legends.desc") }}</p>
-                        <div class="club-card-cta">{{
-                                $t("pages.clubPage.learnMore")
-                            }} →
-                        </div>
-                    </div>
-                </RouterLink>
+                <SectionLinkCard
+                        v-for="c in bottomCards"
+                        :key="String((c.to as any).name)"
+                        :to="c.to"
+                        :img-src="c.imgSrc"
+                        :img-alt="$t(c.altKey)"
+                        :title="$t(c.titleKey)"
+                        :desc="$t(c.descKey)"
+                        :cta="$t('pages.clubPage.learnMore')"
+                />
             </div>
         </section>
     </main>
