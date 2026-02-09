@@ -64,3 +64,59 @@
     opacity: .22;
 }
 
+.club-hero__image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+    filter: contrast(1.05) saturate(1.05);
+}
+
+.club-hero--has-image .club-hero__bg {
+    opacity: .45;
+}
+
+.club-hero__glass {
+    position: relative;
+    display: inline-block;
+    padding: 22px 28px;
+    border-radius: 18px;
+    background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.18),
+            rgba(255, 255, 255, 0.08)
+    );
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+.club-hero__glass h1 {
+    margin: 0 0 6px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+}
+
+.club-hero__glass p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 640px) {
+    .club-hero__glass {
+        padding: 16px 18px;
+        border-radius: 16px;
+        max-width: 92%;
+    }
+
+    .club-hero__inner {
+        position: relative;
+        z-index: 3;
+        max-width: 980px;
+        text-align: center;
+    }
+}
+
+

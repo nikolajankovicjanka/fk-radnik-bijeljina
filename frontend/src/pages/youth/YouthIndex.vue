@@ -16,21 +16,21 @@ const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
 const cards = computed(() => [
     {
         to: {name: "JuniorTeam"},
-        imgSrc: "/public/club/omladinci.jpg",
+        imgSrc: "/public/club/juniori.JPG",
         titleKey: "pages.youth.cards.juniori.title",
         descKey: "pages.youth.cards.juniori.desc",
         altKey: "pages.youth.cards.juniori.alt",
     },
     {
         to: {name: "KadetiTeam"},
-        imgSrc: "/public/club/omladinci.jpg",
+        imgSrc: "/public/club/kadeti.JPG",
         titleKey: "pages.youth.cards.kadeti.title",
         descKey: "pages.youth.cards.kadeti.desc",
         altKey: "pages.youth.cards.kadeti.alt",
     },
     {
         to: {name: "PioniriTeam"},
-        imgSrc: "/public/club/omladinci.jpg",
+        imgSrc: "/public/club/pioniri.JPG",
         titleKey: "pages.youth.cards.pioniri.title",
         descKey: "pages.youth.cards.pioniri.desc",
         altKey: "pages.youth.cards.pioniri.alt",
