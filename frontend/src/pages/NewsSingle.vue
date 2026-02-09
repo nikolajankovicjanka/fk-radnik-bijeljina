@@ -14,7 +14,6 @@
             <div class="container">Vijest nije pronađena.</div>
         </section>
 
-        <!-- ✅ RENDER ONLY WHEN item EXISTS -->
         <template v-else>
             <header class="hero">
                 <div class="hero-media">

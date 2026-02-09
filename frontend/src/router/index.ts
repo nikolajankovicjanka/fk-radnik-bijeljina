@@ -149,6 +149,7 @@ const routes = [
                         meta: {
                             heroTitleKey: "pages.youth.heroTitle",
                             heroDescKey: "pages.youth.heroDesc",
+                            glassHero: false
                         },
                     },
                     {
@@ -158,7 +159,9 @@ const routes = [
                         meta: {
                             heroTitleKey: "pages.youth.cards.juniori.title",
                             heroDescKey: "pages.youth.cards.juniori.desc",
-                        },
+                            heroImg: "/club/juniori-hero.jpg",
+                            glassHero: true
+                        }
                     },
                     {
                         path: "kadeti",
@@ -167,6 +170,8 @@ const routes = [
                         meta: {
                             heroTitleKey: "pages.youth.cards.kadeti.title",
                             heroDescKey: "pages.youth.cards.kadeti.desc",
+                            heroImg: "/club/kadeti-hero.jpg",
+                            glassHero: true
                         },
                     },
                     {
@@ -176,6 +181,8 @@ const routes = [
                         meta: {
                             heroTitleKey: "pages.youth.cards.pioniri.title",
                             heroDescKey: "pages.youth.cards.pioniri.desc",
+                            heroImg: "/club/pioniri-hero.jpg",
+                            glassHero: true
                         },
                     },
                 ],
