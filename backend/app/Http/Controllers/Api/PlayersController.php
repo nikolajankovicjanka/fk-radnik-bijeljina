@@ -11,7 +11,7 @@ class PlayersController extends Controller
     public function index(Request $request)
     {
         $team = $request->query('team_type');
-        $perPage = (int) $request->query('per_page', 100); // OVO JE BITNO!
+        $perPage = (int) $request->query('per_page', 100);
 
         $q = Player::query()->where('is_active', true);
 
@@ -19,7 +19,7 @@ class PlayersController extends Controller
             $q->where('team_type', $team);
         }
 
-        return $q->orderBy('shirt_number')->paginate($perPage); // KORISTI $perPage
+        return $q->orderBy('shirt_number')->paginate($perPage);
     }
 
     public function show(Player $player)

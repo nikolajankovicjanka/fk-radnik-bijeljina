@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {computed} from "vue"
 import type {ComponentPublicInstance} from "vue"
 
 type Player = {
@@ -14,16 +15,39 @@ const props = defineProps<{
     setCardEl?: (el: Element | ComponentPublicInstance | null) => void
 }>()
 
-/**
- * Vue ref callback mora prihvatiti:
- * - Element
- * - ComponentPublicInstance
- * - null
- * i NE smije biti undefined
- */
 const setCardElSafe = (el: Element | ComponentPublicInstance | null) => {
     props.setCardEl?.(el)
 }
+
+const PLACEHOLDER = "/players/placeholder.png"
+
+function normalizePhotoPath(photo?: string | null) {
+    if (!photo) return null
+    if (photo.startsWith("http://") || photo.startsWith("https://")) return photo
+    if (photo.startsWith("/storage/")) return photo
+    if (photo.startsWith("players/")) return "/storage/" + photo
+    if (photo.startsWith("/")) return photo
+    return "/storage/" + photo
+}
+
+function toThumbPath(urlOrPath: string) {
+    if (urlOrPath.endsWith(".webp")) {
+        return urlOrPath.replace(".webp", "_thumb.webp")
+    }
+    return urlOrPath
+}
+
+const imgSrc = computed(() => {
+    const base = normalizePhotoPath(props.player.photo)
+    if (!base) return PLACEHOLDER
+    return toThumbPath(base)
+})
+const imgSrcSet = computed(() => {
+    const base = normalizePhotoPath(props.player.photo)
+    if (!base) return ""
+    const thumb = toThumbPath(base)
+    return `${thumb} 1x, ${base} 2x`
+})
 </script>
 
 <template>
@@ -33,12 +57,19 @@ const setCardElSafe = (el: Element | ComponentPublicInstance | null) => {
     >
         <!-- IMAGE -->
         <img
-                :src="player.photo ?? '/players/placeholder.png'"
+                :src="imgSrc"
+                :srcset="imgSrcSet || undefined"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 :alt="player.name"
+                width="450"
+                height="600"
+                loading="lazy"
+                decoding="async"
                 class="h-[360px] sm:h-[420px] w-full
                    object-cover object-top
                    transition duration-500
                    group-hover:scale-[1.03] group-hover:blur-[2px]"
+                @error="(e) => { (e.target as HTMLImageElement).src = PLACEHOLDER }"
         />
 
         <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent"></div>
