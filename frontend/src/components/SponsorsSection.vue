@@ -12,25 +12,6 @@
                     {{ $t('home.sponsors.sponsors') }}
                 </h2>
             </div>
-
-            <!-- 🔝 GENERAL SPONSOR -->
-            <div class="flex justify-center mb-16">
-                <a
-                        :href="generalSponsor.url"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="bg-white rounded-3xl shadow-lg px-10 py-8 hover:shadow-xl transition"
-                >
-                    <img
-                            :src="generalSponsor.logo"
-                            :alt="generalSponsor.name"
-                            class="h-20 md:h-24 object-contain"
-                            loading="lazy"
-                    />
-                </a>
-            </div>
-
-            <!-- 🏛 INSTITUTIONAL -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-16">
                 <a
                         v-for="sponsor in institutionalSponsors"
@@ -81,59 +62,107 @@ interface Sponsor {
     url: string;
 }
 
-const generalSponsor: Sponsor = {
-    id: 1,
-    name: "Soccerbet",
-    logo: "/sponsors/soccerbet-trim.png",
-    url: "#",
-};
-
 const institutionalSponsors: Sponsor[] = [
     {id: 2, name: "Vlada RS", logo: "/sponsors/vladara_RS.png", url: "#"},
     {
         id: 3,
         name: "Predsjednik RS",
         logo: "/sponsors/logo-predsjednik.png",
-        url: "#"
+        url: "https://vladars.rs/sr-sp-cyrl/Pages/default.aspx"
     },
     {
         id: 4,
         name: "Grad Bijeljina",
         logo: "/sponsors/grad_bijeljina.png",
-        url: "#"
+        url: "https://www.gradbijeljina.org/"
     },
 ];
 
 const otherSponsors: Sponsor[] = [
-    {id: 6, name: "Chicago", logo: "/sponsors/chicago-logo.png", url: "#"},
-    {id: 7, name: "Elvaco", logo: "/sponsors/elvaco-logo.png", url: "#"},
-    {id: 8, name: "ERS", logo: "/sponsors/ers-log.png", url: "#"},
-    {id: 9, name: "Globus", logo: "/sponsors/globus_logo.png", url: "#"},
-    {id: 10, name: "Juventa", logo: "/sponsors/juventa-logo.png", url: "#"},
-    {id: 11, name: "Kelme", logo: "/sponsors/kelme-logo.png", url: "#"},
-    {id: 12, name: "Jelen", logo: "/sponsors/logo-jelen.webp", url: "#"},
+    {
+        id: 6,
+        name: "Kelme",
+        logo: "/sponsors/kelme-logo.png",
+        url: "https://kelme.com/en?srsltid=ARcRdnr-1VLX5o5CaMJ_nkYwYM9qWUwf2MAtGZ1upXoD2ZZrMAuGvfy8"
+    },
+    {
+        id: 7,
+        name: "Elvaco",
+        logo: "/sponsors/elvaco-logo.png",
+        url: "https://elvacometpro.com/en/"
+    },
+    {id: 8, name: "ERS", logo: "/sponsors/ers-log.png", url: "https://ers.ba/"},
+    {
+        id: 9,
+        name: "Globus",
+        logo: "/sponsors/globus_logo.png",
+        url: "https://globus.ba/"
+    },
+    {
+        id: 10,
+        name: "Juventa",
+        logo: "/sponsors/juventa-logo.png",
+        url: "https://www.juventasport.com/"
+    },
+    {
+        id: 11,
+        name: "Chicago",
+        logo: "/sponsors/chicago-logo.png",
+        url: "https://www.facebook.com/p/Caffe-bar-Chicago-100063635726687/"
+    },
+    {
+        id: 12,
+        name: "Jelen",
+        logo: "/sponsors/logo-jelen.webp",
+        url: "https://www.jelenpivo.com/"
+    },
     {
         id: 13,
         name: "Naša Banka",
         logo: "/sponsors/logo-nasa-banka.png",
-        url: "#"
+        url: "https://www.nasa-banka.com/"
     },
-    {id: 14, name: "RITE", logo: "/sponsors/logo-rite.png", url: "#"},
+    {
+        id: 14,
+        name: "RITE",
+        logo: "/sponsors/logo-rite.png",
+        url: "https://riteugljevik.com/"
+    },
     {
         id: 15,
         name: "Tehnika Inžinjering",
         logo: "/sponsors/logo-tehnika-inzinjering.png",
-        url: "#"
+        url: "https://www.tehnikainz.com/"
     },
-    {id: 16, name: "Infocomp", logo: "/sponsors/logo_infocomp.png", url: "#"},
+    {
+        id: 16,
+        name: "Infocomp",
+        logo: "/sponsors/logo_infocomp.png",
+        url: "https://infocomp.ba/articles"
+    },
     {
         id: 17,
         name: "Motel Milošević",
         logo: "/sponsors/motel-milosevic.png",
-        url: "#"
+        url: "https://motelmilosevic.com/"
     },
-    {id: 18, name: "Pass", logo: "/sponsors/pass-logo.png", url: "#"},
-    {id: 20, name: "Steco", logo: "/sponsors/steco-logo.png", url: "#"},
-    {id: 21, name: "Vitinka", logo: "/sponsors/vitinka-logo.png", url: "#"},
+    {
+        id: 18,
+        name: "Pass",
+        logo: "/sponsors/pass-logo.png",
+        url: "https://pass.de/de/standorte.html"
+    },
+    {
+        id: 20,
+        name: "Steco",
+        logo: "/sponsors/steco-logo.png",
+        url: "https://www.stecocentar.com/?srsltid=AfmBOorerCAHIcLCJ0zFZBzmtLmb3lK-GZnxf5xUpBwzqOZF5MZPZkan"
+    },
+    {
+        id: 21,
+        name: "Vitinka",
+        logo: "/sponsors/vitinka-logo.png",
+        url: "https://www.vitinka.com/"
+    },
 ];
 </script>
