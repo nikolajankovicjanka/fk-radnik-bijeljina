@@ -4,10 +4,16 @@ import path from "path"
 
 export default defineConfig({
     plugins: [vue()],
+
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "src"),
         },
+    },
+    build: {
+        outDir: "../backend/public/build",
+        emptyOutDir: true,
+        manifest: true,
     },
     server: {
         host: "127.0.0.1",
