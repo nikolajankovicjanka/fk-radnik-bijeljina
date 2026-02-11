@@ -44,6 +44,9 @@ export const useGamesStore = defineStore("games", {
         } as Record<TeamType, boolean>,
 
         error: null as string | null,
+
+        // ✅ dedup za paralelne pozive
+        _inFlight: new Map<string, Promise<any>>(),
     }),
 
     getters: {
@@ -89,7 +92,7 @@ export const useGamesStore = defineStore("games", {
                 const d = new Date(iso)
                 const fmt = new Intl.DateTimeFormat("sr-RS", {
                     month: "long",
-                    year: "numeric"
+                    year: "numeric",
                 })
                 const t = fmt.format(d)
                 return t.charAt(0).toUpperCase() + t.slice(1)
@@ -98,10 +101,11 @@ export const useGamesStore = defineStore("games", {
             const map = new Map<string, { title: string; items: Game[] }>()
             for (const m of items) {
                 const key = keyOf(m.kickoff_at)
-                if (!map.has(key)) map.set(key, {
-                    title: titleOf(m.kickoff_at),
-                    items: []
-                })
+                if (!map.has(key))
+                    map.set(key, {
+                        title: titleOf(m.kickoff_at),
+                        items: [],
+                    })
                 map.get(key)!.items.push(m)
             }
 
@@ -116,46 +120,86 @@ export const useGamesStore = defineStore("games", {
     },
 
     actions: {
-        async load(_perPage = 50, _force = false) {
+        // ✅ helper: dedup paralelnih istih requestova
+        async _dedup<T>(key: string, fn: () => Promise<T>): Promise<T> {
+            const existing = this._inFlight.get(key)
+            if (existing) return existing as Promise<T>
+
+            const p = fn().finally(() => this._inFlight.delete(key))
+            this._inFlight.set(key, p)
+            return p
+        },
+
+        // ✅ novi: minimalni load za homepage (last + next za svaki tim)
+        async loadHomepageTabs() {
+            await Promise.all(
+                TEAMS.flatMap((t) => [
+                    this.loadFinished(t, 1, 1, "replace"),
+                    this.loadScheduled(t, 1),
+                ])
+            )
+        },
+
+        // ✅ eksplicitno: “staro ponašanje” (više rezultata, za stranice tipa fixtures)
+        async loadFull() {
             await Promise.all([
-                ...TEAMS.map((t) => this.loadScheduled(t)),
+                ...TEAMS.map((t) => this.loadScheduled(t, 200)),
                 ...TEAMS.map((t) => this.loadFinished(t, 1, 3, "replace")),
             ])
         },
 
-        async loadFinished(team: TeamType, page = 1, perPage = 3, mode: "replace" | "append" = "replace") {
-            try {
-                this.isLoadingFinishedByTeam[team] = true
-                this.error = null
-
-                const res = await fetchGames({
-                    team_type: team,
-                    status: "finished",
-                    order: "desc",
-                    page,
-                    perPage,
-                })
-
-                if (mode === "replace") {
-                    this.finishedByTeam[team] = res.items
-                } else {
-                    const existing = new Set(this.finishedByTeam[team].map((x) => x.id))
-                    const toAdd = res.items.filter((x) => !existing.has(x.id))
-                    this.finishedByTeam[team] = [...this.finishedByTeam[team], ...toAdd]
-                }
-
-                this.finishedPaginationByTeam[team] = {
-                    page: res.page,
-                    perPage: res.perPage,
-                    total: res.total,
-                    lastPage: res.lastPage,
-                }
-            } catch (e: any) {
-                this.error = e?.message ?? "Failed to load finished games"
-                if (mode === "replace") this.finishedByTeam[team] = []
-            } finally {
-                this.isLoadingFinishedByTeam[team] = false
+        // ✅ kompatibilno: ko već zove load(), ne ruši se
+        // default sada radi "pametno" (homepage-friendly), a _force=true vuče full
+        async load(_perPage = 50, _force = false) {
+            if (_force) {
+                await this.loadFull()
+                return
             }
+            await this.loadHomepageTabs()
+        },
+
+        async loadFinished(
+            team: TeamType,
+            page = 1,
+            perPage = 3,
+            mode: "replace" | "append" = "replace"
+        ) {
+            const key = `finished:${team}:${page}:${perPage}:${mode}`
+
+            return this._dedup(key, async () => {
+                try {
+                    this.isLoadingFinishedByTeam[team] = true
+                    this.error = null
+
+                    const res = await fetchGames({
+                        team_type: team,
+                        status: "finished",
+                        order: "desc",
+                        page,
+                        perPage,
+                    })
+
+                    if (mode === "replace") {
+                        this.finishedByTeam[team] = res.items
+                    } else {
+                        const existing = new Set(this.finishedByTeam[team].map((x) => x.id))
+                        const toAdd = res.items.filter((x) => !existing.has(x.id))
+                        this.finishedByTeam[team] = [...this.finishedByTeam[team], ...toAdd]
+                    }
+
+                    this.finishedPaginationByTeam[team] = {
+                        page: res.page,
+                        perPage: res.perPage,
+                        total: res.total,
+                        lastPage: res.lastPage,
+                    }
+                } catch (e: any) {
+                    this.error = e?.message ?? "Failed to load finished games"
+                    if (mode === "replace") this.finishedByTeam[team] = []
+                } finally {
+                    this.isLoadingFinishedByTeam[team] = false
+                }
+            })
         },
 
         async loadMoreFinished(team: TeamType) {
@@ -165,26 +209,30 @@ export const useGamesStore = defineStore("games", {
             await this.loadFinished(team, next, pag.perPage, "append")
         },
 
-        async loadScheduled(team: TeamType) {
-            try {
-                this.isLoadingScheduledByTeam[team] = true
-                this.error = null
+        async loadScheduled(team: TeamType, perPage = 200) {
+            const key = `scheduled:${team}:${perPage}`
 
-                const res = await fetchGames({
-                    team_type: team,
-                    status: "scheduled",
-                    order: "asc",
-                    page: 1,
-                    perPage: 200,
-                })
+            return this._dedup(key, async () => {
+                try {
+                    this.isLoadingScheduledByTeam[team] = true
+                    this.error = null
 
-                this.scheduledByTeam[team] = res.items
-            } catch (e: any) {
-                this.error = e?.message ?? "Failed to load scheduled games"
-                this.scheduledByTeam[team] = []
-            } finally {
-                this.isLoadingScheduledByTeam[team] = false
-            }
+                    const res = await fetchGames({
+                        team_type: team,
+                        status: "scheduled",
+                        order: "asc",
+                        page: 1,
+                        perPage,
+                    })
+
+                    this.scheduledByTeam[team] = res.items
+                } catch (e: any) {
+                    this.error = e?.message ?? "Failed to load scheduled games"
+                    this.scheduledByTeam[team] = []
+                } finally {
+                    this.isLoadingScheduledByTeam[team] = false
+                }
+            })
         },
     },
 })

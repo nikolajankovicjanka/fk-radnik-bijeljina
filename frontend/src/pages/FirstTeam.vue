@@ -11,12 +11,16 @@ import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
 import NewsCardHomepage from "@/components/news/NewsCardHomepage.vue"
 import MatchCardNext from "@/components/matches/MatchCardNext.vue"
 import PlayerCard from "@/components/players/PlayerCard.vue"
+import {useStaffStore} from "@/stores/staffs"
+import StaffCard from "@/components/staff/StaffCard.vue"
 
 const TEAM: TeamType = "first_team"
 
 const newsStore = useNewsStore()
 const gamesStore = useGamesStore()
 const playersStore = usePlayersStore()
+const staffStore = useStaffStore()
+const staff = computed(() => staffStore.activeByTeam(TEAM))
 
 const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     rootMargin: "0px 0px -15% 0px",
@@ -175,6 +179,7 @@ onMounted(async () => {
 
     await refreshSections()
     await refreshCards()
+    if (!staffStore.items.length) await staffStore.load(TEAM)
 })
 </script>
 
@@ -184,7 +189,7 @@ onMounted(async () => {
         <section class="relative overflow-hidden">
             <div class="h-[320px] sm:h-[420px] w-full">
                 <img
-                        src="/logo/First_team.JPG"
+                        src="/logo/First_team.webp"
                         :alt="$t('pages.firstTeam.heroAlt')"
                         class="h-full w-full object-cover"
                 />
@@ -274,6 +279,25 @@ onMounted(async () => {
                         />
                     </div>
                 </section>
+            </div>
+        </section>
+
+        <!-- STAFF -->
+        <section class="mx-auto max-w-7xl px-4 py-12">
+            <h2 class="n-title">
+                {{ $t("pages.firstTeam.staffTitle") ?? "Stručni štab" }}
+                <span class="n-title-arrow">→</span>
+            </h2>
+
+            <div v-if="staff.length === 0"
+                 class="mt-6 rounded-xl border border-slate-200 bg-slate-50 p-6 text-slate-500">
+                Trenutno nema unosa stručnog štaba.
+            </div>
+
+            <div v-else
+                 class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+                <StaffCard v-for="m in staff" :key="m.id" :member="m"
+                           :setCardEl="setCardEl"/>
             </div>
         </section>
 

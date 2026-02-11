@@ -103,7 +103,8 @@ export default {
             gk: 'TORHÜTER',
             def: 'ABWEHR',
             mid: 'MITTFELD',
-            att: 'STÜRMER'
+            att: 'STÜRMER',
+            staffTitle: 'Fachstab'
         },
         fixtures: {
             heroTitle: "FK Radnik SoccerBet",
