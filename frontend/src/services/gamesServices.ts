@@ -1,6 +1,6 @@
 import type {Game, TeamType, GameStatus, Club} from "@/types/game"
 
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
+const API = ""
 
 type LaravelPaginated<T> = {
     current_page: number

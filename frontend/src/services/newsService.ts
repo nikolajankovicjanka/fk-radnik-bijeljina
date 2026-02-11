@@ -2,7 +2,7 @@ import type {NewsItem, NewsCategory} from '@/types/news'
 import {i18n} from '@/i18n'
 import type {SupportedLocale} from '@/translation'
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8080'
+const API = ""
 
 // mapiranje app locale -> browser locale (za datume)
 function dateLocale(code: SupportedLocale): string {
