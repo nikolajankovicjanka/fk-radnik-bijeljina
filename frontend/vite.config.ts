@@ -10,10 +10,13 @@ export default defineConfig({
             "@": path.resolve(__dirname, "src"),
         },
     },
+
     build: {
-        outDir: "../backend/public/build",
-        emptyOutDir: true,
+        outDir: "../backend/public",
+        assetsDir: "build",
+        emptyOutDir: false, // ⚠️ ne briši backend/public (ima index.php, storage symlink, itd.)
         manifest: true,
+        sourcemap: false,
     },
     server: {
         host: "127.0.0.1",
@@ -25,6 +28,11 @@ export default defineConfig({
                 changeOrigin: true,
             },
             "/storage": {
+                target: "http://127.0.0.1:8080",
+                changeOrigin: true,
+            },
+            // Ako koristiš Filament lokalno:
+            "/admin": {
                 target: "http://127.0.0.1:8080",
                 changeOrigin: true,
             },
