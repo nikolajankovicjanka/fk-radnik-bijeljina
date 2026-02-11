@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import {computed, onMounted} from "vue"
-import {useI18n} from "vue-i18n"
 import {useRevealOnScroll} from "@/composables/useRevealOnScroll"
 import SectionLinkCard from "@/components/SectionLinkCard.vue"
-
-const {t} = useI18n()
 
 const {setRef: setSectionEl, refresh: refreshSections} = useRevealOnScroll({
     rootMargin: "0px 0px -15% 0px",
