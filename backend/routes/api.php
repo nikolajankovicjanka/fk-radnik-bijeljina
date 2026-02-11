@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\GamesController;
 use App\Http\Controllers\Api\PlayersController;
+use App\Http\Controllers\Api\StaffMemberController;
 
 
 /*
@@ -33,3 +34,5 @@ Route::get('/games/{id}', [GamesController::class, 'show']);
 
 Route::get('/players', [PlayersController::class, 'index']);
 Route::get('/players/{player}', [PlayersController::class, 'show']);
+
+Route::get('/staff', [StaffMemberController::class, 'index']);
