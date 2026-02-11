@@ -45,7 +45,7 @@ const panels: Panel[] = [
         kickerKey: 'hero.panels.women.kicker',
         titleKey: 'hero.panels.women.title',
         descKey: 'hero.panels.women.desc',
-        image: '/hero/fk-radnik-zene.jpg',
+        image: '/hero/fk-radnik-zene.webp',
         ctas: [{labelKey: 'hero.panels.women.cta', to: '/women-team'}],
     },
 ]

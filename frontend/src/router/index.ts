@@ -11,12 +11,10 @@ const routes = [
         beforeEnter: async () => {
             const newsStore = useNewsStore()
             const gamesStore = useGamesStore()
-            const playersStore = usePlayersStore()
 
             await Promise.all([
                 newsStore.load(1),
-                gamesStore.load(50),
-                playersStore.load(200),
+                gamesStore.loadHomepageTabs()
             ])
         },
         children: [

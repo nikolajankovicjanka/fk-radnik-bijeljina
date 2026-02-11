@@ -103,7 +103,8 @@ export default {
             gk: 'PORTEROS',
             def: 'DEFENSORES',
             mid: 'CENTROCAMPISTAS',
-            att: 'DELANTEROS'
+            att: 'DELANTEROS',
+            staffTitle: ' Estado Mayor técnico'
         },
         fixtures: {
             heroTitle: "FK Radnik SoccerBet",

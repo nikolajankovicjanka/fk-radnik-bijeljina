@@ -103,7 +103,8 @@ export default {
             gk: 'GOALKEEPERS',
             def: 'DEFENDERS',
             mid: 'MIDFIELDERS',
-            att: 'FORWARDS'
+            att: 'FORWARDS',
+            staffTitle: 'Expert Staff',
         },
         fixtures: {
             heroTitle: "FK Radnik SoccerBet",

@@ -103,7 +103,8 @@ export default {
             gk: 'ГОЛМАНИ',
             def: 'ОДБРАНА',
             mid: 'ВЕЗНИ РЕД',
-            att: 'НАПАДАЧИ'
+            att: 'НАПАДАЧИ',
+            staffTitle: 'Стручни штаб',
         },
         fixtures: {
             heroTitle: "ФК Радник SoccerBet",
