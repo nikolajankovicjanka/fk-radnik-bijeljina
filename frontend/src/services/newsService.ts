@@ -90,7 +90,7 @@ export async function fetchNews(params: {
     q?: string
     category?: NewsCategory
 }) {
-    const url = new URL(`${API}/api/news`)
+    const url = new URL("/api/news", window.location.origin)
     url.searchParams.set('per_page', String(params.perPage ?? 9))
     url.searchParams.set('page', String(params.page ?? 1))
     if (params.q) url.searchParams.set('q', params.q)

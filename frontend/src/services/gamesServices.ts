@@ -1,6 +1,7 @@
 import type {Game, TeamType, GameStatus, Club} from "@/types/game"
 
-const API = ""
+// ✅ isti origin (domen), bez localhost hardkoda
+const API_BASE = ""
 
 type LaravelPaginated<T> = {
     current_page: number
@@ -13,7 +14,7 @@ type LaravelPaginated<T> = {
 function clubLogoUrl(path?: string | null) {
     if (!path) return "/FK_Radnik_logo.png"
     if (path.startsWith("http://") || path.startsWith("https://")) return path
-    return `${API}/storage/${path}`
+    return `${API_BASE}/storage/${path}` // => "/storage/..."
 }
 
 function normalizeClub(c: Club): Club {
@@ -30,7 +31,9 @@ export async function fetchGames(params?: {
     status?: GameStatus
     order?: "asc" | "desc"
 }) {
-    const url = new URL(`${API}/api/games`)
+    // ✅ new URL mora imati base
+    const url = new URL("/api/games", window.location.origin)
+
     url.searchParams.set("page", String(params?.page ?? 1))
     url.searchParams.set("per_page", String(params?.perPage ?? 50))
     if (params?.team_type) url.searchParams.set("team_type", params.team_type)

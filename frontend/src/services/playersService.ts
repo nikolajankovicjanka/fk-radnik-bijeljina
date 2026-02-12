@@ -21,7 +21,7 @@ export async function fetchPlayers(params?: {
     team_type?: TeamType
     active?: boolean
 }) {
-    const url = new URL(`${API}/api/players`)
+    const url = new URL("/api/players", window.location.origin)
     url.searchParams.set("page", String(params?.page ?? 1))
     url.searchParams.set("per_page", String(params?.perPage ?? 100))
     if (params?.team_type) url.searchParams.set("team_type", params.team_type)
