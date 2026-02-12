@@ -3,6 +3,12 @@
 /public/build
 /public/hot
 /public/storage
+/public/.vite/
+/public/club/
+/public/hero/
+/public/index.html
+/public/logo/
+/public/sponsors/
 /storage/*.key
 /vendor
 .env
