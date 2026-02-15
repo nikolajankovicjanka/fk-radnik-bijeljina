@@ -12,7 +12,7 @@
                         </div>
                         <div class="flex items-center gap-8 sm:gap-12 max-w-full overflow-x-auto no-scrollbar px-1">
                             <a
-                                    href="#"
+                                    href="https://www.soccerbet.ba/ba"
                                     class="group shrink-0 rounded-xl px-2 py-2 transition"
                                     aria-label="SoccerBet"
                             >
