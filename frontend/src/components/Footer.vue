@@ -7,10 +7,10 @@ const socialMedia = [
         svg: 'M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z',
     },
     {
-        icon: 'twitter',
-        label: 'Twitter',
-        url: '#',
-        svg: 'M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z',
+        icon: 'tiktok',
+        label: 'TikTok',
+        url: 'https://www.tiktok.com/@fkradnik',
+        svg: 'M21 7.34v3.4a9.87 9.87 0 01-5.74-1.83l-.01 7.68a6.59 6.59 0 11-6.6-6.59c.37 0 .73.03 1.08.1v3.55a3.04 3.04 0 10 2.08 2.88V2h3.44c.2 1.9 1.19 3.55 2.63 4.67A6.43 6.43 0 0021 7.34z',
     },
     {
         icon: 'instagram',
@@ -27,7 +27,7 @@ const socialMedia = [
 ]
 
 const footerLinks = [
-    {label: 'CONTACT US', to: '/contact'},
+    {label: 'CONTACT US', to: '/club/general-information'},
     {label: 'PRIVACY POLICY', to: '/privacy'},
     {label: 'TERMS & CONDITIONS', to: '/terms'},
     {label: 'SITE MAP', to: '/sitemap'},

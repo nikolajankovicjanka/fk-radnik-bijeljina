@@ -88,13 +88,20 @@ const navItems = [
 
         <nav class="nav-inner max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 h-20 relative">
             <!-- LEFT: Brand -->
-            <div class="flex items-center gap-3">
-                <img src="/logo/FK_Radnik_logo.png" alt="FK Radnik Bijeljina"
-                     class="h-12 w-auto"/>
+
+            <RouterLink
+                    :to="{ name: 'Home' }"
+                    class="flex items-center gap-3 cursor-pointer"
+            >
+                <img
+                        src="/logo/FK_Radnik_logo.png"
+                        alt="FK Radnik Bijeljina"
+                        class="h-12 w-auto"
+                />
                 <span class="text-white/90 font-semibold tracking-wide uppercase text-sm">
-          FK Radnik SoccerBet
-        </span>
-            </div>
+    FK Radnik SoccerBet
+  </span>
+            </RouterLink>
 
             <!-- CENTER: Desktop Navigation -->
             <ul class="hidden lg:flex items-center gap-8 text-[13px] font-semibold uppercase">

@@ -63,12 +63,17 @@ interface Sponsor {
 }
 
 const institutionalSponsors: Sponsor[] = [
-    {id: 2, name: "Vlada RS", logo: "/sponsors/vladara_RS.png", url: "#"},
+    {
+        id: 2,
+        name: "Vlada RS",
+        logo: "/sponsors/vladara_RS.png",
+        url: "https://vladars.rs/sr-sp-cyrl/Pages/default.aspx"
+    },
     {
         id: 3,
         name: "Predsjednik RS",
         logo: "/sponsors/logo-predsjednik.png",
-        url: "https://vladars.rs/sr-sp-cyrl/Pages/default.aspx"
+        url: "https://www.predsjednikrs.rs/sr/"
     },
     {
         id: 4,

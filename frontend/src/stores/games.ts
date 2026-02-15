@@ -71,11 +71,16 @@ export const useGamesStore = defineStore("games", {
         },
         nextUpcoming: (state) => (team: TeamType) => {
             const now = new Date()
-            const list = (state.scheduledByTeam[team] ?? [])
-                .filter((g) => new Date(g.kickoff_at) >= now)
+
+            const all = [...(state.scheduledByTeam[team] ?? [])]
+                .filter((g) => !!g.kickoff_at)
                 .sort((a, b) => +new Date(a.kickoff_at) - +new Date(b.kickoff_at))
 
-            return list[0] ?? null
+            const future = all.find((g) => new Date(g.kickoff_at) >= now)
+            if (future) return future
+
+            // fallback: zadnji “scheduled” (ako su svi u prošlosti)
+            return all[all.length - 1] ?? null
         },
         upcomingAll: (state) => (team: TeamType) => state.scheduledByTeam[team] ?? [],
         upcomingByMonth: (state) => (team: TeamType) => {
