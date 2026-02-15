@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import {useI18n} from "vue-i18n"
+import {computed} from "vue"
+
+const {t} = useI18n()
+
+const currentYear = computed(() => new Date().getFullYear())
+
 const socialMedia = [
     {
         icon: 'facebook',
@@ -27,22 +34,24 @@ const socialMedia = [
 ]
 
 const footerLinks = [
-    {label: 'CONTACT US', to: '/club/general-information'},
-    {label: 'PRIVACY POLICY', to: '/privacy'},
-    {label: 'TERMS & CONDITIONS', to: '/terms'},
-    {label: 'SITE MAP', to: '/sitemap'},
+    {key: 'common.contactUs', to: '/club/general-information'},
+    {key: 'common.privacy', to: '/privacy'},
+    {key: 'common.usloviKoristenja', to: '/terms'},
+    {key: 'common.siteMap', to: '/sitemap'},
 ]
 </script>
 
 <template>
     <footer class="bg-gradient-to-b from-[#061A2F] to-[#0f3760] text-white pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <div
-                    class="flex flex-col lg:flex-row items-center justify-between gap-10 pb-10 border-b border-white/20"
-            >
+
+            <!-- TOP SECTION -->
+            <div class="flex flex-col lg:flex-row items-center justify-between gap-10 pb-10 border-b border-white/20">
+
+                <!-- CONTACT -->
                 <div class="text-center lg:text-left">
                     <h3 class="text-lg font-bold uppercase tracking-wider mb-4 text-blue-300">
-                        CLUB CONTACT
+                        {{ $t('common.contactUs') }}
                     </h3>
                     <div class="space-y-2 text-white/80 text-sm">
                         <p>FK Radnik Bijeljina</p>
@@ -52,6 +61,8 @@ const footerLinks = [
                         <p>info@fkradnik.com</p>
                     </div>
                 </div>
+
+                <!-- LOGO -->
                 <div class="order-first lg:order-none">
                     <div class="flex flex-col items-center">
                         <img
@@ -60,10 +71,12 @@ const footerLinks = [
                                 class="h-32 w-auto mb-4"
                         />
                         <span class="text-white font-bold text-lg tracking-wider uppercase">
-              FK RADNIK BIJELJINA
-            </span>
+                            FK RADNIK BIJELJINA
+                        </span>
                     </div>
                 </div>
+
+                <!-- SOCIAL -->
                 <div class="flex justify-center lg:justify-end space-x-4">
                     <a
                             v-for="social in socialMedia"
@@ -74,30 +87,50 @@ const footerLinks = [
                             rel="noopener noreferrer"
                             class="bg-white/10 hover:bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
                     >
-                        <svg class="w-5 h-5 fill-current text-white group-hover:text-white"
+                        <svg class="w-5 h-5 fill-current text-white"
                              viewBox="0 0 24 24">
                             <path :d="social.svg"/>
                         </svg>
                     </a>
                 </div>
             </div>
+
+            <!-- LINKS -->
             <div class="py-8">
                 <div class="flex flex-wrap justify-center gap-8 md:gap-12">
                     <RouterLink
                             v-for="link in footerLinks"
-                            :key="link.label"
+                            :key="link.key"
                             :to="link.to"
                             class="text-white/70 hover:text-blue-400 uppercase text-sm font-semibold tracking-wider transition-colors duration-300"
                     >
-                        {{ link.label }}
+                        {{ $t(link.key) }}
                     </RouterLink>
                 </div>
             </div>
-            <div class="pt-6 border-t border-white/10">
+
+            <!-- COPYRIGHT -->
+            <div class="pt-6 border-t border-white/10 space-y-3">
+
+                <!-- COPYRIGHT -->
                 <p class="text-center text-white/90 text-xs uppercase tracking-wider">
-                    © 2024 FK RADNIK BIJELJINA. ALL RIGHTS RESERVED.
+                    © {{ currentYear }} FK RADNIK BIJELJINA.
+                    {{ $t('common.allRightsReserved') }}
                 </p>
+
+                <!-- DEVELOPER CREDIT -->
+                <p class="text-center text-white/60 text-xs tracking-wider">
+                    Developed by
+                    <a
+                            href="tel:+38765046323"
+                            class="text-blue-400 hover:text-blue-300 font-semibold transition-colors duration-300"
+                    >
+                        NivedaTech
+                    </a>
+                </p>
+
             </div>
+
         </div>
     </footer>
 </template>

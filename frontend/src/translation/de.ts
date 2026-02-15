@@ -10,6 +10,11 @@ export default {
         loadMore: "Mehr laden",
         loading: "Laden...",
         error: "Fehler",
+        contactUs: "Kontakt",
+        privacy: "Datenschutzrichtlinie",
+        usloviKoristenja: "Allgemeine Geschäftsbedingungen",
+        siteMap: "Sitemap",
+        allRightsReserved: "Alle Rechte vorbehalten"
     },
 
     nav: {
@@ -126,11 +131,34 @@ export default {
                     title: "Grundinformationen",
                     desc: "Stadion, Vereinsfarben, Organisation, Dokumente und wichtige Informationen.",
                     alt: "Grundinformationen",
+                    adresa: "Adresse",
+                    nadimak: "Spitzname",
+                    osnovan: "Gegründet",
+                    kapacitetStadiona: "Stadionkapazität",
+                    teren: "Spielfeld",
+                    kontakt: "Kontakt",
+                    opsteInformacije: "Allgemeine Informationen",
+                    ulaznice: "Tickets",
+                    danUtakmiceTitle: "Spieltag - Allgemeine Informationen",
+                    danUtakmiceText: "Informationen zu Eingängen, Parkplätzen und Verhaltensregeln finden Sie im Spieltagsleitfaden.",
+                    pravilaPonasanjaTitle: "Verhaltensregeln",
+                    pravilaPonasanjaText: "Die Stadionregeln gelten für alle Besucher. Das Mitbringen von Pyrotechnik und gefährlichen Gegenständen ist verboten."
                 },
                 board: {
                     title: "Vereinsführung",
-                    desc: "Management, Führung und Organisationsstruktur des Vereins.",
+                    desc: "Leitung, Management und Organisationsstruktur des Vereins.",
                     alt: "Vereinsführung",
+                    upravniOdbor: "Vorstand",
+                    predsednik: "Präsident",
+                    generalniDirektor: "Generaldirektor",
+                    clanoviUprave: "Vorstandsmitglieder",
+                    skupstinaKluba: "Vereinsversammlung",
+                    potpredsjednici: "Vizepräsidenten",
+                    clanoviSkupstine: "Mitglieder der Versammlung",
+                    nadzorniOdbor: "Aufsichtsrat",
+                    clanovi: "Mitglieder",
+                    skautingSluzba: "Scouting-Abteilung",
+                    sefSkautingSluzbe: "Leiter der Scouting-Abteilung"
                 },
                 history: {
                     title: "Geschichte des Radnik",

@@ -4,24 +4,33 @@
 
             <!-- Upravni odbor -->
             <header class="cb__header">
-                <h2 class="cb__title">Upravni odbor FK Radnik</h2>
+                <h2 class="cb__title">
+                    {{ $t('pages.clubPage.cards.board.upravniOdbor') }}</h2>
                 <span class="cb__accent" aria-hidden="true"></span>
             </header>
 
             <div class="cb__block">
-                <div class="cb__label">Predsjednik:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.predsednik') }}:
+                </div>
                 <div class="cb__value">Nedeljko Ćorić</div>
             </div>
 
             <div class="cb__block">
-                <div class="cb__label">Generalni direktor:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.generalniDirektor') }}:
+                </div>
                 <div class="cb__value">Goran Janjić</div>
             </div>
 
             <div class="cb__block cb__block--list">
-                <div class="cb__label">Članovi upravnog odbora:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.clanoviUprave') }}:
+                </div>
                 <ul class="cb__list">
-                    <li>Nedeljko Ćorić (predsjednik)</li>
+                    <li>Nedeljko Ćorić
+                        ({{ $t('pages.clubPage.cards.board.predsednik') }})
+                    </li>
                     <li>Žarko Novaković</li>
                     <li>Milan Trninić</li>
                     <li>Mihailo Stevanović</li>
@@ -33,17 +42,22 @@
                 </ul>
             </div>
             <header class="cb__header cb__header--spaced">
-                <h2 class="cb__title">Skupština kluba</h2>
+                <h2 class="cb__title">
+                    {{ $t('pages.clubPage.cards.board.skupstinaKluba') }}</h2>
                 <span class="cb__accent" aria-hidden="true"></span>
             </header>
 
             <div class="cb__block">
-                <div class="cb__label">Predsjednik:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.predsednik') }}:
+                </div>
                 <div class="cb__value">Duško Glišić</div>
             </div>
 
             <div class="cb__block cb__block--list">
-                <div class="cb__label">Potpredsjednici:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.potpredsjednici') }}:
+                </div>
                 <ul class="cb__list">
                     <li>Živorad Miražić</li>
                     <li>Nail Sobo</li>
@@ -51,7 +65,9 @@
             </div>
 
             <div class="cb__block cb__block--list">
-                <div class="cb__label">Članovi skupštine:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.clanoviSkupstine') }}:
+                </div>
                 <ul class="cb__list cb__list--cols">
                     <li>Vladimir Močević</li>
                     <li>Miroslav Jevtić</li>
@@ -68,12 +84,15 @@
                 </ul>
             </div>
             <header class="cb__header cb__header--spaced">
-                <h2 class="cb__title">Nadzorni odbor</h2>
+                <h2 class="cb__title">
+                    {{ $t('pages.clubPage.cards.board.nadzorniOdbor') }}</h2>
                 <span class="cb__accent" aria-hidden="true"></span>
             </header>
 
             <div class="cb__block cb__block--list">
-                <div class="cb__label">Članovi:</div>
+                <div class="cb__label">
+                    {{ $t('pages.clubPage.cards.board.clanovi') }}:
+                </div>
                 <ul class="cb__list">
                     <li>Milan Lazarević</li>
                     <li>Mladen Đukić</li>
@@ -81,12 +100,15 @@
                 </ul>
             </div>
             <header class="cb__header cb__header--spaced">
-                <h2 class="cb__title">Skauting služba</h2>
+                <h2 class="cb__title">
+                    {{ $t('pages.clubPage.cards.board.skautingSluzba') }}</h2>
                 <span class="cb__accent" aria-hidden="true"></span>
             </header>
 
             <ul class="cb__list">
-                <li>Filip Vujić - šef skauting službe</li>
+                <li>Filip Vujić -
+                    {{ $t('pages.clubPage.cards.board.sefSkautingSluzbe') }}
+                </li>
                 <li>Nikola Janković</li>
                 <li>Cvijetin Pavić</li>
             </ul>
