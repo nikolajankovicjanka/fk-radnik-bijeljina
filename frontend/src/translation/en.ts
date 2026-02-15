@@ -10,6 +10,11 @@ export default {
         loadMore: "Load more",
         loading: "Loading...",
         error: "Error",
+        contactUs: "Contact Us",
+        privacy: "Privacy Policy",
+        usloviKoristenja: "Terms & Conditions",
+        siteMap: "Sitemap",
+        allRightsReserved: "All rights reserved"
     },
 
     nav: {
@@ -123,14 +128,37 @@ export default {
             allNews: "All news",
             cards: {
                 general: {
-                    title: "Basic information",
+                    title: "Basic Information",
                     desc: "Stadium, club colors, organization, documents and key information.",
-                    alt: "Basic information",
+                    alt: "Basic Information",
+                    adresa: "Address",
+                    nadimak: "Nickname",
+                    osnovan: "Founded",
+                    kapacitetStadiona: "Stadium Capacity",
+                    teren: "Pitch",
+                    kontakt: "Contact",
+                    opsteInformacije: "General Information",
+                    ulaznice: "Tickets",
+                    danUtakmiceTitle: "Matchday - General Information",
+                    danUtakmiceText: "Information about entrances, parking and rules of conduct is available in the matchday guide.",
+                    pravilaPonasanjaTitle: "Code of Conduct",
+                    pravilaPonasanjaText: "Stadium rules apply to all visitors. Bringing pyrotechnics and dangerous items is prohibited."
                 },
                 board: {
-                    title: "Club management",
+                    title: "Club Management",
                     desc: "Management, leadership and organizational structure of the club.",
-                    alt: "Club management",
+                    alt: "Club Management",
+                    upravniOdbor: "Board of Directors",
+                    predsednik: "President",
+                    generalniDirektor: "General Director",
+                    clanoviUprave: "Board Members",
+                    skupstinaKluba: "Club Assembly",
+                    potpredsjednici: "Vice Presidents",
+                    clanoviSkupstine: "Assembly Members",
+                    nadzorniOdbor: "Supervisory Board",
+                    clanovi: "Members",
+                    skautingSluzba: "Scouting Department",
+                    sefSkautingSluzbe: "Head of Scouting"
                 },
                 history: {
                     title: "History of Radnik",

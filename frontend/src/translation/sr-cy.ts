@@ -10,6 +10,11 @@ export default {
         loadMore: "Учитај још",
         loading: "Учитавање...",
         error: "Грешка",
+        contactUs: "Контактирајте нас",
+        privacy: "Политика приватности",
+        usloviKoristenja: "Услови коришћења",
+        siteMap: "Мапа сајта",
+        allRightsReserved: "Сва права задржана"
     },
 
     nav: {
@@ -126,11 +131,34 @@ export default {
                     title: "Основне информације",
                     desc: "Стадион, боје клуба, организација, документи и кључне информације.",
                     alt: "Основне информације",
+                    adresa: "Адреса",
+                    nadimak: "Надимак",
+                    osnovan: "Основан",
+                    kapacitetStadiona: "Капацитет стадиона",
+                    teren: "Терен",
+                    kontakt: "Контакт",
+                    opsteInformacije: "Опште информације",
+                    ulaznice: "Улазнице",
+                    danUtakmiceTitle: "Дан утакмице - опште информације",
+                    danUtakmiceText: "Информације о улазима, паркингу и правилима понашања доступне су у водичу за дан утакмице.",
+                    pravilaPonasanjaTitle: "Правила понашања",
+                    pravilaPonasanjaText: "Правила стадиона важе за све посетиоце. Унос пиротехнике и опасних предмета је забрањен."
                 },
                 board: {
                     title: "Управа клуба",
                     desc: "Управа, руководство и организациона структура клуба.",
                     alt: "Управа клуба",
+                    upravniOdbor: "Управни одбор",
+                    predsednik: "Председник",
+                    generalniDirektor: "Генерални директор",
+                    clanoviUprave: "Чланови управног одбора",
+                    skupstinaKluba: "Скупштина клуба",
+                    potpredsjednici: "Потпредседници",
+                    clanoviSkupstine: "Чланови скупштине",
+                    nadzorniOdbor: "Надзорни одбор",
+                    clanovi: "Чланови",
+                    skautingSluzba: "Скаутинг служба",
+                    sefSkautingSluzbe: "Шеф скаутинг службе"
                 },
                 history: {
                     title: "Историја Радника",
