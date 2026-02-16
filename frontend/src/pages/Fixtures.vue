@@ -16,19 +16,21 @@ const {locale} = useI18n()
 const TEAM: TeamType = "first_team"
 const gamesStore = useGamesStore()
 
-// Mapiraj i18n locale (bs/sr/en/de/it...) na Intl locale
 const intlLocale = computed(() => {
     const l = String(locale.value || "sr")
+
     const map: Record<string, string> = {
-        sr: "sr-RS",
-        bs: "bs-BA",
-        hr: "hr-HR",
+        sr: "sr-RS",        // latinica
+        "sr-cy": "sr-RS",   // ćirilica (isto regionalno)
         en: "en-GB",
+        es: "es-ES",
+        fr: "fr-FR",
         de: "de-DE",
-        it: "it-IT",
     }
+
     return map[l] ?? "sr-RS"
 })
+
 
 function formatDateLong(iso: string) {
     const d = new Date(iso)
