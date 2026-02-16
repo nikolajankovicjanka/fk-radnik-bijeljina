@@ -59,12 +59,92 @@ const item = ref<(NewsItem & { content?: string }) | null>(null)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 
+const SITE_NAME = "FK Radnik Bijeljina"
+const SITE_URL = "https://fkradnikbijeljina.com"
+
+function setOrCreateMetaByName(name: string, content: string) {
+    let el = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null
+    if (!el) {
+        el = document.createElement("meta")
+        el.setAttribute("name", name)
+        document.head.appendChild(el)
+    }
+    el.setAttribute("content", content)
+}
+
+function setOrCreateMetaByProperty(property: string, content: string) {
+    let el = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null
+    if (!el) {
+        el = document.createElement("meta")
+        el.setAttribute("property", property)
+        document.head.appendChild(el)
+    }
+    el.setAttribute("content", content)
+}
+
+function setCanonical(href: string) {
+    let el = document.querySelector(`link[rel="canonical"]`) as HTMLLinkElement | null
+    if (!el) {
+        el = document.createElement("link")
+        el.setAttribute("rel", "canonical")
+        document.head.appendChild(el)
+    }
+    el.setAttribute("href", href)
+}
+
+function stripHtml(html: string) {
+    return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
+}
+
+function makeDescription(i: {
+    excerpt?: string | null,
+    content?: string | null
+}) {
+    const base = (i.excerpt && i.excerpt.trim().length > 10)
+        ? i.excerpt
+        : (i.content ? stripHtml(i.content) : "")
+
+    if (!base) {
+        return "Zvanična stranica FK Radnik Bijeljina. Vijesti, rezultati, raspored, igrači, tabela i informacije o klubu."
+    }
+
+    return base.length > 160 ? base.slice(0, 157).trimEnd() + "…" : base
+}
+
+function applySeoForNews(i: (NewsItem & { content?: string })) {
+    const url = `${SITE_URL}/news/${props.slug}`
+    const title = `${i.title} | ${SITE_NAME}`
+    const description = makeDescription(i)
+    const image = i.image ? (i.image.startsWith("http") ? i.image : `${SITE_URL}${i.image}`) : `${SITE_URL}/logo/FK_Radnik_logo.png`
+
+    document.title = title
+    setOrCreateMetaByName("description", description)
+    setCanonical(url)
+
+    setOrCreateMetaByProperty("og:type", "article")
+    setOrCreateMetaByProperty("og:site_name", SITE_NAME)
+    setOrCreateMetaByProperty("og:title", title)
+    setOrCreateMetaByProperty("og:description", description)
+    setOrCreateMetaByProperty("og:url", url)
+    setOrCreateMetaByProperty("og:image", image)
+
+    setOrCreateMetaByName("twitter:card", "summary_large_image")
+    setOrCreateMetaByName("twitter:title", title)
+    setOrCreateMetaByName("twitter:description", description)
+    setOrCreateMetaByName("twitter:image", image)
+}
+
 async function load(slug: string) {
     try {
         isLoading.value = true
         error.value = null
         item.value = null
-        item.value = await getNewsBySlug(slug)
+
+        const data = await getNewsBySlug(slug)
+        item.value = data
+
+        // SEO update nakon što imamo sadržaj
+        if (data) applySeoForNews(data)
     } catch (e: any) {
         error.value = e?.message ?? 'Failed to load news'
         item.value = null

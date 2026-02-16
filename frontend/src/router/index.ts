@@ -22,11 +22,19 @@ const routes = [
                 path: '',
                 name: 'Home',
                 component: () => import('@/pages/Home.vue'),
+                meta: {
+                    heroTitleKey: 'club.name',
+                    heroDescKey: 'pages.clubPage.heroDesc',
+                },
             },
             {
                 path: "first-team",
                 name: "First Team",
                 component: () => import("@/pages/FirstTeam.vue"),
+                meta: {
+                    heroTitleKey: 'pages.firstTeam.title',
+                    heroDescKey: 'hero.panels.team.desc',
+                },
                 beforeEnter: async () => {
                     const newsStore = useNewsStore()
                     const gamesStore = useGamesStore()
@@ -116,17 +124,30 @@ const routes = [
                 path: 'news',
                 name: 'News',
                 component: () => import('@/pages/News.vue'),
+                meta: {
+                    heroTitleKey: 'pages.newsPage.heroTitle',
+                    heroDescKey: 'pages.newsPage.heroDesc',
+                },
             },
             {
                 path: 'news/:slug',
                 name: 'NewsSingle',
                 component: () => import('@/pages/NewsSingle.vue'),
                 props: true,
+                meta: {
+                    // default dok se ne postavi dinamički iz API-a u NewsSingle.vue
+                    heroTitleKey: 'pages.newsPage.heroTitle',
+                    heroDescKey: 'pages.newsPage.heroDesc',
+                },
             },
             {
                 path: "fixtures",
                 name: "Fixtures",
                 component: () => import("@/pages/Fixtures.vue"),
+                meta: {
+                    heroTitleKey: 'pages.fixtures.heroTitle',
+                    heroDescKey: 'pages.fixtures.heroDesc',
+                },
                 beforeEnter: async () => {
                     const gamesStore = useGamesStore()
 
@@ -189,6 +210,10 @@ const routes = [
                 path: 'women-team',
                 name: 'WomenTeam',
                 component: () => import('@/pages/WomenTeam.vue'),
+                meta: {
+                    heroTitleKey: 'hero.panels.women.title',
+                    heroDescKey: 'hero.panels.women.desc',
+                },
             },
         ],
     },
