@@ -9,12 +9,30 @@ import MatchCardNext from "@/components/matches/MatchCardNext.vue"
 import type {LastMatch} from "@/components/matches/MatchCardLast.vue"
 import type {NextMatch} from "@/components/matches/MatchCardNext.vue"
 
+import {useI18n} from "vue-i18n"
+
+const {locale} = useI18n()
+
 const TEAM: TeamType = "first_team"
 const gamesStore = useGamesStore()
 
+// Mapiraj i18n locale (bs/sr/en/de/it...) na Intl locale
+const intlLocale = computed(() => {
+    const l = String(locale.value || "sr")
+    const map: Record<string, string> = {
+        sr: "sr-RS",
+        bs: "bs-BA",
+        hr: "hr-HR",
+        en: "en-GB",
+        de: "de-DE",
+        it: "it-IT",
+    }
+    return map[l] ?? "sr-RS"
+})
+
 function formatDateLong(iso: string) {
     const d = new Date(iso)
-    return d.toLocaleDateString("sr-RS", {
+    return d.toLocaleDateString(intlLocale.value, {
         day: "2-digit",
         month: "long",
         year: "numeric",
@@ -22,11 +40,11 @@ function formatDateLong(iso: string) {
 }
 
 function formatDateShort(iso: string) {
-    return new Date(iso).toLocaleDateString("sr-RS")
+    return new Date(iso).toLocaleDateString(intlLocale.value)
 }
 
 function formatTime(iso: string) {
-    return new Date(iso).toLocaleTimeString("sr-RS", {
+    return new Date(iso).toLocaleTimeString(intlLocale.value, {
         hour: "2-digit",
         minute: "2-digit",
     })
@@ -38,7 +56,6 @@ function scoreText(g: Game) {
     return `${hs} : ${as}`
 }
 
-// Ako želiš da competition bude takmičenje, a round da ide gore u headeru kartice:
 function competitionText(g: Game) {
     return g.competition ?? "—"
 }
@@ -103,7 +120,7 @@ const upcomingCardsByMonth = computed(() =>
                 </div>
             </header>
         </section>
-        
+
         <!-- LAST RESULTS -->
         <section class="mx-auto max-w-7xl px-4 py-12">
             <div class="flex items-end justify-between gap-4">
