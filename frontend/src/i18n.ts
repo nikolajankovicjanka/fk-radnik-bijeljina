@@ -1,18 +1,24 @@
-import {createI18n} from 'vue-i18n'
-import {messages, type SupportedLocale} from '@/translation'
+import {createI18n} from "vue-i18n"
+import {messages, type SupportedLocale} from "@/translation"
 
-const defaultLocale: SupportedLocale =
-    (localStorage.getItem('fk_lang') as SupportedLocale) ?? 'sr-Latn'
+const FALLBACK_LOCALE: SupportedLocale = "sr-Latn"
 
-export const i18n = createI18n({
+function readSavedLocale(): SupportedLocale {
+    const raw = localStorage.getItem("fk_lang")
+    return raw && raw in messages ? (raw as SupportedLocale) : FALLBACK_LOCALE
+}
+
+type MessageSchema = (typeof messages)[typeof FALLBACK_LOCALE]
+
+export const i18n = createI18n<[MessageSchema], SupportedLocale, false>({
     legacy: false,
     globalInjection: true,
-    locale: defaultLocale,
-    fallbackLocale: 'sr-Latn',
+    locale: readSavedLocale(),
+    fallbackLocale: FALLBACK_LOCALE,
     messages,
 })
 
 export function setLocale(locale: SupportedLocale) {
     i18n.global.locale.value = locale
-    localStorage.setItem('fk_lang', locale)
+    localStorage.setItem("fk_lang", locale)
 }
