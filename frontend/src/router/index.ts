@@ -47,7 +47,11 @@ const routes = [
                         await newsStore.load(1)
                     }
                     if (!gamesStore.items.length) await gamesStore.load(50)
-                    if (!playersStore.items.length) await playersStore.load(200)
+                    await playersStore.load({
+                        perPage: 200,
+                        team_type: "first_team",
+                        active: true
+                    })
                 },
             },
             {
@@ -160,6 +164,15 @@ const routes = [
             {
                 path: "youth-team",
                 component: () => import("@/pages/youth/YouthLayout.vue"),
+                beforeEnter: async () => {
+                    const playersStore = usePlayersStore()
+                    // učitaj samo youth igrače
+                    await playersStore.load({
+                        perPage: 400,
+                        team_type: "youth",
+                        active: true
+                    })
+                },
                 children: [
                     {
                         path: "",

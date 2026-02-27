@@ -170,16 +170,16 @@ watch(
         await refreshCards()
     }
 )
-
 onMounted(async () => {
     newsStore.activeCategory = "first_team"
-    if (!newsStore.items.length) await newsStore.load(1)
-    if (!gamesStore.items.length) await gamesStore.load(50)
-    if (!playersStore.items.length) await playersStore.load(200)
+    if (!(newsStore.items?.length)) await newsStore.load(1)
+    if (!(gamesStore.items?.length)) await gamesStore.load(50)
+    if (!(playersStore.items?.length)) await playersStore.load(200)
 
     await refreshSections()
     await refreshCards()
-    if (!staffStore.items.length) await staffStore.load(TEAM)
+
+    if (!(staffStore.items?.length)) await staffStore.load(TEAM)
 })
 </script>
 
