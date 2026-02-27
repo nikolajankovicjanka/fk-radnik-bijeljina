@@ -2,8 +2,7 @@
 import {computed, onMounted, watch} from "vue"
 import {i18n} from "@/i18n"
 
-import type {TeamType} from "@/types/game"
-import type {PlayerPosition} from "@/types/player"
+import type {TeamType, PlayerPosition} from "@/types/player"
 
 import {usePlayersStore} from "@/stores/players"
 import {useGamesStore} from "@/stores/games"
@@ -166,28 +165,26 @@ watch(
 )
 
 onMounted(async () => {
-    // players (youth) - učitaj ako nije učitano (bitno: items može biti undefined)
-    if (!(playersStore.items?.length)) {
-        await playersStore.load({
-            perPage: 400,
-            team_type: TEAM,
-            active: true,
-        })
+    if (!playersStore.activeByTeam(TEAM).length) {
+        await playersStore.load({perPage: 400, team_type: TEAM, active: true})
     }
 
-    if (!(gamesStore.items?.length)) await gamesStore.load(50)
+    if (!gamesStore.upcomingAll(TEAM).length) {
+        await gamesStore.loadScheduled(TEAM, 200)
+    }
 
     await refreshSections()
     await refreshCards()
 
-    // staff (youth)
-    if (!staffStore.activeByTeam(TEAM).length) await staffStore.load(TEAM)
+    if (!staffStore.activeByTeam(TEAM).length) {
+        await staffStore.load(TEAM)
+    }
 })
 </script>
 
 <template>
     <main class="bg-white">
-        
+
 
         <!-- NEXT MATCH CARD -->
         <section class="mx-auto max-w-7xl px-4 py-12">

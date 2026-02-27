@@ -172,14 +172,33 @@ watch(
 )
 onMounted(async () => {
     newsStore.activeCategory = "first_team"
-    if (!(newsStore.items?.length)) await newsStore.load(1)
-    if (!(gamesStore.items?.length)) await gamesStore.load(50)
-    if (!(playersStore.items?.length)) await playersStore.load(200)
+
+    const tasks: Promise<any>[] = []
+
+    if (!(newsStore.items?.length)) tasks.push(newsStore.load(1))
+
+    if (!gamesStore.upcomingAll(TEAM).length) {
+        tasks.push(gamesStore.loadScheduled(TEAM, 200))
+    }
+
+    if (!playersStore.activeByTeam(TEAM).length) {
+        tasks.push(
+            playersStore.load({
+                perPage: 200,
+                team_type: TEAM,
+                active: true,
+            })
+        )
+    }
+
+    if (!staffStore.activeByTeam(TEAM).length) {
+        tasks.push(staffStore.load(TEAM))
+    }
+
+    await Promise.all(tasks)
 
     await refreshSections()
     await refreshCards()
-
-    if (!(staffStore.items?.length)) await staffStore.load(TEAM)
 })
 </script>
 
