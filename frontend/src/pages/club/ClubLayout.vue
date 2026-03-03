@@ -17,6 +17,7 @@ const heroDesc = computed(() => {
 })
 
 const heroImg = computed(() => (route.meta.heroImg as string | undefined) ?? "")
+
 </script>
 
 <template>
