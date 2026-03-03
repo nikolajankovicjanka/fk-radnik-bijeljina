@@ -77,6 +77,34 @@ export default {
 
     club: {
         name: 'FK RADNIK BIJELJINA',
+        clubHistory: {
+            badge: "FK Radnik — Bijeljina",
+            title: "A Través de las Décadas — Momentos Clave",
+            desc: "La historia del club presentada a través de los períodos y logros más importantes que han dado forma a la identidad y tradición del Radnik.",
+
+            blocks: [
+                {
+                    label: "1945–1957",
+                    title: "Fundación y primeros éxitos",
+                    text: "Antes de la Segunda Guerra Mundial, los predecesores del actual Radnik fueron los clubes de fútbol Podrinje, Zora y Radnički. El 14 de junio de 1945 se fundó oficialmente el FK Radnik. El club mantuvo su nombre, excepto entre 1995 y 1997, cuando se llamó FK Panteri Bijeljina. Radnik ganó su primer trofeo en 1948 como campeón de la región de Tuzla. Un año después alcanzó los dieciseisavos de final de la Copa Yugoslava y en 1957 ingresó en la zona Novi Sad–Srem.",
+                },
+                {
+                    label: "1971/72",
+                    title: "Temporada dorada en Yugoslavia",
+                    text: "Radnik logró su mayor éxito durante la era yugoslava en la temporada 1971/72 al ganar la Liga Republicana de Bosnia y Herzegovina. En el playoff de ascenso a la Segunda Liga Yugoslava derrotó al FK Sloga Vukovar con marcadores globales de 4:0 y 8:0, asegurando el ascenso.",
+                },
+                {
+                    label: "1998/99 & 2004/05",
+                    title: "Primera Liga de la República Srpska",
+                    text: "Tras la disolución de Yugoslavia, Radnik se convirtió en bicampeón de la Primera Liga de la República Srpska en las temporadas 1998/99 y 2004/05. El segundo título aseguró el ascenso a la Premier League de Bosnia y Herzegovina.",
+                },
+                {
+                    label: "2011/12–2015/16",
+                    title: "Regreso a la élite y triunfo en la Copa",
+                    text: "Como campeón de la Primera Liga de la República Srpska en 2011/12, Radnik regresó a la Premier League. El mayor logro en la historia reciente del club fue la conquista de la Copa de Bosnia y Herzegovina en la temporada 2015/16.",
+                },
+            ],
+        }
     },
 
     matches: {

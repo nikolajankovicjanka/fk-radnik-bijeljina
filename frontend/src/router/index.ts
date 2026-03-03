@@ -92,6 +92,7 @@ const routes = [
                         meta: {
                             heroTitleKey: 'pages.clubPage.cards.history.title',
                             heroDescKey: 'pages.clubPage.cards.history.desc',
+                            heroImg: '/club/fk-radnik-stadion.jpg',
                         },
                     },
                     {
