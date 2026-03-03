@@ -256,7 +256,7 @@ onMounted(async () => {
         </section>
 
         <!-- NEXT MATCH CARD -->
-        <section class="mx-auto max-w-7xl px-4 py-12">
+        <section class="mx-auto max-w-7xl px-4 py-10">
             <div>
                 <h2 class="n-title mb-4">
                     {{ $t("pages.firstTeam.nextMatch") }}
