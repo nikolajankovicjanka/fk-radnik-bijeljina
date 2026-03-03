@@ -126,6 +126,7 @@ export default {
         firstTeam: {
             heroAlt: 'Erste Mannschaft',
             title: 'Erste Mannschaft',
+            tabela: 'Ligatabelle',
             allMatches: 'Alle Spiele',
             nextMatch: 'Nächstes Spiel',
             noScheduled: 'Aktuell keine geplanten Spiele.',

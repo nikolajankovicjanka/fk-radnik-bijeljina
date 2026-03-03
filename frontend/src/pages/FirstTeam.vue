@@ -215,6 +215,7 @@ onMounted(async () => {
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-black/10"/>
 
+
             <div class="absolute inset-x-0 bottom-0">
                 <div class="mx-auto max-w-7xl px-4 pb-10 text-white">
                     <div class="flex items-end justify-between gap-6">
@@ -239,6 +240,19 @@ onMounted(async () => {
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section class="mx-auto max-w-7xl px-4 py-12">
+            <div>
+                <h2 class="n-title mb-4">
+                    {{ $t("pages.firstTeam.tabela") }}
+                    <span class="n-title-arrow">→</span>
+                </h2>
+            </div>
+            <iframe id="sofa-standings-embed-2557-77355"
+                    src="https://widgets.sofascore.com/embed/tournament/2557/season/77355/standings/Premijer%20Liga%2025%2F26?widgetTitle=Premijer%20Liga%2025%2F26&showCompetitionLogo=true"
+                    style=height:723px!important;max-width:1268px!important;width:100%!important;
+                    frameborder="0" scrolling="no"></iframe>
         </section>
 
         <!-- NEXT MATCH CARD -->

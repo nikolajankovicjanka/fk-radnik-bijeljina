@@ -185,6 +185,19 @@ onMounted(async () => {
 <template>
     <main class="bg-white">
 
+        <section class="mx-auto max-w-7xl px-4 py-12">
+            <div>
+                <h2 class="n-title mb-4">
+                    {{ $t("pages.firstTeam.tabela") }}
+                    <span class="n-title-arrow">→</span>
+                </h2>
+            </div>
+            <iframe id="sofa-standings-embed-135596-77335"
+                    src="https://widgets.sofascore.com/embed/tournament/135596/season/77335/standings/Premijer%20Liga%20BiH%20Juniori%2025%2F26?widgetTitle=Premijer%20Liga%20BiH%20Juniori%2025%2F26&showCompetitionLogo=true"
+                    style=height:963px!important;max-width:1268px!important;width:100%!important;
+                    frameborder="0" scrolling="no"></iframe>
+        </section>
+
 
         <!-- NEXT MATCH CARD -->
         <section class="mx-auto max-w-7xl px-4 py-12">
