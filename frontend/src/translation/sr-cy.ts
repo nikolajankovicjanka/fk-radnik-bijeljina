@@ -126,6 +126,7 @@ export default {
         firstTeam: {
             heroAlt: 'Први тим',
             title: 'Први тим',
+            tabela: 'Табела',
             allMatches: 'Сви мечеви',
             nextMatch: 'Наредна утакмица',
             noScheduled: 'Тренутно нема заказаних утакмица.',

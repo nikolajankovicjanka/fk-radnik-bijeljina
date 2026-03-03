@@ -126,6 +126,7 @@ export default {
         firstTeam: {
             heroAlt: 'Primer equipo',
             title: 'Primer equipo',
+            tabela: 'Clasificación',
             allMatches: 'Todos los partidos',
             nextMatch: 'Próximo partido',
             noScheduled: 'Actualmente no hay partidos programados.',
