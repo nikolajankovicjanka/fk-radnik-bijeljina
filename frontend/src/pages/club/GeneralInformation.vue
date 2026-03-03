@@ -50,7 +50,7 @@
                     </p>
                     <p class="gi-text gi-text--inverse">
                         {{ $t('pages.clubPage.cards.general.ulaznice') }}:
-                        <a href="tel:+38700000001"><br>+387 00 000 001</a>
+                        <a href="tel:+38755201338"> +387 55 201 338</a>
                         <span><br>(Pon–Pet, 10:00–17:00)</span>
                     </p>
                     <p class="gi-text gi-text--inverse">

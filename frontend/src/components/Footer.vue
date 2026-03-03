@@ -54,8 +54,8 @@ const footerLinks = [
                         <p>FK Radnik Bijeljina</p>
                         <p>Balkanska BB</p>
                         <p>Bijeljina, Republika Srpska</p>
-                        <p class="mt-1">+387 55 244 400</p>
-                        <p>info@fkradnik.com</p>
+                        <p><a href="tel:+38755201338"> +387 55 201 338</a></p>
+                        <p>fkradnikbijeljina@gmail.com</p>
                     </div>
                 </div>
 

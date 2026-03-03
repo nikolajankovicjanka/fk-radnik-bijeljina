@@ -31,7 +31,7 @@
             </div>
 
             <!-- 🤝 OTHERS -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
                 <a
                         v-for="sponsor in otherSponsors"
                         :key="sponsor.id"
@@ -168,6 +168,12 @@ const otherSponsors: Sponsor[] = [
         name: "Vitinka",
         logo: "/sponsors/vitinka-logo.png",
         url: "https://www.vitinka.com/"
+    },
+    {
+        id: 22,
+        name: "Hajduk",
+        logo: "/sponsors/hajduk-logo.png",
+        url: ""
     },
 ];
 </script>
