@@ -1,10 +1,12 @@
 <template>
-    <div class="h-full flex flex-col rounded-2xl bg-white shadow-[0_8px_25px_rgba(0,0,0,0.06)] overflow-hidden mb-3 transition-all duration-300 hover:shadow-[0_15px_40px_rgba(10,45,107,0.15)] hover:-translate-y-1">
+    <div
+            class="h-full flex flex-col rounded-2xl bg-white shadow-[0_8px_25px_rgba(0,0,0,0.06)] overflow-hidden mb-3 transition-all duration-300 hover:shadow-[0_15px_40px_rgba(10,45,107,0.15)] hover:-translate-y-1"
+    >
         <!-- Header sa rundom i datumom -->
         <div class="px-5 py-3 bg-gradient-to-r from-blue-50/40 to-white">
             <div class="flex items-center justify-between">
                 <div class="text-[11px] font-extrabold tracking-widest text-[#0A2D6B] uppercase">
-                    {{ match.round ?? $t('matches.match') }}
+                    {{ match.round ?? $t("matches.match") }}
                 </div>
                 <div class="text-[11px] font-semibold text-gray-500">
                     {{ formattedDate }}
@@ -54,8 +56,10 @@
 
                     <!-- Dodatni status ako je završeno -->
                     <div class="mt-1">
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700">
-              {{ $t('matches.finished') }}
+            <span
+                    class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-green-700"
+            >
+              {{ $t("matches.finished") }}
             </span>
                     </div>
                 </div>
@@ -85,29 +89,33 @@
             </div>
         </div>
 
-        <!-- Dugme -->
+        <!-- Dugme (Link na Match Centre placeholder) -->
         <div class="px-5 pb-5">
-            <button
-                    type="button"
-                    @click="$emit('details', match)"
-                    class="w-full rounded-xl bg-gradient-to-r from-[#0A2D6B] to-[#1e40af] text-white py-2.5 text-sm font-bold hover:from-[#1e40af] hover:to-[#0A2D6B] transition-all shadow-md hover:shadow-lg group"
+            <RouterLink
+                    :to="{ name: 'MatchCentre', params: { id: matchCentreId } }"
+                    class="group block w-full rounded-xl bg-gradient-to-r from-[#0A2D6B] to-[#1e40af] text-white py-2.5 text-sm font-bold text-center transition-all shadow-md hover:shadow-lg hover:from-[#1e40af] hover:to-[#0A2D6B]"
             >
         <span class="flex items-center justify-center gap-2">
-          {{ $t('matches.matchCentre') }}
-          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform"
-               fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {{ $t("matches.matchCentre") }}
+          <svg
+                  class="w-4 h-4 transition-transform group-hover:translate-x-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+          >
             <path stroke-linecap="round" stroke-linejoin="round"
                   stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
         </span>
-            </button>
+            </RouterLink>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
-import {i18n} from '@/i18n'
+import {computed} from "vue"
+import {RouterLink} from "vue-router"
+import {i18n} from "@/i18n"
 
 export type Team = {
     id?: number
@@ -118,6 +126,7 @@ export type Team = {
 }
 
 export type LastMatch = {
+    id?: number // ✅ dodato da RouterLink uvijek ima nešto smisleno
     home: Team
     away: Team
     score: string
@@ -129,19 +138,15 @@ export type LastMatch = {
 
 const props = defineProps<{ match: LastMatch }>()
 
-defineEmits<{
-    details: [match: LastMatch]
-}>()
-
 const toDateLocale = (loc: string) => {
-    if (loc === 'sr-Latn') return 'sr-Latn-RS'
-    if (loc === 'sr-Cyrl') return 'sr-Cyrl-RS'
+    if (loc === "sr-Latn") return "sr-Latn-RS"
+    if (loc === "sr-Cyrl") return "sr-Cyrl-RS"
     return loc
 }
 
 const displayScore = computed(() => {
-    const raw = props.match.score ?? ''
-    return raw.replace(/\s*:\s*/g, ':').trim()
+    const raw = props.match.score ?? ""
+    return raw.replace(/\s*:\s*/g, ":").trim()
 })
 
 const formattedDate = computed(() => {
@@ -150,12 +155,17 @@ const formattedDate = computed(() => {
     try {
         const d = new Date(props.match.kickoff_at)
         return d.toLocaleDateString(toDateLocale(i18n.global.locale.value), {
-            day: '2-digit',
-            month: 'long',
-            year: 'numeric',
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
         })
     } catch {
         return props.match.date
     }
+})
+
+const matchCentreId = computed(() => {
+    if (props.match.id != null) return String(props.match.id)
+    return props.match.kickoff_at || props.match.date || "0"
 })
 </script>
