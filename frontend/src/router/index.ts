@@ -55,6 +55,15 @@ const routes = [
                 },
             },
             {
+                path: "/match-centre/:id",
+                name: "MatchCentre",
+                component: () => import("@/pages/matches/MatchCentre.vue"),
+                meta: {
+                    heroTitleKey: "matches.matchCentre",
+                    heroDescKey: "matches.matchCentreDesc",
+                },
+            },
+            {
                 path: 'club',
                 component: () => import('@/pages/club/ClubLayout.vue'),
                 children: [
