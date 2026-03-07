@@ -110,7 +110,7 @@
                     {{ $t('pages.clubPage.cards.board.sefSkautingSluzbe') }}
                 </li>
                 <li>Nikola Janković</li>
-                <li>Cvijetin Pavić</li>
+                <li>Bojan Vuković</li>
             </ul>
 
         </div>

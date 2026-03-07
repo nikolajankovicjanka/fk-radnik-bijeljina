@@ -178,7 +178,7 @@ export default {
                     desc: "Uprava, rukovodstvo i organizaciona struktura kluba.",
                     alt: "Uprava kluba",
                     upravniOdbor: "Upravni odbor",
-                    predsednik: "Predsednik",
+                    predsednik: "Predsjednik",
                     generalniDirektor: "Generalni direktor",
                     clanoviUprave: "Članovi upravnog odbora",
                     skupstinaKluba: "Skupština kluba",
