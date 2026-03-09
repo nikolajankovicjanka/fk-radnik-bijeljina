@@ -1,10 +1,9 @@
 import {defineStore} from "pinia"
-import type {StaffMember} from "@/types/staff"
 import {fetchStaff} from "@/services/staffService"
-import type {TeamType} from "@/types/player" // ili "@/types/game" gdje god ti je TeamType
+import type {StaffMember, StaffTeamType} from "@/types/staff"
 
-type TeamCache = Record<TeamType, StaffMember[]>
-type LoadedAtCache = Partial<Record<TeamType, number>>
+type TeamCache = Record<StaffTeamType, StaffMember[]>
+type LoadedAtCache = Partial<Record<StaffTeamType, number>>
 
 export const useStaffStore = defineStore("staff", {
     state: () => ({
@@ -12,6 +11,7 @@ export const useStaffStore = defineStore("staff", {
             first_team: [],
             youth: [],
             women: [],
+            board: [],
         } as TeamCache,
 
         isLoading: false,
@@ -21,7 +21,7 @@ export const useStaffStore = defineStore("staff", {
     }),
 
     getters: {
-        activeByTeam: (state) => (team: TeamType) =>
+        activeByTeam: (state) => (team: StaffTeamType) =>
             (state.itemsByTeam[team] ?? [])
                 .filter((s) => s.is_active)
                 .slice()
@@ -29,7 +29,7 @@ export const useStaffStore = defineStore("staff", {
     },
 
     actions: {
-        async load(team: TeamType, force = false) {
+        async load(team: StaffTeamType, force = false) {
             const loadedAt = this.loadedAtByTeam[team]
             if (!force && loadedAt && Date.now() - loadedAt < 60_000) return
 

@@ -180,6 +180,8 @@ export default {
                     upravniOdbor: "Upravni odbor",
                     predsednik: "Predsjednik",
                     generalniDirektor: "Generalni direktor",
+                    sekretarUprave: "Sekretar upravnog odbora",
+                    sekretarKluba: "Sekretar kluba",
                     clanoviUprave: "Članovi upravnog odbora",
                     skupstinaKluba: "Skupština kluba",
                     potpredsjednici: "Potpredsjednici",
@@ -187,6 +189,8 @@ export default {
                     nadzorniOdbor: "Nadzorni odbor",
                     clanovi: "Članovi",
                     skautingSluzba: "Skauting sluzba",
+                    sluzbaEkonomata: "Služba ekonomata",
+                    komesarZaBezbjednost: "Komesar za bezbjednost",
                     sefSkautingSluzbe: "Šef skauting sluzbe",
                 },
                 history: {

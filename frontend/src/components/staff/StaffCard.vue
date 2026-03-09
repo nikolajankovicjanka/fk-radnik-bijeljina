@@ -54,12 +54,23 @@ const roleLabel = computed(() => {
     const map: Record<string, string> = {
         head_coach: "Šef stručnog štaba",
         assistant_coach: "Pomoćni trener",
-        goalkeeper_coach: "Trener golmana",
+        gk_coach: "Trener golmana",
         fitness_coach: "Kondicioni trener",
         physio: "Fizioterapeut",
+        doctor: "Doktor",
         analyst: "Analitičar",
         team_manager: "Team manager",
+
+        president: "Predsjednik kluba",
+        general_director: "Generalni direktor",
+        sport_director: "Sportski direktor",
+        board_secretary: "Sekretar upravnog odbora",
+        club_secretary: "Sekretar kluba",
+        board_member: "Član upravnog odbora",
+        youth_director: "Šef omladinskih selekcija",
+        economat: "Služba ekonomata",
     }
+
     const r = props.member.role ?? ""
     return map[r] ?? (r || "Staff")
 })
@@ -135,3 +146,16 @@ const roleLabel = computed(() => {
         </div>
     </article>
 </template>
+
+<style scoped>
+/* Osigurava da kartica ima minimalnu visinu i pre učitavanja slike */
+article {
+    min-height: 360px;
+}
+
+@media (min-width: 640px) {
+    article {
+        min-height: 420px;
+    }
+}
+</style>

@@ -7,6 +7,7 @@ enum TeamType: string
     case FIRST_TEAM = 'first_team';
     case YOUTH = 'youth';
     case WOMEN = 'women';
+    case BOARD = 'board';
 
     public function label() : string
     {
@@ -14,6 +15,7 @@ enum TeamType: string
             self::FIRST_TEAM => 'Prvi tim',
             self::YOUTH => 'Omladinski pogon',
             self::WOMEN => 'Žene',
+            self::BOARD => 'Uprava kluba',
         };
     }
 
