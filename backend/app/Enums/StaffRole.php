@@ -13,6 +13,15 @@ enum StaffRole: string
     case ANALYST = 'analyst';
     case TEAM_MANAGER = 'team_manager';
 
+    case PRESIDENT = 'president';
+    case GENERAL_DIRECTOR = 'general_director';
+    case SPORT_DIRECTOR = 'sport_director';
+    case BOARD_SECRETARY = 'board_secretary';
+    case CLUB_SECRETARY = 'club_secretary';
+    case BOARD_MEMBER = 'board_member';
+    case YOUTH_DIRECTOR = 'youth_director';
+    case ECONOMAT = 'economat';
+
     public function label() : string
     {
         return match ($this) {
@@ -24,6 +33,15 @@ enum StaffRole: string
             self::DOCTOR => 'Doktor',
             self::ANALYST => 'Analitičar',
             self::TEAM_MANAGER => 'Team manager',
+
+            self::PRESIDENT => 'Predsjednik kluba',
+            self::GENERAL_DIRECTOR => 'Generalni direktor',
+            self::SPORT_DIRECTOR => 'Sportski direktor',
+            self::BOARD_SECRETARY => 'Sekretar upravnog odbora',
+            self::CLUB_SECRETARY => 'Sekretar kluba',
+            self::BOARD_MEMBER => 'Član upravnog odbora',
+            self::YOUTH_DIRECTOR => 'Šef omladinskih selekcija',
+            self::ECONOMAT => 'Služba ekonomata',
         };
     }
 
