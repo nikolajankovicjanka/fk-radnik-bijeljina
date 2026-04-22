@@ -96,7 +96,7 @@ onMounted(async () => {
 
         <!-- SECTION 2 -->
         <section class="bg-slate-50">
-            <div class="mx-auto max-w-7xl px-4 py-12">
+            <div class="mx-auto max-w-7xl px-5 py-12">
                 <NewsSliderHomepage :title="$t('pages.clubPage.clubNewsTitle')"
                                     category="club" :limit="9"/>
 
