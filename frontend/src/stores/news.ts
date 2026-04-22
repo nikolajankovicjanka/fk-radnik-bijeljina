@@ -16,7 +16,7 @@ export const useNewsStore = defineStore('news', {
         error: null as string | null,
         pagination: {
             page: 1,
-            perPage: 9,
+            perPage: 50,
             total: 0,
             lastPage: 1,
         } as Pagination,
