@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\GamesController;
 use App\Http\Controllers\Api\PlayersController;
 use App\Http\Controllers\Api\StaffMemberController;
+use App\Http\Controllers\Api\ClubDocumentController;
 
 
 /*
@@ -36,3 +37,5 @@ Route::get('/players', [PlayersController::class, 'index']);
 Route::get('/players/{player}', [PlayersController::class, 'show']);
 
 Route::get('/staff', [StaffMemberController::class, 'index']);
+
+Route::get('/club-documents', [ClubDocumentController::class, 'index']);
