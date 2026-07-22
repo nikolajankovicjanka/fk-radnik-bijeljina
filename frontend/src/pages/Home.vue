@@ -17,14 +17,14 @@
     </section>
 
     <SeasonTicketsPromo
-            image-src="/hero/fk-radnik-sezonske.jpg"
-            title="Sezonske karte u prodaji"
-            subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
-            badge-text="2025/26"
-            primary-href="/tickets"
-            primary-text="Kupi sezonsku"
-            secondary-href="/contact"
-            secondary-text="Kontakt"
+        image-src="/hero/fk-radnik-sezonske.png"
+        title="Sezonske karte u prodaji"
+        subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
+        badge-text="2026/27"
+        ticket-email="office@fkradnikbijeljina.com"
+        phone-number="+387XXXXXXXX"
+        primary-text="Kupi sezonsku"
+        secondary-text="Kontakt"
     />
 
     <SponsorsSection/>
