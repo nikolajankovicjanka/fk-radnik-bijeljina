@@ -16,7 +16,7 @@
         </div>
     </section>
     <SeasonTicketPopup
-        image-src="/hero/fk-radnik-sezonske.png"
+        image-src="/hero/fk-radnik-sezonske.jpg"
         title="Sezonske karte u prodaji"
         subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
         badge-text="2026/27"
@@ -32,7 +32,7 @@
 
 
   <SeasonTicketsPromo
-        image-src="/hero/fk-radnik-sezonske.png"
+        image-src="/hero/fk-radnik-sezonske.jpg"
         title="Sezonske karte u prodaji"
         subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
         badge-text="2026/27"
