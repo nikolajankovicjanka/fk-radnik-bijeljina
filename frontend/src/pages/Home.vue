@@ -17,10 +17,14 @@
     </section>
     <SeasonTicketPopup
         image-src="/hero/fk-radnik-sezonske.png"
-        image-alt="Sezonske karte FK Radnik Bijeljina 2026/27"
+        title="Sezonske karte u prodaji"
+        subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
+        badge-text="2026/27"
         ticket-email="office@fkradnikbijeljina.com"
-        phone-number="+387XXXXXXXX"
-        :duration="6000"
+        phone-number="+38765691808"
+        primary-text="Kupi sezonsku"
+        secondary-text="Kontakt"
+        :duration="10000"
         storage-key="fk-radnik-season-ticket-popup-2026-27"
     />
 
