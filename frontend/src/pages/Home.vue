@@ -28,11 +28,8 @@
         storage-key="fk-radnik-season-ticket-popup-2026-27"
     />
 
-
-
-
   <SeasonTicketsPromo
-        image-src="/hero/fk-radnik-sezonske-banner.png"
+        image-src="/hero/fk-radnik-sezonske.png"
         title="Sezonske karte u prodaji"
         subtitle="Osiguraj svoje mjesto na tribinama. Izaberi paket i podrži FK Radnik."
         badge-text="2026/27"
