@@ -249,10 +249,10 @@ onMounted(async () => {
                     <span class="n-title-arrow">→</span>
                 </h2>
             </div>
-            <iframe id="sofa-standings-embed-2557-77355"
-                    src="https://widgets.sofascore.com/embed/tournament/2557/season/77355/standings/Premijer%20Liga%2025%2F26?widgetTitle=Premijer%20Liga%2025%2F26&showCompetitionLogo=true"
-                    style=height:723px!important;max-width:1268px!important;width:100%!important;
-                    frameborder="0" scrolling="no"></iframe>
+          <iframe id="sofa-standings-embed-2557-97761" src="https://widgets.sofascore.com/embed/tournament/2557/season/97761/standings?widgetTitle=WWIN+Liga+BiH&showCompetitionLogo=true&widgetTheme=light" frameborder="0" scrolling="no"
+                  style="width:100%!important;
+                  height:723px!important;max-width:1268px!important;"></iframe>
+
         </section>
 
         <!-- NEXT MATCH CARD -->
