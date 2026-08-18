@@ -142,25 +142,34 @@
                  flex-col items-center
                  outline-none
                  transition-[transform,opacity,filter]
-                 duration-700
-                 ease-[cubic-bezier(.22,.61,.36,1)]"
-            :class="
+                 ease-[cubic-bezier(.22,.61,.36,1)]
+                 will-change-transform"
+            :class="[
             isActive(index)
               ? 'cursor-default'
-              : 'cursor-pointer'
-          "
+              : 'cursor-pointer',
+
+            isMobile
+              ? 'duration-500'
+              : 'duration-700'
+          ]"
             :style="getItemStyle(index)"
             @pointerdown.stop
             @click.stop="activate(index)"
         >
           <div
               class="relative flex items-end justify-center
-                   transition-all duration-700"
-              :class="
+                   transition-all
+                   ease-[cubic-bezier(.22,.61,.36,1)]"
+              :class="[
               isActive(index)
                 ? 'h-[330px] w-[260px] sm:h-[380px] sm:w-[310px] lg:h-[420px] lg:w-[350px]'
-                : 'h-[250px] w-[190px] sm:h-[290px] sm:w-[220px] lg:h-[320px] lg:w-[245px]'
-            "
+                : 'h-[250px] w-[190px] sm:h-[290px] sm:w-[220px] lg:h-[320px] lg:w-[245px]',
+
+              isMobile
+                ? 'duration-500'
+                : 'duration-700'
+            ]"
           >
             <!-- Active glow behind trophy -->
             <div
@@ -181,12 +190,18 @@
                 class="relative z-20
                      max-h-full max-w-full
                      object-contain
-                     transition-all duration-700"
-                :class="
+                     transition-all
+                     ease-[cubic-bezier(.22,.61,.36,1)]
+                     will-change-transform"
+                :class="[
                 isActive(index)
                   ? 'trophy-active scale-105 brightness-110 contrast-105 drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]'
-                  : 'scale-90 grayscale brightness-[0.7] contrast-95 opacity-65 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]'
-              "
+                  : 'scale-90 grayscale brightness-[0.7] contrast-95 opacity-65 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]',
+
+                isMobile
+                  ? 'duration-500'
+                  : 'duration-700'
+              ]"
             />
 
             <!-- Active highlight -->
@@ -234,7 +249,10 @@
                  hover:scale-105
                  hover:border-[#E2B75E]
                  hover:bg-[#09233d]
+                 disabled:pointer-events-none
+                 disabled:opacity-50
                  sm:h-12 sm:w-12"
+            :disabled="isRotating"
             @pointerdown.stop
             @click.stop.prevent="prev"
         >
@@ -258,7 +276,10 @@
                  hover:scale-105
                  hover:border-[#E2B75E]
                  hover:bg-[#09233d]
+                 disabled:pointer-events-none
+                 disabled:opacity-50
                  sm:h-12 sm:w-12"
+            :disabled="isRotating"
             @pointerdown.stop
             @click.stop.prevent="next"
         >
@@ -362,13 +383,15 @@
             :key="index"
             type="button"
             data-no-drag
+            :disabled="isRotating"
             :aria-label="
             t('trophies.showTrophy', {
               number: index + 1,
             })
           "
             class="h-2.5 rounded-full
-                 transition-all duration-300"
+                 transition-all duration-300
+                 disabled:pointer-events-none"
             :class="
             isActive(index)
               ? 'w-8 bg-[#D8AD59]'
@@ -383,7 +406,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+} from 'vue'
 import { useI18n } from 'vue-i18n'
 
 type Trophy = {
@@ -411,7 +439,6 @@ const trophies: Trophy[] = [
         '1998/99 · 2004/05 · 2011/12 · 2023/24',
     image: '/trophies/pobjednik-rs-img.png',
   },
-
   {
     id: 2,
     count: 7,
@@ -423,7 +450,6 @@ const trophies: Trophy[] = [
         '2009/10 · 2012/13 · 2013/14 · 2015/16 · 2016/17 · 2017/18 · 2018/19',
     image: '/trophies/kup-rs-img.png',
   },
-
   {
     id: 3,
     count: 1,
@@ -436,14 +462,41 @@ const trophies: Trophy[] = [
   },
 ]
 
-const activeIndex = ref(0)
+/**
+ * ------------------------------------------------------
+ * Responsive viewport
+ * ------------------------------------------------------
+ */
+
+const viewportWidth = ref(1280)
+
+const updateViewportWidth = () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  viewportWidth.value = window.innerWidth
+}
+
+const isMobile = computed(() => {
+  return viewportWidth.value < 640
+})
+
+const isTablet = computed(() => {
+  return (
+      viewportWidth.value >= 640 &&
+      viewportWidth.value < 1024
+  )
+})
 
 /**
- * Always returns a Trophy.
- *
- * The fallback also prevents vue-tsc from reporting:
- * "activeTrophy is possibly undefined".
+ * ------------------------------------------------------
+ * Active trophy
+ * ------------------------------------------------------
  */
+
+const activeIndex = ref(0)
+
 const activeTrophy = computed<Trophy>(() => {
   return trophies[activeIndex.value] ?? trophies[0]!
 })
@@ -453,12 +506,80 @@ const isActive = (index: number) => {
 }
 
 /**
- * Determines whether the trophy is:
+ * ------------------------------------------------------
+ * Mobile circular wrap animation
+ * ------------------------------------------------------
+ *
+ * Kod tri elementa jedan trofej mora pri svakom pomjeranju
+ * preći sa LEFT -> RIGHT ili RIGHT -> LEFT.
+ *
+ * Na mobilnom ga zato prvo šaljemo u "back" poziciju,
+ * zatim ga prikazujemo na suprotnoj strani.
+ */
+
+const wrappingIndex = ref<number | null>(null)
+
+const isRotating = ref(false)
+
+let wrapTimer: ReturnType<typeof setTimeout> | null =
+    null
+
+let rotationTimer:
+    | ReturnType<typeof setTimeout>
+    | null = null
+
+/**
+ * Koliko dugo wrapping trofej ide prema pozadini.
+ */
+const MOBILE_WRAP_PHASE = 230
+
+/**
+ * Ukupno trajanje mobilne rotacije.
+ */
+const MOBILE_ROTATION_DURATION = 560
+
+const clearRotationTimers = () => {
+  if (wrapTimer) {
+    clearTimeout(wrapTimer)
+    wrapTimer = null
+  }
+
+  if (rotationTimer) {
+    clearTimeout(rotationTimer)
+    rotationTimer = null
+  }
+}
+
+const finishMobileRotation = () => {
+  clearRotationTimers()
+
+  /**
+   * Nakon prve faze trofej više nije zaključan
+   * u BACK poziciji i kreće prema novoj bočnoj poziciji.
+   */
+  wrapTimer = setTimeout(() => {
+    wrappingIndex.value = null
+  }, MOBILE_WRAP_PHASE)
+
+  /**
+   * Ne dozvoljavamo novu rotaciju dok prethodna
+   * vizuelno ne završi.
+   */
+  rotationTimer = setTimeout(() => {
+    isRotating.value = false
+  }, MOBILE_ROTATION_DURATION)
+}
+
+/**
+ * ------------------------------------------------------
+ * Relative carousel position
+ * ------------------------------------------------------
  *
  * -1 = left
- *  0 = active / center
+ *  0 = center
  *  1 = right
  */
+
 const getRelativePosition = (index: number) => {
   const total = trophies.length
 
@@ -476,31 +597,75 @@ const getRelativePosition = (index: number) => {
 }
 
 /**
- * Circular carousel positioning.
+ * ------------------------------------------------------
+ * Trophy position / transform
+ * ------------------------------------------------------
  */
+
 const getItemStyle = (index: number) => {
   const position = getRelativePosition(index)
 
-  const mobile =
-      typeof window !== 'undefined' &&
-      window.innerWidth < 640
+  const mobile = isMobile.value
+  const tablet = isTablet.value
 
-  const tablet =
-      typeof window !== 'undefined' &&
-      window.innerWidth < 1024
-
+  /**
+   * Malo kompaktniji raspored na telefonu.
+   *
+   * Prethodno:
+   * 150px / scale .62 / Y 40
+   *
+   * Sada:
+   * 135px / scale .58 / Y 55
+   *
+   * Vizuelno daje više osjećaja dubine.
+   */
   const sideDistance = mobile
-      ? 150
+      ? 135
       : tablet
           ? 255
           : 360
 
-  const sideScale = mobile ? 0.62 : 0.8
+  const sideScale = mobile ? 0.58 : 0.8
 
-  const sideY = mobile ? 40 : 55
+  const sideY = mobile ? 55 : 55
 
   /**
-   * Center
+   * ----------------------------------------------
+   * MOBILE BACK POSITION
+   * ----------------------------------------------
+   *
+   * Ovo je najvažniji dio izmjene.
+   *
+   * Trofej koji treba da "wrapuje" sa jedne
+   * strane na drugu prvo ide:
+   *
+   * scale 0.58
+   *      ↓
+   * scale 0.40
+   *      ↓
+   * opacity 0
+   *      ↓
+   * iza centralnog trofeja
+   */
+  if (
+      mobile &&
+      wrappingIndex.value === index
+  ) {
+    return {
+      transform: `
+        translate(-50%, -50%)
+        translateX(0px)
+        translateY(115px)
+        scale(0.40)
+      `,
+      opacity: '0',
+      zIndex: '5',
+      transitionDuration: '230ms',
+    }
+  }
+
+  /**
+   * CENTER
    */
   if (position === 0) {
     return {
@@ -512,11 +677,14 @@ const getItemStyle = (index: number) => {
       `,
       opacity: '1',
       zIndex: '30',
+      transitionDuration: mobile
+          ? '500ms'
+          : '700ms',
     }
   }
 
   /**
-   * Left
+   * LEFT
    */
   if (position === -1) {
     return {
@@ -526,13 +694,16 @@ const getItemStyle = (index: number) => {
         translateY(${sideY}px)
         scale(${sideScale})
       `,
-      opacity: mobile ? '0.5' : '0.72',
+      opacity: mobile ? '0.52' : '0.72',
       zIndex: '20',
+      transitionDuration: mobile
+          ? '500ms'
+          : '700ms',
     }
   }
 
   /**
-   * Right
+   * RIGHT
    */
   if (position === 1) {
     return {
@@ -542,18 +713,23 @@ const getItemStyle = (index: number) => {
         translateY(${sideY}px)
         scale(${sideScale})
       `,
-      opacity: mobile ? '0.5' : '0.72',
+      opacity: mobile ? '0.52' : '0.72',
       zIndex: '20',
+      transitionDuration: mobile
+          ? '500ms'
+          : '700ms',
     }
   }
 
   /**
-   * Hidden position
+   * FALLBACK / HIDDEN
    */
   return {
     transform: `
       translate(-50%, -50%)
-      scale(0.55)
+      translateX(0px)
+      translateY(110px)
+      scale(0.42)
     `,
     opacity: '0',
     zIndex: '5',
@@ -561,36 +737,133 @@ const getItemStyle = (index: number) => {
 }
 
 /**
- * Activate trophy by clicking it.
+ * ------------------------------------------------------
+ * Carousel navigation
+ * ------------------------------------------------------
  */
-const activate = (index: number) => {
-  if (index < 0 || index >= trophies.length) {
+
+const next = () => {
+  if (isRotating.value) {
     return
   }
 
+  /**
+   * Desktop/tablet može ostati standardna animacija.
+   */
+  if (!isMobile.value) {
+    activeIndex.value =
+        (activeIndex.value + 1) % trophies.length
+
+    return
+  }
+
+  isRotating.value = true
+
+  /**
+   * Kada idemo NEXT:
+   *
+   * trenutni LEFT trofej treba kasnije
+   * postati RIGHT.
+   *
+   * Njega šaljemo iza.
+   */
+  wrappingIndex.value =
+      (activeIndex.value - 1 + trophies.length) %
+      trophies.length
+
+  activeIndex.value =
+      (activeIndex.value + 1) %
+      trophies.length
+
+  finishMobileRotation()
+}
+
+const prev = () => {
+  if (isRotating.value) {
+    return
+  }
+
+  /**
+   * Desktop/tablet.
+   */
+  if (!isMobile.value) {
+    activeIndex.value =
+        (
+            activeIndex.value -
+            1 +
+            trophies.length
+        ) % trophies.length
+
+    return
+  }
+
+  isRotating.value = true
+
+  /**
+   * Kada idemo PREV:
+   *
+   * trenutni RIGHT trofej treba kasnije
+   * postati LEFT.
+   *
+   * Njega šaljemo iza.
+   */
+  wrappingIndex.value =
+      (activeIndex.value + 1) %
+      trophies.length
+
+  activeIndex.value =
+      (
+          activeIndex.value -
+          1 +
+          trophies.length
+      ) % trophies.length
+
+  finishMobileRotation()
+}
+
+/**
+ * Klik na bočni trofej ili navigation dot.
+ *
+ * Umjesto direktnog activeIndex = index,
+ * koristimo next/prev da i klik dobije istu
+ * kružnu animaciju.
+ */
+const activate = (index: number) => {
+  if (
+      index < 0 ||
+      index >= trophies.length ||
+      index === activeIndex.value ||
+      isRotating.value
+  ) {
+    return
+  }
+
+  const relativePosition =
+      getRelativePosition(index)
+
+  if (relativePosition === 1) {
+    next()
+    return
+  }
+
+  if (relativePosition === -1) {
+    prev()
+    return
+  }
+
+  /**
+   * Fallback za slučaj da kasnije carousel
+   * dobije više od 3 trofeja.
+   */
   activeIndex.value = index
 }
 
 /**
- * Next trophy.
+ * ------------------------------------------------------
+ * Swipe / drag
+ * ------------------------------------------------------
  */
-const next = () => {
-  activeIndex.value =
-      (activeIndex.value + 1) % trophies.length
-}
 
-/**
- * Previous trophy.
- */
-const prev = () => {
-  activeIndex.value =
-      (activeIndex.value - 1 + trophies.length) %
-      trophies.length
-}
-
-/**
- * Drag / swipe
- */
 const isDragging = ref(false)
 
 const startX = ref(0)
@@ -599,15 +872,15 @@ const currentX = ref(0)
 
 const dragDistance = ref(0)
 
-/**
- * Start drag.
- */
 const onPointerDown = (event: PointerEvent) => {
+  if (isRotating.value) {
+    return
+  }
+
   const target = event.target as HTMLElement
 
   /**
-   * Buttons and links must retain
-   * their normal click behaviour.
+   * Interaktivni elementi ne pokreću drag.
    */
   if (
       target.closest(
@@ -633,9 +906,6 @@ const onPointerDown = (event: PointerEvent) => {
   )
 }
 
-/**
- * Drag movement.
- */
 const onPointerMove = (event: PointerEvent) => {
   if (!isDragging.value) {
     return
@@ -647,27 +917,28 @@ const onPointerMove = (event: PointerEvent) => {
       currentX.value - startX.value
 }
 
-/**
- * Finish drag.
- */
 const onPointerUp = (event: PointerEvent) => {
   if (!isDragging.value) {
     return
   }
 
-  const threshold = 55
+  const threshold = isMobile.value
+      ? 45
+      : 55
 
   /**
-   * Drag right -> previous.
+   * Swipe right -> previous.
    */
   if (dragDistance.value > threshold) {
     prev()
   }
 
   /**
-   * Drag left -> next.
+   * Swipe left -> next.
    */
-  else if (dragDistance.value < -threshold) {
+  else if (
+      dragDistance.value < -threshold
+  ) {
     next()
   }
 
@@ -688,6 +959,31 @@ const onPointerUp = (event: PointerEvent) => {
 
   dragDistance.value = 0
 }
+
+/**
+ * ------------------------------------------------------
+ * Lifecycle
+ * ------------------------------------------------------
+ */
+
+onMounted(() => {
+  updateViewportWidth()
+
+  window.addEventListener(
+      'resize',
+      updateViewportWidth,
+      { passive: true },
+  )
+})
+
+onBeforeUnmount(() => {
+  clearRotationTimers()
+
+  window.removeEventListener(
+      'resize',
+      updateViewportWidth,
+  )
+})
 </script>
 
 <style scoped>
@@ -726,7 +1022,7 @@ const onPointerUp = (event: PointerEvent) => {
 }
 
 /**
- * Trophy information transition
+ * Active trophy information
  */
 .trophy-info-enter-active,
 .trophy-info-leave-active {
@@ -746,9 +1042,21 @@ const onPointerUp = (event: PointerEvent) => {
 }
 
 /**
- * Accessibility:
- * reduce animations if user
- * requests reduced motion.
+ * Mobile
+ *
+ * GPU acceleration dodatno smanjuje trzanje
+ * transformacije na telefonu.
+ */
+@media (max-width: 639px) {
+  button[style*='transform'] {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+}
+
+/**
+ * Reduced motion accessibility
  */
 @media (prefers-reduced-motion: reduce) {
   .trophy-active {
