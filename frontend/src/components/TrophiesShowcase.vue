@@ -42,14 +42,6 @@
         >
           {{ t('trophies.title') }}
         </h2>
-
-        <p
-            class="mx-auto mt-4 max-w-2xl
-                 text-sm leading-6 text-white/50
-                 md:text-base"
-        >
-          {{ t('trophies.description') }}
-        </p>
       </div>
 
       <!-- Carousel -->
