@@ -1,28 +1,49 @@
 <template>
   <section
-      class="relative overflow-hidden bg-[#031426] py-16 lg:py-24"
+      class="relative overflow-hidden
+           bg-[linear-gradient(135deg,#EEF4F8_0%,#DCE8F2_50%,#F4F7F9_100%)]
+           py-16 lg:py-24"
   >
     <!-- =====================================================
-         BACKGROUND
+         BACKGROUND AMBIENCE
     ====================================================== -->
     <div class="pointer-events-none absolute inset-0">
+      <!-- Central blue ambience -->
       <div
           class="absolute inset-0
-               bg-[radial-gradient(circle_at_center,rgba(15,61,103,0.32),transparent_58%)]"
+               bg-[radial-gradient(circle_at_center,rgba(3,20,38,0.07),transparent_58%)]"
       />
 
+      <!-- Gold ambience -->
+      <div
+          class="absolute left-1/2 top-[30%]
+               h-[520px] w-[520px]
+               -translate-x-1/2
+               rounded-full
+               bg-[radial-gradient(circle,rgba(216,173,89,0.12),transparent_68%)]
+               blur-3xl"
+      />
+
+      <!-- Decorative circles -->
       <div
           class="absolute -right-24 top-[-100px]
                h-[620px] w-[620px]
                rounded-full
-               border border-white/[0.025]"
+               border border-[#031426]/[0.04]"
       />
 
       <div
           class="absolute right-[-20px] top-[-20px]
                h-[460px] w-[460px]
                rounded-full
-               border border-white/[0.02]"
+               border border-[#031426]/[0.035]"
+      />
+
+      <div
+          class="absolute -left-[180px] bottom-[-260px]
+               h-[600px] w-[600px]
+               rounded-full
+               border border-[#031426]/[0.025]"
       />
     </div>
 
@@ -39,36 +60,33 @@
                  justify-center gap-4"
         >
           <span
-              class="h-px w-12 bg-[#D8AD59]/60"
+              class="h-px w-12
+                   bg-[#D8AD59]/70"
           />
 
           <span
-              class="text-[11px] font-bold uppercase
-                   tracking-[0.35em] text-[#D8AD59]"
+              class="text-[11px]
+                   font-bold uppercase
+                   tracking-[0.35em]
+                   text-[#B88A36]"
           >
             {{ t('trophies.sectionLabel') }}
           </span>
 
           <span
-              class="h-px w-12 bg-[#D8AD59]/60"
+              class="h-px w-12
+                   bg-[#D8AD59]/70"
           />
         </div>
 
         <h2
             class="text-3xl font-black uppercase
-                 tracking-tight text-white
+                 tracking-tight text-[#031426]
                  md:text-5xl lg:text-6xl"
         >
           {{ t('trophies.title') }}
         </h2>
 
-        <p
-            class="mx-auto mt-4 max-w-2xl
-                 text-sm leading-6 text-white/50
-                 md:text-base"
-        >
-          {{ t('trophies.description') }}
-        </p>
       </div>
 
       <!-- =====================================================
@@ -86,18 +104,18 @@
           @pointercancel="onPointerUp"
       >
         <!-- ===================================================
-             SPOTLIGHT
+             SPOTLIGHT BEAM
         ==================================================== -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[-90px] z-[1]
                  h-[520px] w-[300px]
                  -translate-x-1/2
-                 opacity-90"
+                 opacity-80"
         >
           <div
               class="absolute inset-0
-                   bg-[linear-gradient(to_bottom,rgba(255,222,150,0.18),rgba(216,173,89,0.07)_45%,transparent_88%)]
+                   bg-[linear-gradient(to_bottom,rgba(255,218,135,0.24),rgba(216,173,89,0.08)_45%,transparent_88%)]
                    blur-2xl"
           />
 
@@ -105,12 +123,14 @@
               class="absolute left-1/2 top-0
                    h-[430px] w-[110px]
                    -translate-x-1/2
-                   bg-[linear-gradient(to_bottom,rgba(255,239,198,0.15),transparent)]
+                   bg-[linear-gradient(to_bottom,rgba(255,226,160,0.2),transparent)]
                    blur-xl"
           />
         </div>
 
-        <!-- Radial light -->
+        <!-- ===================================================
+             ACTIVE RADIAL GLOW
+        ==================================================== -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[40%] z-[1]
@@ -118,15 +138,17 @@
                  -translate-x-1/2
                  -translate-y-1/2
                  rounded-full
-                 bg-[radial-gradient(circle,rgba(216,173,89,0.18)_0%,rgba(216,173,89,0.07)_38%,transparent_72%)]
+                 bg-[radial-gradient(circle,rgba(216,173,89,0.16)_0%,rgba(216,173,89,0.07)_38%,transparent_72%)]
                  blur-2xl"
         />
 
-        <!-- Ground reflection -->
+        <!-- ===================================================
+             GROUND REFLECTION
+        ==================================================== -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[64%] z-[2]
-                 h-[40px] w-[280px]
+                 h-[38px] w-[280px]
                  -translate-x-1/2
                  rounded-[50%]
                  bg-[#D8AD59]/20
@@ -134,7 +156,7 @@
         />
 
         <!-- ===================================================
-             ORBIT
+             OUTER ORBIT
         ==================================================== -->
         <div
             class="pointer-events-none absolute
@@ -143,10 +165,13 @@
                  -translate-x-1/2
                  -translate-y-1/2
                  rounded-[50%]
-                 border border-[#D8AD59]/20
+                 border border-[#031426]/10
                  sm:h-[200px]"
         />
 
+        <!-- ===================================================
+             INNER ORBIT
+        ==================================================== -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[58%] z-[0]
@@ -155,12 +180,12 @@
                  -translate-y-1/2
                  rounded-[50%]
                  border border-dashed
-                 border-white/[0.06]
+                 border-[#031426]/10
                  sm:h-[160px]"
         />
 
         <!-- ===================================================
-             TROPHIES
+             TROPHY ITEMS
         ==================================================== -->
         <button
             v-for="(trophy, index) in trophies"
@@ -183,12 +208,15 @@
             @click.stop="activate(index)"
         >
           <!--
-            BITNO:
-            Dimenzije ovog containera su sada ISTE
-            za aktivni i bočne trofeje.
+            VAŽNO:
 
-            Razliku u veličini kontroliše isključivo
-            transform: scale() na parent wrapperu.
+            Svi trophy containeri imaju ISTU veličinu.
+
+            Ne mijenjamo više width/height kada
+            trofej postane aktivan.
+
+            Cijelu promjenu veličine kontroliše
+            scale() na trophy-item wrapperu.
           -->
           <div
               class="relative flex
@@ -197,7 +225,9 @@
                    sm:h-[380px] sm:w-[310px]
                    lg:h-[420px] lg:w-[350px]"
           >
-            <!-- Active glow -->
+            <!-- =================================================
+                 ACTIVE GLOW
+            ================================================== -->
             <div
                 v-if="
                 isActive(index) &&
@@ -214,18 +244,13 @@
 
             <!-- =================================================
                  TROPHY IMAGE
-
-                 iOS:
-                 nema dynamic filter/scale animacije.
-
-                 Desktop / Android:
-                 zadržavamo grayscale, brightness i shadow.
             ================================================== -->
             <img
                 :src="trophy.image"
                 :alt="t(trophy.shortTitleKey)"
                 draggable="false"
-                class="relative z-20
+                class="trophy-image
+                     relative z-20
                      max-h-full max-w-full
                      object-contain"
                 :class="
@@ -233,7 +258,9 @@
               "
             />
 
-            <!-- Active highlight -->
+            <!-- =================================================
+                 ACTIVE HIGHLIGHT
+            ================================================== -->
             <div
                 v-if="
                 isActive(index) &&
@@ -242,28 +269,32 @@
                 class="pointer-events-none
                      absolute inset-0 z-30
                      rounded-full
-                     bg-[radial-gradient(circle,rgba(255,230,165,0.12),transparent_65%)]
+                     bg-[radial-gradient(circle,rgba(255,230,165,0.16),transparent_65%)]
                      mix-blend-screen"
             />
           </div>
 
-          <!-- Side label -->
+          <!-- =================================================
+               SIDE TROPHY LABEL
+          ================================================== -->
           <div
               v-if="!isActive(index)"
-              class="mt-2 hidden text-center sm:block"
+              class="mt-2 hidden text-center
+                   sm:block"
           >
             <p
                 class="text-[10px]
                      font-bold uppercase
                      tracking-[0.17em]
-                     text-white/45"
+                     text-[#031426]/50"
             >
               {{ t(trophy.shortTitleKey) }}
             </p>
 
             <p
                 class="mt-1 text-xs
-                     text-[#D8AD59]/70"
+                     font-medium
+                     text-[#B88A36]/80"
             >
               {{ trophy.mainSeason }}
             </p>
@@ -271,7 +302,7 @@
         </button>
 
         <!-- ===================================================
-             PREVIOUS
+             PREVIOUS BUTTON
         ==================================================== -->
         <button
             type="button"
@@ -284,15 +315,16 @@
                  -translate-y-1/2
                  items-center justify-center
                  rounded-full
-                 border border-[#D8AD59]/50
-                 bg-[#031426]/75
+                 border border-[#D8AD59]/70
+                 bg-white/75
                  text-3xl font-light
-                 text-[#E2B75E]
+                 text-[#B88A36]
+                 shadow-[0_8px_24px_rgba(3,20,38,0.08)]
                  backdrop-blur-md
                  transition-all duration-300
                  hover:scale-105
-                 hover:border-[#E2B75E]
-                 hover:bg-[#09233d]
+                 hover:border-[#B88A36]
+                 hover:bg-white
                  disabled:pointer-events-none
                  disabled:opacity-50
                  sm:h-12 sm:w-12"
@@ -303,7 +335,7 @@
         </button>
 
         <!-- ===================================================
-             NEXT
+             NEXT BUTTON
         ==================================================== -->
         <button
             type="button"
@@ -316,15 +348,16 @@
                  -translate-y-1/2
                  items-center justify-center
                  rounded-full
-                 border border-[#D8AD59]/50
-                 bg-[#031426]/75
+                 border border-[#D8AD59]/70
+                 bg-white/75
                  text-3xl font-light
-                 text-[#E2B75E]
+                 text-[#B88A36]
+                 shadow-[0_8px_24px_rgba(3,20,38,0.08)]
                  backdrop-blur-md
                  transition-all duration-300
                  hover:scale-105
-                 hover:border-[#E2B75E]
-                 hover:bg-[#09233d]
+                 hover:border-[#B88A36]
+                 hover:bg-white
                  disabled:pointer-events-none
                  disabled:opacity-50
                  sm:h-12 sm:w-12"
@@ -335,7 +368,7 @@
         </button>
 
         <!-- ===================================================
-             ACTIVE TROPHY INFORMATION
+             ACTIVE TROPHY INFO
         ==================================================== -->
         <div
             class="absolute bottom-0 left-1/2
@@ -355,29 +388,29 @@
               >
                 <span
                     class="h-px w-10
-                         bg-[#D8AD59]/50"
+                         bg-[#D8AD59]/70"
                 />
 
                 <span
-                    class="text-[10px] font-bold
-                         uppercase
+                    class="text-[10px]
+                         font-bold uppercase
                          tracking-[0.28em]
-                         text-[#D8AD59]"
+                         text-[#B88A36]"
                 >
                   {{ t(activeTrophy.typeKey) }}
                 </span>
 
                 <span
                     class="h-px w-10
-                         bg-[#D8AD59]/50"
+                         bg-[#D8AD59]/70"
                 />
               </div>
 
-              <!-- Competition -->
+              <!-- Competition name -->
               <h3
                   class="text-2xl font-black
                        uppercase leading-tight
-                       text-white
+                       text-[#031426]
                        sm:text-3xl
                        lg:text-4xl"
               >
@@ -398,17 +431,17 @@
                   <p
                       class="text-4xl font-black
                            leading-none
-                           text-[#E1B45E]
+                           text-[#B88A36]
                            sm:text-5xl"
                   >
                     {{ activeTrophy.count }}x
                   </p>
 
                   <p
-                      class="text-[9px] font-bold
-                           uppercase
+                      class="text-[9px]
+                           font-bold uppercase
                            tracking-[0.22em]
-                           text-white/35
+                           text-[#031426]/45
                            sm:mt-1"
                   >
                     {{ t('trophies.won') }}
@@ -417,7 +450,7 @@
 
                 <div
                     class="hidden h-12 w-px
-                         bg-white/10
+                         bg-[#031426]/15
                          sm:block"
                 />
 
@@ -431,14 +464,15 @@
                       class="text-[9px]
                            font-semibold uppercase
                            tracking-[0.2em]
-                           text-white/30"
+                           text-[#031426]/40"
                   >
                     {{ t('trophies.seasons') }}
                   </p>
 
                   <p
                       class="mt-1 text-sm
-                           leading-6 text-white/70
+                           leading-6
+                           text-[#25455F]/80
                            sm:text-base"
                   >
                     {{ activeTrophy.seasons }}
@@ -451,7 +485,7 @@
       </div>
 
       <!-- =====================================================
-           DOTS
+           NAVIGATION DOTS
       ====================================================== -->
       <div
           class="mt-8 flex items-center
@@ -474,7 +508,7 @@
             :class="
             isActive(index)
               ? 'w-8 bg-[#D8AD59]'
-              : 'w-2.5 bg-white/15 hover:bg-white/35'
+              : 'w-2.5 bg-[#031426]/15 hover:bg-[#031426]/30'
           "
             @pointerdown.stop
             @click.stop="activate(index)"
@@ -528,11 +562,14 @@ const trophies: Trophy[] = [
   {
     id: 1,
     count: 4,
-    typeKey: 'trophies.championship',
-    titleKey: 'trophies.republikaSrpska',
+    typeKey:
+        'trophies.championship',
+    titleKey:
+        'trophies.republikaSrpska',
     shortTitleKey:
         'trophies.championshipRs',
-    mainSeason: '2023/24',
+    mainSeason:
+        '2023/24',
     seasons:
         '1998/99 · 2004/05 · 2011/12 · 2023/24',
     image:
@@ -542,10 +579,14 @@ const trophies: Trophy[] = [
   {
     id: 2,
     count: 7,
-    typeKey: 'trophies.cup',
-    titleKey: 'trophies.republikaSrpska',
-    shortTitleKey: 'trophies.cupRs',
-    mainSeason: '2018/19',
+    typeKey:
+        'trophies.cup',
+    titleKey:
+        'trophies.republikaSrpska',
+    shortTitleKey:
+        'trophies.cupRs',
+    mainSeason:
+        '2018/19',
     seasons:
         '2009/10 · 2012/13 · 2013/14 · 2015/16 · 2016/17 · 2017/18 · 2018/19',
     image:
@@ -555,12 +596,16 @@ const trophies: Trophy[] = [
   {
     id: 3,
     count: 1,
-    typeKey: 'trophies.cup',
+    typeKey:
+        'trophies.cup',
     titleKey:
         'trophies.bosniaHerzegovina',
-    shortTitleKey: 'trophies.cupBih',
-    mainSeason: '2015/16',
-    seasons: '2015/16',
+    shortTitleKey:
+        'trophies.cupBih',
+    mainSeason:
+        '2015/16',
+    seasons:
+        '2015/16',
     image:
         '/trophies/kup-bih-img.png',
   },
@@ -571,18 +616,21 @@ const trophies: Trophy[] = [
  * DEVICE / VIEWPORT
  * ============================================================
  */
-const viewportWidth = ref(1280)
+const viewportWidth =
+    ref(1280)
 
-const isIOS = ref(false)
+const isIOS =
+    ref(false)
 
 const detectIOS = () => {
   if (
-      typeof navigator === 'undefined'
+      typeof navigator ===
+      'undefined'
   ) {
     return
   }
 
-  const ua =
+  const userAgent =
       navigator.userAgent
 
   const platform =
@@ -592,7 +640,9 @@ const detectIOS = () => {
       navigator.maxTouchPoints ?? 0
 
   isIOS.value =
-      /iPhone|iPad|iPod/i.test(ua) ||
+      /iPhone|iPad|iPod/i.test(
+          userAgent,
+      ) ||
       (
           platform === 'MacIntel' &&
           touchPoints > 1
@@ -601,7 +651,8 @@ const detectIOS = () => {
 
 const updateViewportWidth = () => {
   if (
-      typeof window === 'undefined'
+      typeof window ===
+      'undefined'
   ) {
     return
   }
@@ -610,28 +661,35 @@ const updateViewportWidth = () => {
       window.innerWidth
 }
 
-const isMobile = computed(() => {
-  return viewportWidth.value < 640
-})
+const isMobile =
+    computed(() => {
+      return (
+          viewportWidth.value < 640
+      )
+    })
 
-const isTablet = computed(() => {
-  return (
-      viewportWidth.value >= 640 &&
-      viewportWidth.value < 1024
-  )
-})
+const isTablet =
+    computed(() => {
+      return (
+          viewportWidth.value >= 640 &&
+          viewportWidth.value < 1024
+      )
+    })
 
 /**
  * ============================================================
  * ACTIVE TROPHY
  * ============================================================
  */
-const activeIndex = ref(0)
+const activeIndex =
+    ref(0)
 
 const activeTrophy =
     computed<Trophy>(() => {
       return (
-          trophies[activeIndex.value] ??
+          trophies[
+              activeIndex.value
+              ] ??
           trophies[0]!
       )
     })
@@ -640,7 +698,8 @@ const isActive = (
     index: number,
 ) => {
   return (
-      index === activeIndex.value
+      index ===
+      activeIndex.value
   )
 }
 
@@ -649,61 +708,75 @@ const isActive = (
  * ROTATION STATE
  * ============================================================
  */
-const isRotating = ref(false)
+const isRotating =
+    ref(false)
 
 const wrappingIndex =
     ref<number | null>(null)
 
 const rotationDirection =
-    ref<RotationDirection>(null)
+    ref<RotationDirection>(
+        null,
+    )
 
 const wrapPhase =
     ref<WrapPhase>('idle')
 
 let timers:
-    ReturnType<typeof setTimeout>[] = []
+    ReturnType<
+        typeof setTimeout
+    >[] = []
 
 /**
- * Normal movement:
- * center <-> side
+ * Center <-> side movement.
  */
-const MOBILE_MOVE_DURATION = 480
+const MOBILE_MOVE_DURATION =
+    480
 
 /**
- * Wrapped trophy first fades backwards.
+ * Side trophy fades backwards.
  */
-const WRAP_HIDE_DURATION = 160
+const WRAP_HIDE_DURATION =
+    160
 
 /**
- * Safari needs a short moment after
- * transition:none repositioning.
+ * Short pause after Safari teleport.
  */
-const TELEPORT_SETTLE = 40
+const TELEPORT_SETTLE =
+    40
 
 /**
- * Fade-in on opposite side.
+ * Wrapped trophy appears
+ * on opposite side.
  */
-const WRAP_SHOW_DURATION = 220
+const WRAP_SHOW_DURATION =
+    220
 
 /**
- * Total lock time.
+ * Total mobile lock.
  */
-const MOBILE_ROTATION_DURATION = 520
+const MOBILE_ROTATION_DURATION =
+    520
 
 const addTimer = (
     callback: () => void,
     delay: number,
 ) => {
   const timer =
-      setTimeout(callback, delay)
+      setTimeout(
+          callback,
+          delay,
+      )
 
   timers.push(timer)
 }
 
 const clearTimers = () => {
-  timers.forEach((timer) => {
-    clearTimeout(timer)
-  })
+  timers.forEach(
+      (timer) => {
+        clearTimeout(timer)
+      },
+  )
 
   timers = []
 }
@@ -724,16 +797,19 @@ const getRelativePosition = (
       trophies.length
 
   let diff =
-      index - activeIndex.value
+      index -
+      activeIndex.value
 
   if (
-      diff > total / 2
+      diff >
+      total / 2
   ) {
     diff -= total
   }
 
   if (
-      diff < -total / 2
+      diff <
+      -total / 2
   ) {
     diff += total
   }
@@ -747,11 +823,15 @@ const getRelativePosition = (
  * ============================================================
  */
 const getSideDistance = () => {
-  if (isMobile.value) {
+  if (
+      isMobile.value
+  ) {
     return 125
   }
 
-  if (isTablet.value) {
+  if (
+      isTablet.value
+  ) {
     return 255
   }
 
@@ -759,7 +839,9 @@ const getSideDistance = () => {
 }
 
 const getSideScale = () => {
-  if (isMobile.value) {
+  if (
+      isMobile.value
+  ) {
     return 0.60
   }
 
@@ -767,7 +849,9 @@ const getSideScale = () => {
 }
 
 const getSideY = () => {
-  if (isMobile.value) {
+  if (
+      isMobile.value
+  ) {
     return 48
   }
 
@@ -775,10 +859,14 @@ const getSideY = () => {
 }
 
 /**
- * One transform function for ALL movement.
+ * ============================================================
+ * TRANSFORM
+ * ============================================================
  *
- * This is important for iOS:
- * there are no nested transform animations.
+ * Koristimo samo jedan transform
+ * na trophy wrapperu.
+ *
+ * translate3d pomaže WebKit compositingu.
  */
 const createTransform = (
     x: number,
@@ -801,7 +889,9 @@ const getItemStyle = (
     index: number,
 ): CSSProperties => {
   const position =
-      getRelativePosition(index)
+      getRelativePosition(
+          index,
+      )
 
   const sideDistance =
       getSideDistance()
@@ -815,23 +905,25 @@ const getItemStyle = (
   /**
    * ----------------------------------------------------------
    * MOBILE WRAP
-   *
-   * 1. hide on original side
-   * 2. teleport while opacity = 0
-   * 3. fade in on opposite side
    * ----------------------------------------------------------
+   *
+   * NEXT:
+   *
+   * LEFT
+   * ↓
+   * hide
+   * ↓
+   * teleport while invisible
+   * ↓
+   * RIGHT fade-in
+   *
+   * PREV radi obrnuto.
    */
   if (
       isMobile.value &&
-      wrappingIndex.value === index
+      wrappingIndex.value ===
+      index
   ) {
-    /**
-     * NEXT:
-     * old LEFT -> new RIGHT
-     *
-     * PREV:
-     * old RIGHT -> new LEFT
-     */
     const oldSideX =
         rotationDirection.value ===
         'next'
@@ -845,13 +937,11 @@ const getItemStyle = (
             : -sideDistance
 
     /**
-     * Phase 1
-     *
-     * Remains on same side while moving
-     * slightly backwards/down.
+     * HIDE
      */
     if (
-        wrapPhase.value === 'hide'
+        wrapPhase.value ===
+        'hide'
     ) {
       return {
         transform:
@@ -861,9 +951,11 @@ const getItemStyle = (
                 0.46,
             ),
 
-        opacity: '0',
+        opacity:
+            '0',
 
-        zIndex: '5',
+        zIndex:
+            '5',
 
         transitionProperty:
             'transform, opacity',
@@ -876,26 +968,17 @@ const getItemStyle = (
 
         willChange:
             'transform, opacity',
-
-        backfaceVisibility:
-            'hidden',
-
-        WebkitBackfaceVisibility:
-            'hidden',
       }
     }
 
     /**
-     * Phase 2
+     * TELEPORT
      *
-     * Completely invisible.
+     * Element je opacity 0,
+     * a transform dobije transition:none.
      *
-     * IMPORTANT:
-     * transition is disabled here.
-     *
-     * Safari therefore cannot visually
-     * animate from left -> right
-     * across the center.
+     * Safari zato ne može da ga
+     * animira preko centra.
      */
     if (
         wrapPhase.value ===
@@ -909,33 +992,31 @@ const getItemStyle = (
                 sideScale,
             ),
 
-        opacity: '0',
+        opacity:
+            '0',
 
-        zIndex: '5',
+        zIndex:
+            '5',
 
-        transition: 'none',
+        transition:
+            'none',
 
         willChange:
             'transform, opacity',
-
-        backfaceVisibility:
-            'hidden',
-
-        WebkitBackfaceVisibility:
-            'hidden',
       }
     }
 
     /**
-     * Phase 3
+     * SHOW
      *
-     * It is already on the correct side.
-     * Only opacity changes.
+     * Element je već fizički
+     * na novoj strani.
      *
-     * No transform animation.
+     * Animiramo samo opacity.
      */
     if (
-        wrapPhase.value === 'show'
+        wrapPhase.value ===
+        'show'
     ) {
       return {
         transform:
@@ -945,9 +1026,11 @@ const getItemStyle = (
                 sideScale,
             ),
 
-        opacity: '0.52',
+        opacity:
+            '0.52',
 
-        zIndex: '20',
+        zIndex:
+            '20',
 
         transitionProperty:
             'opacity',
@@ -958,13 +1041,8 @@ const getItemStyle = (
         transitionTimingFunction:
             'ease-out',
 
-        willChange: 'opacity',
-
-        backfaceVisibility:
-            'hidden',
-
-        WebkitBackfaceVisibility:
-            'hidden',
+        willChange:
+            'opacity',
       }
     }
   }
@@ -985,9 +1063,11 @@ const getItemStyle = (
               1,
           ),
 
-      opacity: '1',
+      opacity:
+          '1',
 
-      zIndex: '30',
+      zIndex:
+          '30',
 
       transitionProperty:
           'transform, opacity',
@@ -1002,12 +1082,6 @@ const getItemStyle = (
 
       willChange:
           'transform, opacity',
-
-      backfaceVisibility:
-          'hidden',
-
-      WebkitBackfaceVisibility:
-          'hidden',
     }
   }
 
@@ -1032,7 +1106,8 @@ const getItemStyle = (
               ? '0.52'
               : '0.72',
 
-      zIndex: '20',
+      zIndex:
+          '20',
 
       transitionProperty:
           'transform, opacity',
@@ -1047,12 +1122,6 @@ const getItemStyle = (
 
       willChange:
           'transform, opacity',
-
-      backfaceVisibility:
-          'hidden',
-
-      WebkitBackfaceVisibility:
-          'hidden',
     }
   }
 
@@ -1077,7 +1146,8 @@ const getItemStyle = (
               ? '0.52'
               : '0.72',
 
-      zIndex: '20',
+      zIndex:
+          '20',
 
       transitionProperty:
           'transform, opacity',
@@ -1092,17 +1162,13 @@ const getItemStyle = (
 
       willChange:
           'transform, opacity',
-
-      backfaceVisibility:
-          'hidden',
-
-      WebkitBackfaceVisibility:
-          'hidden',
     }
   }
 
   /**
-   * Fallback
+   * ----------------------------------------------------------
+   * FALLBACK
+   * ----------------------------------------------------------
    */
   return {
     transform:
@@ -1112,43 +1178,44 @@ const getItemStyle = (
             0.45,
         ),
 
-    opacity: '0',
+    opacity:
+        '0',
 
-    zIndex: '5',
+    zIndex:
+        '5',
   }
 }
 
 /**
  * ============================================================
- * IMAGE VISUAL STATE
+ * TROPHY IMAGE STATE
  * ============================================================
  *
  * iOS:
  *
- * NO transform
- * NO animated filter
- * NO animated drop-shadow
+ * Ne animiramo filter,
+ * scale niti drop-shadow.
  *
- * Android/Desktop:
+ * Desktop / Android:
  *
- * keep richer visual treatment.
+ * Zadržavamo bogatiji izgled.
  */
 const getTrophyImageClass = (
     index: number,
 ) => {
   /**
-   * iOS WebKit safe mode
+   * iOS WebKit safe mode.
    */
   if (
       isIOS.value
   ) {
     return isActive(index)
         ? 'opacity-100'
-        : 'opacity-100'
+        : 'opacity-75'
   }
 
   /**
-   * Desktop / Android
+   * Desktop / Android active.
    */
   if (
       isActive(index)
@@ -1157,18 +1224,20 @@ const getTrophyImageClass = (
       trophy-active
       brightness-110
       contrast-105
-      drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]
-      transition-[filter]
-      duration-300
+      drop-shadow-[0_24px_38px_rgba(3,20,38,0.28)]
     `
   }
 
+  /**
+   * Desktop / Android side trophy.
+   */
   return `
     grayscale
-    brightness-[0.7]
+    brightness-[0.75]
     contrast-95
-    drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]
-    transition-[filter]
+    opacity-75
+    drop-shadow-[0_16px_22px_rgba(3,20,38,0.20)]
+    transition-[filter,opacity]
     duration-300
   `
 }
@@ -1193,7 +1262,8 @@ const startMobileRotation = (
 
   clearTimers()
 
-  isRotating.value = true
+  isRotating.value =
+      true
 
   rotationDirection.value =
       direction
@@ -1202,10 +1272,13 @@ const startMobileRotation = (
       activeIndex.value
 
   /**
-   * Wrapped trophy:
+   * Wrapped trophy.
    *
-   * NEXT -> old LEFT
-   * PREV -> old RIGHT
+   * NEXT:
+   * old LEFT.
+   *
+   * PREV:
+   * old RIGHT.
    */
   wrappingIndex.value =
       direction === 'next'
@@ -1220,57 +1293,78 @@ const startMobileRotation = (
       ) % trophies.length
 
   /**
-   * Start hide phase BEFORE
-   * changing activeIndex.
+   * Start hide phase
+   * prije promjene active indexa.
    */
-  wrapPhase.value = 'hide'
+  wrapPhase.value =
+      'hide'
 
   /**
-   * Let browser register hide state first.
+   * Dva RAF-a omogućavaju browseru
+   * da registruje početnu fazu
+   * prije promjene pozicija.
    */
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      activeIndex.value =
-          direction === 'next'
-              ? (
-              oldIndex + 1
-          ) % trophies.length
-              : (
-              oldIndex -
-              1 +
-              trophies.length
-          ) % trophies.length
-    })
-  })
+  requestAnimationFrame(
+      () => {
+        requestAnimationFrame(
+            () => {
+              activeIndex.value =
+                  direction ===
+                  'next'
+                      ? (
+                          oldIndex +
+                          1
+                      ) %
+                      trophies.length
+                      : (
+                          oldIndex -
+                          1 +
+                          trophies.length
+                      ) %
+                      trophies.length
+            },
+        )
+      },
+  )
 
   /**
-   * Teleport while invisible.
+   * TELEPORT
    */
-  addTimer(() => {
-    wrapPhase.value =
-        'teleport'
-  }, WRAP_HIDE_DURATION)
+  addTimer(
+      () => {
+        wrapPhase.value =
+            'teleport'
+      },
+      WRAP_HIDE_DURATION,
+  )
 
   /**
-   * Allow Safari to commit the
-   * transition:none transform.
+   * SHOW
    */
-  addTimer(() => {
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            wrapPhase.value =
-                'show'
-          })
-        })
+  addTimer(
+      () => {
+        requestAnimationFrame(
+            () => {
+              requestAnimationFrame(
+                  () => {
+                    wrapPhase.value =
+                        'show'
+                  },
+              )
+            },
+        )
       },
       WRAP_HIDE_DURATION +
-      TELEPORT_SETTLE)
+      TELEPORT_SETTLE,
+  )
 
   /**
-   * Cleanup.
+   * FINISH
    */
-  addTimer(() => {
-        wrappingIndex.value = null
+  addTimer(
+      () => {
+        wrappingIndex.value =
+            null
 
         rotationDirection.value =
             null
@@ -1281,7 +1375,8 @@ const startMobileRotation = (
         isRotating.value =
             false
       },
-      MOBILE_ROTATION_DURATION)
+      MOBILE_ROTATION_DURATION,
+  )
 }
 
 /**
@@ -1297,8 +1392,7 @@ const next = () => {
   }
 
   /**
-   * Mobile gets safe circular
-   * multi-phase animation.
+   * Mobile safe animation.
    */
   if (
       isMobile.value
@@ -1311,13 +1405,14 @@ const next = () => {
   }
 
   /**
-   * Desktop/tablet.
+   * Desktop / tablet.
    */
   activeIndex.value =
       (
           activeIndex.value +
           1
-      ) % trophies.length
+      ) %
+      trophies.length
 }
 
 /**
@@ -1347,12 +1442,13 @@ const prev = () => {
           activeIndex.value -
           1 +
           trophies.length
-      ) % trophies.length
+      ) %
+      trophies.length
 }
 
 /**
  * ============================================================
- * ACTIVATE
+ * ACTIVATE TROPHY
  * ============================================================
  */
 const activate = (
@@ -1361,14 +1457,17 @@ const activate = (
   if (
       index < 0 ||
       index >= trophies.length ||
-      index === activeIndex.value ||
+      index ===
+      activeIndex.value ||
       isRotating.value
   ) {
     return
   }
 
   const relative =
-      getRelativePosition(index)
+      getRelativePosition(
+          index,
+      )
 
   if (
       relative === 1
@@ -1405,13 +1504,27 @@ const currentX =
 const dragDistance =
     ref(0)
 
-const onPointerDown = (event: PointerEvent) => {
-  if (isRotating.value) {
+/**
+ * ------------------------------------------------------------
+ * POINTER DOWN
+ * ------------------------------------------------------------
+ */
+const onPointerDown = (
+    event: PointerEvent,
+) => {
+  if (
+      isRotating.value
+  ) {
     return
   }
 
-  const target = event.target as HTMLElement
+  const target =
+      event.target as HTMLElement
 
+  /**
+   * Buttons/links must keep
+   * their normal behavior.
+   */
   if (
       target.closest(
           'button, a, input, textarea, select, [data-no-drag]',
@@ -1420,16 +1533,31 @@ const onPointerDown = (event: PointerEvent) => {
     return
   }
 
-  isDragging.value = true
-  startX.value = event.clientX
-  currentX.value = event.clientX
-  dragDistance.value = 0
+  isDragging.value =
+      true
 
-  const carousel = event.currentTarget as HTMLElement
+  startX.value =
+      event.clientX
 
-  carousel.setPointerCapture?.(event.pointerId)
+  currentX.value =
+      event.clientX
+
+  dragDistance.value =
+      0
+
+  const carousel =
+      event.currentTarget as HTMLElement
+
+  carousel.setPointerCapture?.(
+      event.pointerId,
+  )
 }
 
+/**
+ * ------------------------------------------------------------
+ * POINTER MOVE
+ * ------------------------------------------------------------
+ */
 const onPointerMove = (
     event: PointerEvent,
 ) => {
@@ -1447,27 +1575,63 @@ const onPointerMove = (
       startX.value
 }
 
-const onPointerUp = (event: PointerEvent) => {
-  if (!isDragging.value) {
+/**
+ * ------------------------------------------------------------
+ * POINTER UP
+ * ------------------------------------------------------------
+ */
+const onPointerUp = (
+    event: PointerEvent,
+) => {
+  if (
+      !isDragging.value
+  ) {
     return
   }
 
-  const threshold = isMobile.value ? 42 : 55
+  const threshold =
+      isMobile.value
+          ? 42
+          : 55
 
-  if (dragDistance.value > threshold) {
+  /**
+   * Swipe right.
+   */
+  if (
+      dragDistance.value >
+      threshold
+  ) {
     prev()
-  } else if (dragDistance.value < -threshold) {
+  }
+
+  /**
+   * Swipe left.
+   */
+  else if (
+      dragDistance.value <
+      -threshold
+  ) {
     next()
   }
 
-  const carousel = event.currentTarget as HTMLElement
+  const carousel =
+      event.currentTarget as HTMLElement
 
-  if (carousel.hasPointerCapture?.(event.pointerId)) {
-    carousel.releasePointerCapture(event.pointerId)
+  if (
+      carousel.hasPointerCapture?.(
+          event.pointerId,
+      )
+  ) {
+    carousel.releasePointerCapture(
+        event.pointerId,
+    )
   }
 
-  isDragging.value = false
-  dragDistance.value = 0
+  isDragging.value =
+      false
+
+  dragDistance.value =
+      0
 }
 
 /**
@@ -1475,65 +1639,93 @@ const onPointerUp = (event: PointerEvent) => {
  * LIFECYCLE
  * ============================================================
  */
-onMounted(() => {
-  updateViewportWidth()
+onMounted(
+    () => {
+      updateViewportWidth()
 
-  detectIOS()
+      detectIOS()
 
-  window.addEventListener(
-      'resize',
-      updateViewportWidth,
-      {
-        passive: true,
-      },
-  )
-})
+      window.addEventListener(
+          'resize',
+          updateViewportWidth,
+          {
+            passive: true,
+          },
+      )
+    },
+)
 
-onBeforeUnmount(() => {
-  clearTimers()
+onBeforeUnmount(
+    () => {
+      clearTimers()
 
-  window.removeEventListener(
-      'resize',
-      updateViewportWidth,
-  )
-})
+      window.removeEventListener(
+          'resize',
+          updateViewportWidth,
+      )
+    },
+)
 </script>
 
 <style scoped>
 /**
  * ============================================================
  * TROPHY WRAPPER
- *
- * Single compositing layer.
- * Especially important for iOS WebKit.
  * ============================================================
+ *
+ * Jedini element koji kontroliše
+ * poziciju i scale.
  */
 .trophy-item {
-  transform-origin: center center;
+  transform-origin:
+      center center;
 
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+  -webkit-backface-visibility:
+      hidden;
 
-  -webkit-transform-style: preserve-3d;
-  transform-style: preserve-3d;
+  backface-visibility:
+      hidden;
 
-  will-change: transform, opacity;
+  will-change:
+      transform,
+      opacity;
+}
+
+/**
+ * Image ne dobija transform.
+ *
+ * Ovo je posebno važno za Safari/iOS.
+ */
+.trophy-image {
+  -webkit-backface-visibility:
+      hidden;
+
+  backface-visibility:
+      hidden;
 }
 
 /**
  * ============================================================
- * DESKTOP / ANDROID ACTIVE LIGHT
+ * ACTIVE TROPHY EFFECT
  *
- * iOS does not receive this class from JS.
+ * Desktop / Android.
+ *
+ * Na iOS-u ova klasa se ne dodjeljuje.
  * ============================================================
  */
 @keyframes trophyReveal {
   0% {
     filter:
-        brightness(0.95)
+        brightness(0.96)
+        contrast(1)
         drop-shadow(
             0 0 0
-            rgba(216, 173, 89, 0)
+            rgba(
+                216,
+                173,
+                89,
+                0
+            )
         );
   }
 
@@ -1543,7 +1735,12 @@ onBeforeUnmount(() => {
         contrast(1.05)
         drop-shadow(
             0 0 14px
-            rgba(216, 173, 89, 0.18)
+            rgba(
+                216,
+                173,
+                89,
+                0.20
+            )
         );
   }
 }
@@ -1570,35 +1767,35 @@ onBeforeUnmount(() => {
 
 .trophy-info-enter-from {
   opacity: 0;
-  transform: translateY(10px);
+
+  transform:
+      translateY(10px);
 }
 
 .trophy-info-leave-to {
   opacity: 0;
-  transform: translateY(-6px);
+
+  transform:
+      translateY(-6px);
 }
 
 /**
  * ============================================================
- * iOS / MOBILE RENDERING
+ * IOS / MOBILE
  * ============================================================
  */
-@media (max-width: 639px) {
+@media (
+max-width: 639px
+) {
   .trophy-item {
     -webkit-backface-visibility:
         hidden;
 
     backface-visibility:
         hidden;
-
-    -webkit-transform-style:
-        preserve-3d;
-
-    transform-style:
-        preserve-3d;
   }
 
-  .trophy-item img {
+  .trophy-image {
     -webkit-backface-visibility:
         hidden;
 
@@ -1613,7 +1810,8 @@ onBeforeUnmount(() => {
  * ============================================================
  */
 @media (
-prefers-reduced-motion: reduce
+prefers-reduced-motion:
+    reduce
 ) {
   .trophy-active {
     animation: none;
