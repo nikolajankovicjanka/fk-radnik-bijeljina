@@ -17,6 +17,30 @@ export default {
         allRightsReserved: "All rights reserved",
     },
 
+    trophies: {
+        sectionLabel: 'Club history',
+        title: 'FK Radnik Trophies',
+        description:
+            'Click a side trophy or drag left and right to explore.',
+
+        championship: 'Championship',
+        cup: 'Cup',
+
+        republikaSrpska: 'Republika Srpska',
+        bosniaHerzegovina: 'Bosnia and Herzegovina',
+
+        championshipRs: 'Republika Srpska Championship',
+        cupRs: 'Republika Srpska Cup',
+        cupBih: 'Bosnia and Herzegovina Cup',
+
+        seasons: 'Seasons',
+        won: 'won',
+
+        previous: 'Previous trophy',
+        next: 'Next trophy',
+        showTrophy: 'Show trophy {number}',
+    },
+
     nav: {
         home: 'Home',
         firstTeam: 'First Team',

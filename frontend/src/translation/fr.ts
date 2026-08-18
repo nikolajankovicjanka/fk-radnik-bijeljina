@@ -17,6 +17,30 @@ export default {
         allRightsReserved: "Tous droits réservés",
     },
 
+    trophies: {
+        sectionLabel: 'Histoire du club',
+        title: 'Trophées du FK Radnik',
+        description:
+            'Cliquez sur un trophée latéral ou faites glisser vers la gauche ou la droite.',
+
+        championship: 'Championnat',
+        cup: 'Coupe',
+
+        republikaSrpska: 'République serbe de Bosnie',
+        bosniaHerzegovina: 'Bosnie-Herzégovine',
+
+        championshipRs: 'Championnat de la République serbe de Bosnie',
+        cupRs: 'Coupe de la République serbe de Bosnie',
+        cupBih: 'Coupe de Bosnie-Herzégovine',
+
+        seasons: 'Saisons',
+        won: 'remporté',
+
+        previous: 'Trophée précédent',
+        next: 'Trophée suivant',
+        showTrophy: 'Afficher le trophée {number}',
+    },
+
     nav: {
         home: 'Accueil',
         firstTeam: 'Équipe première',

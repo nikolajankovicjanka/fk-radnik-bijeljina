@@ -17,6 +17,30 @@ export default {
         allRightsReserved: "Сва права задржана",
     },
 
+    trophies: {
+        sectionLabel: 'Историја клуба',
+        title: 'Трофеји ФК Радник',
+        description:
+            'Кликни на бочни трофеј или превуци приказ лијево и десно.',
+
+        championship: 'Првенство',
+        cup: 'Куп',
+
+        republikaSrpska: 'Републике Српске',
+        bosniaHerzegovina: 'Босне и Херцеговине',
+
+        championshipRs: 'Првенство РС',
+        cupRs: 'Куп РС',
+        cupBih: 'Куп БиХ',
+
+        seasons: 'Сезоне',
+        won: 'освојено',
+
+        previous: 'Претходни трофеј',
+        next: 'Сљедећи трофеј',
+        showTrophy: 'Прикажи трофеј {number}',
+    },
+
     nav: {
         home: 'Почетна',
         firstTeam: 'Први тим',

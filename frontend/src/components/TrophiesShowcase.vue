@@ -27,25 +27,33 @@
           <span class="h-px w-12 bg-[#D8AD59]/60" />
 
           <span
-              class="text-[11px] font-bold uppercase tracking-[0.35em] text-[#D8AD59]"
+              class="text-[11px] font-bold uppercase
+                   tracking-[0.35em] text-[#D8AD59]"
           >
-            Istorija kluba
+            {{ t('trophies.sectionLabel') }}
           </span>
 
           <span class="h-px w-12 bg-[#D8AD59]/60" />
         </div>
 
         <h2
-            class="text-3xl font-black uppercase tracking-tight text-white
-                 md:text-5xl lg:text-6xl"
+            class="text-3xl font-black uppercase tracking-tight
+                 text-white md:text-5xl lg:text-6xl"
         >
-          Trofeji FK Radnik
+          {{ t('trophies.title') }}
         </h2>
+
+        <p
+            class="mx-auto mt-4 max-w-2xl
+                 text-sm leading-6 text-white/50
+                 md:text-base"
+        >
+          {{ t('trophies.description') }}
+        </p>
       </div>
 
       <!-- Carousel -->
       <div
-          ref="carouselRef"
           class="relative mx-auto h-[610px] max-w-6xl
                select-none touch-pan-y
                sm:h-[650px]
@@ -100,7 +108,7 @@
                  blur-2xl"
         />
 
-        <!-- Orbit -->
+        <!-- Outer orbit -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[58%] z-[0]
@@ -111,6 +119,7 @@
                  sm:h-[200px]"
         />
 
+        <!-- Inner orbit -->
         <div
             class="pointer-events-none absolute
                  left-1/2 top-[58%] z-[0]
@@ -126,6 +135,8 @@
             v-for="(trophy, index) in trophies"
             :key="trophy.id"
             type="button"
+            data-no-drag
+            :aria-label="t(trophy.shortTitleKey)"
             class="absolute left-1/2 top-[38%]
                  flex -translate-x-1/2 -translate-y-1/2
                  flex-col items-center
@@ -133,8 +144,13 @@
                  transition-[transform,opacity,filter]
                  duration-700
                  ease-[cubic-bezier(.22,.61,.36,1)]"
-            :class="isActive(index) ? 'cursor-default' : 'cursor-pointer'"
+            :class="
+            isActive(index)
+              ? 'cursor-default'
+              : 'cursor-pointer'
+          "
             :style="getItemStyle(index)"
+            @pointerdown.stop
             @click.stop="activate(index)"
         >
           <div
@@ -157,16 +173,20 @@
                      blur-3xl"
             />
 
+            <!-- Trophy -->
             <img
                 :src="trophy.image"
-                :alt="trophy.title"
+                :alt="t(trophy.shortTitleKey)"
                 draggable="false"
-                class="relative z-20 max-h-full max-w-full object-contain transition-all duration-700"
+                class="relative z-20
+                     max-h-full max-w-full
+                     object-contain
+                     transition-all duration-700"
                 :class="
-    isActive(index)
-      ? 'trophy-active scale-105 brightness-110 contrast-105 drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]'
-      : 'scale-90 grayscale brightness-[0.7] contrast-95 opacity-65 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]'
-  "
+                isActive(index)
+                  ? 'trophy-active scale-105 brightness-110 contrast-105 drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]'
+                  : 'scale-90 grayscale brightness-[0.7] contrast-95 opacity-65 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]'
+              "
             />
 
             <!-- Active highlight -->
@@ -179,7 +199,7 @@
             />
           </div>
 
-          <!-- Side label -->
+          <!-- Side trophy label -->
           <div
               v-if="!isActive(index)"
               class="mt-2 hidden text-center sm:block"
@@ -188,7 +208,7 @@
                 class="text-[10px] font-bold uppercase
                      tracking-[0.17em] text-white/45"
             >
-              {{ trophy.shortTitle }}
+              {{ t(trophy.shortTitleKey) }}
             </p>
 
             <p class="mt-1 text-xs text-[#D8AD59]/70">
@@ -200,21 +220,21 @@
         <!-- Previous -->
         <button
             type="button"
-            aria-label="Prethodni trofej"
             data-no-drag
+            :aria-label="t('trophies.previous')"
             class="absolute left-0 top-[43%] z-[60]
-         flex h-11 w-11 -translate-y-1/2
-         items-center justify-center
-         rounded-full
-         border border-[#D8AD59]/50
-         bg-[#031426]/75
-         text-3xl font-light text-[#E2B75E]
-         backdrop-blur-md
-         transition-all duration-300
-         hover:scale-105
-         hover:border-[#E2B75E]
-         hover:bg-[#09233d]
-         sm:h-12 sm:w-12"
+                 flex h-11 w-11 -translate-y-1/2
+                 items-center justify-center
+                 rounded-full
+                 border border-[#D8AD59]/50
+                 bg-[#031426]/75
+                 text-3xl font-light text-[#E2B75E]
+                 backdrop-blur-md
+                 transition-all duration-300
+                 hover:scale-105
+                 hover:border-[#E2B75E]
+                 hover:bg-[#09233d]
+                 sm:h-12 sm:w-12"
             @pointerdown.stop
             @click.stop.prevent="prev"
         >
@@ -224,21 +244,21 @@
         <!-- Next -->
         <button
             type="button"
-            aria-label="Sljedeći trofej"
             data-no-drag
+            :aria-label="t('trophies.next')"
             class="absolute right-0 top-[43%] z-[60]
-         flex h-11 w-11 -translate-y-1/2
-         items-center justify-center
-         rounded-full
-         border border-[#D8AD59]/50
-         bg-[#031426]/75
-         text-3xl font-light text-[#E2B75E]
-         backdrop-blur-md
-         transition-all duration-300
-         hover:scale-105
-         hover:border-[#E2B75E]
-         hover:bg-[#09233d]
-         sm:h-12 sm:w-12"
+                 flex h-11 w-11 -translate-y-1/2
+                 items-center justify-center
+                 rounded-full
+                 border border-[#D8AD59]/50
+                 bg-[#031426]/75
+                 text-3xl font-light text-[#E2B75E]
+                 backdrop-blur-md
+                 transition-all duration-300
+                 hover:scale-105
+                 hover:border-[#E2B75E]
+                 hover:bg-[#09233d]
+                 sm:h-12 sm:w-12"
             @pointerdown.stop
             @click.stop.prevent="next"
         >
@@ -252,8 +272,12 @@
                  -translate-x-1/2
                  px-4 text-center"
         >
-          <Transition name="trophy-info" mode="out-in">
+          <Transition
+              name="trophy-info"
+              mode="out-in"
+          >
             <div :key="activeTrophy.id">
+              <!-- Type -->
               <div class="mb-3 flex items-center justify-center gap-3">
                 <span class="h-px w-10 bg-[#D8AD59]/50" />
 
@@ -261,18 +285,19 @@
                     class="text-[10px] font-bold uppercase
                          tracking-[0.28em] text-[#D8AD59]"
                 >
-                  {{ activeTrophy.type }}
+                  {{ t(activeTrophy.typeKey) }}
                 </span>
 
                 <span class="h-px w-10 bg-[#D8AD59]/50" />
               </div>
 
+              <!-- Competition -->
               <h3
                   class="text-2xl font-black uppercase
                        leading-tight text-white
                        sm:text-3xl lg:text-4xl"
               >
-                {{ activeTrophy.title }}
+                {{ t(activeTrophy.titleKey) }}
               </h3>
 
               <div
@@ -295,19 +320,25 @@
                            tracking-[0.22em] text-white/35
                            sm:mt-1"
                   >
-                    osvojeno
+                    {{ t('trophies.won') }}
                   </p>
                 </div>
 
-                <div class="hidden h-12 w-px bg-white/10 sm:block" />
+                <div
+                    class="hidden h-12 w-px
+                         bg-white/10 sm:block"
+                />
 
                 <!-- Seasons -->
-                <div class="max-w-[580px] text-center sm:text-left">
+                <div
+                    class="max-w-[580px]
+                         text-center sm:text-left"
+                >
                   <p
                       class="text-[9px] font-semibold uppercase
                            tracking-[0.2em] text-white/30"
                   >
-                    Sezone
+                    {{ t('trophies.seasons') }}
                   </p>
 
                   <p
@@ -324,20 +355,27 @@
         </div>
       </div>
 
-      <!-- Dots -->
+      <!-- Navigation dots -->
       <div class="mt-8 flex items-center justify-center gap-3">
         <button
             v-for="(_, index) in trophies"
             :key="index"
             type="button"
-            :aria-label="`Prikaži trofej ${index + 1}`"
-            class="h-2.5 rounded-full transition-all duration-300"
+            data-no-drag
+            :aria-label="
+            t('trophies.showTrophy', {
+              number: index + 1,
+            })
+          "
+            class="h-2.5 rounded-full
+                 transition-all duration-300"
             :class="
             isActive(index)
               ? 'w-8 bg-[#D8AD59]'
               : 'w-2.5 bg-white/15 hover:bg-white/35'
           "
-            @click="activate(index)"
+            @pointerdown.stop
+            @click.stop="activate(index)"
         />
       </div>
     </div>
@@ -346,46 +384,52 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 type Trophy = {
   id: number
   count: number
-  type: string
-  title: string
-  shortTitle: string
+  typeKey: string
+  titleKey: string
+  shortTitleKey: string
   mainSeason: string
   seasons: string
   image: string
 }
 
+const { t } = useI18n()
+
 const trophies: Trophy[] = [
   {
     id: 1,
     count: 4,
-    type: 'Prvenstvo',
-    title: 'Republike Srpske',
-    shortTitle: 'Prvenstvo RS',
+    typeKey: 'trophies.championship',
+    titleKey: 'trophies.republikaSrpska',
+    shortTitleKey: 'trophies.championshipRs',
     mainSeason: '2023/24',
-    seasons: '1998/99 · 2004/05 · 2011/12 · 2023/24',
+    seasons:
+        '1998/99 · 2004/05 · 2011/12 · 2023/24',
     image: '/trophies/pobjednik-rs-img.png',
   },
+
   {
     id: 2,
     count: 7,
-    type: 'Kup',
-    title: 'Republike Srpske',
-    shortTitle: 'Kup RS',
+    typeKey: 'trophies.cup',
+    titleKey: 'trophies.republikaSrpska',
+    shortTitleKey: 'trophies.cupRs',
     mainSeason: '2018/19',
     seasons:
         '2009/10 · 2012/13 · 2013/14 · 2015/16 · 2016/17 · 2017/18 · 2018/19',
     image: '/trophies/kup-rs-img.png',
   },
+
   {
     id: 3,
     count: 1,
-    type: 'Kup',
-    title: 'Bosne i Hercegovine',
-    shortTitle: 'Kup BiH',
+    typeKey: 'trophies.cup',
+    titleKey: 'trophies.bosniaHerzegovina',
+    shortTitleKey: 'trophies.cupBih',
     mainSeason: '2015/16',
     seasons: '2015/16',
     image: '/trophies/kup-bih-img.png',
@@ -394,12 +438,27 @@ const trophies: Trophy[] = [
 
 const activeIndex = ref(0)
 
-const carouselRef = ref<HTMLElement | null>(null)
+/**
+ * Always returns a Trophy.
+ *
+ * The fallback also prevents vue-tsc from reporting:
+ * "activeTrophy is possibly undefined".
+ */
+const activeTrophy = computed<Trophy>(() => {
+  return trophies[activeIndex.value] ?? trophies[0]!
+})
 
-const activeTrophy = computed(() => trophies[activeIndex.value])
+const isActive = (index: number) => {
+  return index === activeIndex.value
+}
 
-const isActive = (index: number) => index === activeIndex.value
-
+/**
+ * Determines whether the trophy is:
+ *
+ * -1 = left
+ *  0 = active / center
+ *  1 = right
+ */
 const getRelativePosition = (index: number) => {
   const total = trophies.length
 
@@ -416,19 +475,33 @@ const getRelativePosition = (index: number) => {
   return diff
 }
 
+/**
+ * Circular carousel positioning.
+ */
 const getItemStyle = (index: number) => {
   const position = getRelativePosition(index)
 
   const mobile =
-      typeof window !== 'undefined' && window.innerWidth < 640
+      typeof window !== 'undefined' &&
+      window.innerWidth < 640
 
   const tablet =
-      typeof window !== 'undefined' && window.innerWidth < 1024
+      typeof window !== 'undefined' &&
+      window.innerWidth < 1024
 
-  const sideDistance = mobile ? 150 : tablet ? 255 : 360
+  const sideDistance = mobile
+      ? 150
+      : tablet
+          ? 255
+          : 360
+
   const sideScale = mobile ? 0.62 : 0.8
+
   const sideY = mobile ? 40 : 55
 
+  /**
+   * Center
+   */
   if (position === 0) {
     return {
       transform: `
@@ -442,6 +515,9 @@ const getItemStyle = (index: number) => {
     }
   }
 
+  /**
+   * Left
+   */
   if (position === -1) {
     return {
       transform: `
@@ -455,6 +531,9 @@ const getItemStyle = (index: number) => {
     }
   }
 
+  /**
+   * Right
+   */
   if (position === 1) {
     return {
       transform: `
@@ -468,6 +547,9 @@ const getItemStyle = (index: number) => {
     }
   }
 
+  /**
+   * Hidden position
+   */
   return {
     transform: `
       translate(-50%, -50%)
@@ -478,35 +560,58 @@ const getItemStyle = (index: number) => {
   }
 }
 
+/**
+ * Activate trophy by clicking it.
+ */
 const activate = (index: number) => {
+  if (index < 0 || index >= trophies.length) {
+    return
+  }
+
   activeIndex.value = index
 }
 
+/**
+ * Next trophy.
+ */
 const next = () => {
   activeIndex.value =
       (activeIndex.value + 1) % trophies.length
 }
 
+/**
+ * Previous trophy.
+ */
 const prev = () => {
   activeIndex.value =
-      (activeIndex.value - 1 + trophies.length) % trophies.length
+      (activeIndex.value - 1 + trophies.length) %
+      trophies.length
 }
 
 /**
- * Swipe / drag
+ * Drag / swipe
  */
 const isDragging = ref(false)
+
 const startX = ref(0)
+
 const currentX = ref(0)
+
 const dragDistance = ref(0)
 
+/**
+ * Start drag.
+ */
 const onPointerDown = (event: PointerEvent) => {
   const target = event.target as HTMLElement
 
-  // Ne pokreći drag ako je kliknut interaktivni element.
+  /**
+   * Buttons and links must retain
+   * their normal click behaviour.
+   */
   if (
       target.closest(
-          'button, a, input, textarea, select, [data-no-drag]'
+          'button, a, input, textarea, select, [data-no-drag]',
       )
   ) {
     return
@@ -515,24 +620,36 @@ const onPointerDown = (event: PointerEvent) => {
   isDragging.value = true
 
   startX.value = event.clientX
+
   currentX.value = event.clientX
+
   dragDistance.value = 0
 
-  const carousel = event.currentTarget as HTMLElement
+  const carousel =
+      event.currentTarget as HTMLElement
 
-  carousel.setPointerCapture?.(event.pointerId)
+  carousel.setPointerCapture?.(
+      event.pointerId,
+  )
 }
 
+/**
+ * Drag movement.
+ */
 const onPointerMove = (event: PointerEvent) => {
   if (!isDragging.value) {
     return
   }
 
   currentX.value = event.clientX
+
   dragDistance.value =
       currentX.value - startX.value
 }
 
+/**
+ * Finish drag.
+ */
 const onPointerUp = (event: PointerEvent) => {
   if (!isDragging.value) {
     return
@@ -540,17 +657,35 @@ const onPointerUp = (event: PointerEvent) => {
 
   const threshold = 55
 
+  /**
+   * Drag right -> previous.
+   */
   if (dragDistance.value > threshold) {
     prev()
-  } else if (dragDistance.value < -threshold) {
+  }
+
+  /**
+   * Drag left -> next.
+   */
+  else if (dragDistance.value < -threshold) {
     next()
   }
 
-  const target = event.currentTarget as HTMLElement
+  const carousel =
+      event.currentTarget as HTMLElement
 
-  target.releasePointerCapture?.(event.pointerId)
+  if (
+      carousel.hasPointerCapture?.(
+          event.pointerId,
+      )
+  ) {
+    carousel.releasePointerCapture(
+        event.pointerId,
+    )
+  }
 
   isDragging.value = false
+
   dragDistance.value = 0
 }
 </script>
@@ -560,26 +695,39 @@ const onPointerUp = (event: PointerEvent) => {
   0% {
     filter:
         brightness(0.72)
-        drop-shadow(0 0 0 rgba(216, 173, 89, 0));
+        drop-shadow(
+            0 0 0 rgba(216, 173, 89, 0)
+        );
   }
 
   42% {
     filter:
         brightness(1.25)
-        drop-shadow(0 0 30px rgba(216, 173, 89, 0.35));
+        drop-shadow(
+            0 0 30px rgba(216, 173, 89, 0.35)
+        );
   }
 
   100% {
     filter:
         brightness(1.1)
-        drop-shadow(0 0 14px rgba(216, 173, 89, 0.18));
+        drop-shadow(
+            0 0 14px rgba(216, 173, 89, 0.18)
+        );
   }
 }
 
 .trophy-active {
-  animation: trophyReveal 0.75s ease forwards;
+  animation:
+      trophyReveal
+      0.75s
+      ease
+      forwards;
 }
 
+/**
+ * Trophy information transition
+ */
 .trophy-info-enter-active,
 .trophy-info-leave-active {
   transition:
@@ -595,5 +743,21 @@ const onPointerUp = (event: PointerEvent) => {
 .trophy-info-leave-to {
   opacity: 0;
   transform: translateY(-8px);
+}
+
+/**
+ * Accessibility:
+ * reduce animations if user
+ * requests reduced motion.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .trophy-active {
+    animation: none;
+  }
+
+  .trophy-info-enter-active,
+  .trophy-info-leave-active {
+    transition: none;
+  }
 }
 </style>
