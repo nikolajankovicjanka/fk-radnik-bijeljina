@@ -1,0 +1,599 @@
+<template>
+  <section class="relative overflow-hidden bg-[#031426] py-16 lg:py-24">
+    <!-- Background ambience -->
+    <div class="pointer-events-none absolute inset-0">
+      <div
+          class="absolute inset-0
+               bg-[radial-gradient(circle_at_center,rgba(15,61,103,0.32),transparent_58%)]"
+      />
+
+      <div
+          class="absolute -right-24 top-[-100px]
+               h-[620px] w-[620px]
+               rounded-full border border-white/[0.025]"
+      />
+
+      <div
+          class="absolute right-[-20px] top-[-20px]
+               h-[460px] w-[460px]
+               rounded-full border border-white/[0.02]"
+      />
+    </div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <!-- Heading -->
+      <div class="mb-10 text-center lg:mb-14">
+        <div class="mb-4 flex items-center justify-center gap-4">
+          <span class="h-px w-12 bg-[#D8AD59]/60" />
+
+          <span
+              class="text-[11px] font-bold uppercase tracking-[0.35em] text-[#D8AD59]"
+          >
+            Istorija kluba
+          </span>
+
+          <span class="h-px w-12 bg-[#D8AD59]/60" />
+        </div>
+
+        <h2
+            class="text-3xl font-black uppercase tracking-tight text-white
+                 md:text-5xl lg:text-6xl"
+        >
+          Trofeji FK Radnik
+        </h2>
+      </div>
+
+      <!-- Carousel -->
+      <div
+          ref="carouselRef"
+          class="relative mx-auto h-[610px] max-w-6xl
+               select-none touch-pan-y
+               sm:h-[650px]
+               lg:h-[690px]"
+          @pointerdown="onPointerDown"
+          @pointermove="onPointerMove"
+          @pointerup="onPointerUp"
+          @pointercancel="onPointerUp"
+      >
+        <!-- Spotlight beam -->
+        <div
+            class="pointer-events-none absolute
+                 left-1/2 top-[-90px] z-[1]
+                 h-[520px] w-[300px]
+                 -translate-x-1/2
+                 opacity-90"
+        >
+          <div
+              class="absolute inset-0
+                   bg-[linear-gradient(to_bottom,rgba(255,222,150,0.18),rgba(216,173,89,0.07)_45%,transparent_88%)]
+                   blur-2xl"
+          />
+
+          <div
+              class="absolute left-1/2 top-0
+                   h-[430px] w-[110px]
+                   -translate-x-1/2
+                   bg-[linear-gradient(to_bottom,rgba(255,239,198,0.15),transparent)]
+                   blur-xl"
+          />
+        </div>
+
+        <!-- Active radial glow -->
+        <div
+            class="pointer-events-none absolute
+                 left-1/2 top-[40%] z-[1]
+                 h-[430px] w-[430px]
+                 -translate-x-1/2 -translate-y-1/2
+                 rounded-full
+                 bg-[radial-gradient(circle,rgba(216,173,89,0.18)_0%,rgba(216,173,89,0.07)_38%,transparent_72%)]
+                 blur-2xl"
+        />
+
+        <!-- Ground reflection -->
+        <div
+            class="pointer-events-none absolute
+                 left-1/2 top-[64%] z-[2]
+                 h-[40px] w-[280px]
+                 -translate-x-1/2
+                 rounded-[50%]
+                 bg-[#D8AD59]/20
+                 blur-2xl"
+        />
+
+        <!-- Orbit -->
+        <div
+            class="pointer-events-none absolute
+                 left-1/2 top-[58%] z-[0]
+                 h-[180px] w-[94%]
+                 -translate-x-1/2 -translate-y-1/2
+                 rounded-[50%]
+                 border border-[#D8AD59]/20
+                 sm:h-[200px]"
+        />
+
+        <div
+            class="pointer-events-none absolute
+                 left-1/2 top-[58%] z-[0]
+                 h-[135px] w-[78%]
+                 -translate-x-1/2 -translate-y-1/2
+                 rounded-[50%]
+                 border border-dashed border-white/[0.06]
+                 sm:h-[160px]"
+        />
+
+        <!-- Trophy items -->
+        <button
+            v-for="(trophy, index) in trophies"
+            :key="trophy.id"
+            type="button"
+            class="absolute left-1/2 top-[38%]
+                 flex -translate-x-1/2 -translate-y-1/2
+                 flex-col items-center
+                 outline-none
+                 transition-[transform,opacity,filter]
+                 duration-700
+                 ease-[cubic-bezier(.22,.61,.36,1)]"
+            :class="isActive(index) ? 'cursor-default' : 'cursor-pointer'"
+            :style="getItemStyle(index)"
+            @click.stop="activate(index)"
+        >
+          <div
+              class="relative flex items-end justify-center
+                   transition-all duration-700"
+              :class="
+              isActive(index)
+                ? 'h-[330px] w-[260px] sm:h-[380px] sm:w-[310px] lg:h-[420px] lg:w-[350px]'
+                : 'h-[250px] w-[190px] sm:h-[290px] sm:w-[220px] lg:h-[320px] lg:w-[245px]'
+            "
+          >
+            <!-- Active glow behind trophy -->
+            <div
+                v-if="isActive(index)"
+                class="absolute bottom-2 left-1/2
+                     h-20 w-48
+                     -translate-x-1/2
+                     rounded-full
+                     bg-[#D8AD59]/25
+                     blur-3xl"
+            />
+
+            <img
+                :src="trophy.image"
+                :alt="trophy.title"
+                draggable="false"
+                class="relative z-20 max-h-full max-w-full object-contain transition-all duration-700"
+                :class="
+    isActive(index)
+      ? 'trophy-active scale-105 brightness-110 contrast-105 drop-shadow-[0_24px_38px_rgba(0,0,0,0.65)]'
+      : 'scale-90 grayscale brightness-[0.7] contrast-95 opacity-65 drop-shadow-[0_16px_22px_rgba(0,0,0,0.5)]'
+  "
+            />
+
+            <!-- Active highlight -->
+            <div
+                v-if="isActive(index)"
+                class="pointer-events-none absolute inset-0 z-30
+                     rounded-full
+                     bg-[radial-gradient(circle,rgba(255,230,165,0.12),transparent_65%)]
+                     mix-blend-screen"
+            />
+          </div>
+
+          <!-- Side label -->
+          <div
+              v-if="!isActive(index)"
+              class="mt-2 hidden text-center sm:block"
+          >
+            <p
+                class="text-[10px] font-bold uppercase
+                     tracking-[0.17em] text-white/45"
+            >
+              {{ trophy.shortTitle }}
+            </p>
+
+            <p class="mt-1 text-xs text-[#D8AD59]/70">
+              {{ trophy.mainSeason }}
+            </p>
+          </div>
+        </button>
+
+        <!-- Previous -->
+        <button
+            type="button"
+            aria-label="Prethodni trofej"
+            data-no-drag
+            class="absolute left-0 top-[43%] z-[60]
+         flex h-11 w-11 -translate-y-1/2
+         items-center justify-center
+         rounded-full
+         border border-[#D8AD59]/50
+         bg-[#031426]/75
+         text-3xl font-light text-[#E2B75E]
+         backdrop-blur-md
+         transition-all duration-300
+         hover:scale-105
+         hover:border-[#E2B75E]
+         hover:bg-[#09233d]
+         sm:h-12 sm:w-12"
+            @pointerdown.stop
+            @click.stop.prevent="prev"
+        >
+          ‹
+        </button>
+
+        <!-- Next -->
+        <button
+            type="button"
+            aria-label="Sljedeći trofej"
+            data-no-drag
+            class="absolute right-0 top-[43%] z-[60]
+         flex h-11 w-11 -translate-y-1/2
+         items-center justify-center
+         rounded-full
+         border border-[#D8AD59]/50
+         bg-[#031426]/75
+         text-3xl font-light text-[#E2B75E]
+         backdrop-blur-md
+         transition-all duration-300
+         hover:scale-105
+         hover:border-[#E2B75E]
+         hover:bg-[#09233d]
+         sm:h-12 sm:w-12"
+            @pointerdown.stop
+            @click.stop.prevent="next"
+        >
+          ›
+        </button>
+
+        <!-- Active trophy info -->
+        <div
+            class="absolute bottom-0 left-1/2 z-50
+                 w-full max-w-4xl
+                 -translate-x-1/2
+                 px-4 text-center"
+        >
+          <Transition name="trophy-info" mode="out-in">
+            <div :key="activeTrophy.id">
+              <div class="mb-3 flex items-center justify-center gap-3">
+                <span class="h-px w-10 bg-[#D8AD59]/50" />
+
+                <span
+                    class="text-[10px] font-bold uppercase
+                         tracking-[0.28em] text-[#D8AD59]"
+                >
+                  {{ activeTrophy.type }}
+                </span>
+
+                <span class="h-px w-10 bg-[#D8AD59]/50" />
+              </div>
+
+              <h3
+                  class="text-2xl font-black uppercase
+                       leading-tight text-white
+                       sm:text-3xl lg:text-4xl"
+              >
+                {{ activeTrophy.title }}
+              </h3>
+
+              <div
+                  class="mt-5 flex flex-col items-center
+                       justify-center gap-4
+                       sm:flex-row sm:gap-7"
+              >
+                <!-- Count -->
+                <div class="flex items-center gap-3 sm:block">
+                  <p
+                      class="text-4xl font-black leading-none
+                           text-[#E1B45E]
+                           sm:text-5xl"
+                  >
+                    {{ activeTrophy.count }}x
+                  </p>
+
+                  <p
+                      class="text-[9px] font-bold uppercase
+                           tracking-[0.22em] text-white/35
+                           sm:mt-1"
+                  >
+                    osvojeno
+                  </p>
+                </div>
+
+                <div class="hidden h-12 w-px bg-white/10 sm:block" />
+
+                <!-- Seasons -->
+                <div class="max-w-[580px] text-center sm:text-left">
+                  <p
+                      class="text-[9px] font-semibold uppercase
+                           tracking-[0.2em] text-white/30"
+                  >
+                    Sezone
+                  </p>
+
+                  <p
+                      class="mt-1 text-sm leading-6
+                           text-white/70
+                           sm:text-base"
+                  >
+                    {{ activeTrophy.seasons }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+      </div>
+
+      <!-- Dots -->
+      <div class="mt-8 flex items-center justify-center gap-3">
+        <button
+            v-for="(_, index) in trophies"
+            :key="index"
+            type="button"
+            :aria-label="`Prikaži trofej ${index + 1}`"
+            class="h-2.5 rounded-full transition-all duration-300"
+            :class="
+            isActive(index)
+              ? 'w-8 bg-[#D8AD59]'
+              : 'w-2.5 bg-white/15 hover:bg-white/35'
+          "
+            @click="activate(index)"
+        />
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+
+type Trophy = {
+  id: number
+  count: number
+  type: string
+  title: string
+  shortTitle: string
+  mainSeason: string
+  seasons: string
+  image: string
+}
+
+const trophies: Trophy[] = [
+  {
+    id: 1,
+    count: 4,
+    type: 'Prvenstvo',
+    title: 'Republike Srpske',
+    shortTitle: 'Prvenstvo RS',
+    mainSeason: '2023/24',
+    seasons: '1998/99 · 2004/05 · 2011/12 · 2023/24',
+    image: '/trophies/pobjednik-rs-img.png',
+  },
+  {
+    id: 2,
+    count: 7,
+    type: 'Kup',
+    title: 'Republike Srpske',
+    shortTitle: 'Kup RS',
+    mainSeason: '2018/19',
+    seasons:
+        '2009/10 · 2012/13 · 2013/14 · 2015/16 · 2016/17 · 2017/18 · 2018/19',
+    image: '/trophies/kup-rs-img.png',
+  },
+  {
+    id: 3,
+    count: 1,
+    type: 'Kup',
+    title: 'Bosne i Hercegovine',
+    shortTitle: 'Kup BiH',
+    mainSeason: '2015/16',
+    seasons: '2015/16',
+    image: '/trophies/kup-bih-img.png',
+  },
+]
+
+const activeIndex = ref(0)
+
+const carouselRef = ref<HTMLElement | null>(null)
+
+const activeTrophy = computed(() => trophies[activeIndex.value])
+
+const isActive = (index: number) => index === activeIndex.value
+
+const getRelativePosition = (index: number) => {
+  const total = trophies.length
+
+  let diff = index - activeIndex.value
+
+  if (diff > total / 2) {
+    diff -= total
+  }
+
+  if (diff < -total / 2) {
+    diff += total
+  }
+
+  return diff
+}
+
+const getItemStyle = (index: number) => {
+  const position = getRelativePosition(index)
+
+  const mobile =
+      typeof window !== 'undefined' && window.innerWidth < 640
+
+  const tablet =
+      typeof window !== 'undefined' && window.innerWidth < 1024
+
+  const sideDistance = mobile ? 150 : tablet ? 255 : 360
+  const sideScale = mobile ? 0.62 : 0.8
+  const sideY = mobile ? 40 : 55
+
+  if (position === 0) {
+    return {
+      transform: `
+        translate(-50%, -50%)
+        translateX(0px)
+        translateY(-18px)
+        scale(1)
+      `,
+      opacity: '1',
+      zIndex: '30',
+    }
+  }
+
+  if (position === -1) {
+    return {
+      transform: `
+        translate(-50%, -50%)
+        translateX(-${sideDistance}px)
+        translateY(${sideY}px)
+        scale(${sideScale})
+      `,
+      opacity: mobile ? '0.5' : '0.72',
+      zIndex: '20',
+    }
+  }
+
+  if (position === 1) {
+    return {
+      transform: `
+        translate(-50%, -50%)
+        translateX(${sideDistance}px)
+        translateY(${sideY}px)
+        scale(${sideScale})
+      `,
+      opacity: mobile ? '0.5' : '0.72',
+      zIndex: '20',
+    }
+  }
+
+  return {
+    transform: `
+      translate(-50%, -50%)
+      scale(0.55)
+    `,
+    opacity: '0',
+    zIndex: '5',
+  }
+}
+
+const activate = (index: number) => {
+  activeIndex.value = index
+}
+
+const next = () => {
+  activeIndex.value =
+      (activeIndex.value + 1) % trophies.length
+}
+
+const prev = () => {
+  activeIndex.value =
+      (activeIndex.value - 1 + trophies.length) % trophies.length
+}
+
+/**
+ * Swipe / drag
+ */
+const isDragging = ref(false)
+const startX = ref(0)
+const currentX = ref(0)
+const dragDistance = ref(0)
+
+const onPointerDown = (event: PointerEvent) => {
+  const target = event.target as HTMLElement
+
+  // Ne pokreći drag ako je kliknut interaktivni element.
+  if (
+      target.closest(
+          'button, a, input, textarea, select, [data-no-drag]'
+      )
+  ) {
+    return
+  }
+
+  isDragging.value = true
+
+  startX.value = event.clientX
+  currentX.value = event.clientX
+  dragDistance.value = 0
+
+  const carousel = event.currentTarget as HTMLElement
+
+  carousel.setPointerCapture?.(event.pointerId)
+}
+
+const onPointerMove = (event: PointerEvent) => {
+  if (!isDragging.value) {
+    return
+  }
+
+  currentX.value = event.clientX
+  dragDistance.value =
+      currentX.value - startX.value
+}
+
+const onPointerUp = (event: PointerEvent) => {
+  if (!isDragging.value) {
+    return
+  }
+
+  const threshold = 55
+
+  if (dragDistance.value > threshold) {
+    prev()
+  } else if (dragDistance.value < -threshold) {
+    next()
+  }
+
+  const target = event.currentTarget as HTMLElement
+
+  target.releasePointerCapture?.(event.pointerId)
+
+  isDragging.value = false
+  dragDistance.value = 0
+}
+</script>
+
+<style scoped>
+@keyframes trophyReveal {
+  0% {
+    filter:
+        brightness(0.72)
+        drop-shadow(0 0 0 rgba(216, 173, 89, 0));
+  }
+
+  42% {
+    filter:
+        brightness(1.25)
+        drop-shadow(0 0 30px rgba(216, 173, 89, 0.35));
+  }
+
+  100% {
+    filter:
+        brightness(1.1)
+        drop-shadow(0 0 14px rgba(216, 173, 89, 0.18));
+  }
+}
+
+.trophy-active {
+  animation: trophyReveal 0.75s ease forwards;
+}
+
+.trophy-info-enter-active,
+.trophy-info-leave-active {
+  transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
+}
+
+.trophy-info-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.trophy-info-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+</style>

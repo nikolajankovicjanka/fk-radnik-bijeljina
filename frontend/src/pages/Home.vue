@@ -7,6 +7,8 @@
 
   <MainPartnersBar />
 
+  <TrophiesShowcase />
+
   <section class="relative bg-white">
     <div class="container mx-auto px-4">
       <NewsSliderHomepage />
@@ -54,4 +56,5 @@ import SeasonTicketsPromo from '../components/SeasonTicketsPromo.vue'
 import SeasonTicketPopup from '../components/SeasonTicketPopup.vue'
 import MainPartnersBar from '../components/MainPartnersBar.vue'
 import SponsorsSection from '../components/SponsorsSection.vue'
+import TrophiesShowcase from "@/components/TrophiesShowcase.vue";
 </script>
