@@ -12,7 +12,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        /*
+         * Svakih 15 minuta provjeravamo postoje li pending
+         * webshop narudžbe kojima je istekla rezervacija.
+         *
+         * withoutOverlapping sprečava pokretanje nove instance
+         * dok prethodna još uvijek radi.
+         */
+        $schedule
+            ->command('shop:expire-pending-orders')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping();
     }
 
     /**
@@ -20,7 +30,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

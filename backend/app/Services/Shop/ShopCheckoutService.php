@@ -4,6 +4,7 @@ namespace App\Services\Shop;
 
 use App\Models\ShopOrder;
 use App\Models\ShopOrderItem;
+use App\Models\ShopVoucher;
 use App\Models\ShopProductVariant;
 use App\Models\ShopSetting;
 use App\Models\ShopVoucherUsage;
@@ -228,6 +229,33 @@ class ShopCheckoutService
                     ?? ShopOrder::DELIVERY_COURIER;
 
                 /*
+                 * Ako checkout koristi promo vaučer,
+                 * zaključavamo njegov DB red do kraja transakcije.
+                 *
+                 * Time dva paralelna checkout zahtjeva za isti vaučer
+                 * ne mogu istovremeno proći provjeru usage_limit-a.
+                 *
+                 * Drugi request čeka da prvi završi transakciju.
+                 * Nakon toga VoucherService vidi novo evidentirano
+                 * korištenje i ponovo provjerava usage_limit.
+                 *
+                 * Ako kod ne postoji, ovdje ne bacamo grešku.
+                 * Standardnu business poruku vraća VoucherService.
+                 */
+                if (
+                    $voucherCode !== null
+                    && $voucherCode !== ''
+                ) {
+                    ShopVoucher::query()
+                        ->whereRaw(
+                            'UPPER(code) = ?',
+                            [strtoupper($voucherCode)]
+                        )
+                        ->lockForUpdate()
+                        ->first();
+                }
+
+                /*
                  * Pricing servis ponovo validira popuste.
                  *
                  * Frontend ne odlučuje:
@@ -378,6 +406,9 @@ class ShopCheckoutService
                 /*
                  * Ako je korišten promo vaučer,
                  * evidentiramo njegovo korištenje.
+                 *
+                 * Voucher red je i dalje zaključan do COMMIT-a
+                 * ove transakcije.
                  */
                 if ($pricing['voucher']) {
                     ShopVoucherUsage::create([

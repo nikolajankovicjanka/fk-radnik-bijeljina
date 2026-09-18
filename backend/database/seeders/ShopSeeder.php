@@ -42,6 +42,11 @@ class ShopSeeder extends Seeder
                 'type' => 'string',
             ],
             [
+                'key' => 'pending_order_expiry_hours',
+                'value' => '24',
+                'type' => 'integer',
+            ],
+            [
                 'key' => 'orders_enabled',
                 'value' => '1',
                 'type' => 'boolean',
