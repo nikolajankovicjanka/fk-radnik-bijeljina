@@ -5,12 +5,14 @@
       <RouterView />
     </main>
     <Footer class="flex-shrink-0 mt-auto" />
+    <FloatingCart />
   </div>
 </template>
 
 <script setup lang="ts">
   import Navbar from '../components/NavBar.vue'
   import Footer from '../components/Footer.vue'
+  import FloatingCart from '@/components/shop/FloatingCart.vue'
 </script>
 
 <style>
