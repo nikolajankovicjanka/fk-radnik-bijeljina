@@ -48,6 +48,12 @@ class ShopProduct extends Model
         return $this->hasMany(ShopProductVariant::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(ShopProductImage::class)
+            ->orderBy('sort_order');
+    }
+
     public function orderItems(): HasMany
     {
         return $this->hasMany(ShopOrderItem::class);

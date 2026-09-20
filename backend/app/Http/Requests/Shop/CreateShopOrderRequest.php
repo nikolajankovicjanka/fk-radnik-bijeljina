@@ -73,13 +73,14 @@ class CreateShopOrderRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:100',
+                'prohibited_with:voucher_code',
             ],
-
 
             'voucher_code' => [
                 'nullable',
                 'string',
                 'max:100',
+                'prohibited_with:season_ticket_number',
             ],
 
             'items' => [
