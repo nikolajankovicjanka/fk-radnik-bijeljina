@@ -33,10 +33,15 @@ class ShopProductController extends Controller
         $product = ShopProduct::query()
             ->with([
                 'category',
+
                 'variants' => function ($query) {
                     $query
                         ->where('is_active', true)
                         ->orderBy('sort_order');
+                },
+
+                'images' => function ($query) {
+                    $query->orderBy('sort_order');
                 },
             ])
             ->where('slug', $slug)

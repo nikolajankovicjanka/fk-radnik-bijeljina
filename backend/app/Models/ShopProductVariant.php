@@ -18,12 +18,14 @@ class ShopProductVariant extends Model
         'stock_quantity',
         'reserved_quantity',
         'is_active',
+        'sort_order',
     ];
 
     protected $casts = [
         'stock_quantity' => 'integer',
         'reserved_quantity' => 'integer',
         'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     public function product(): BelongsTo

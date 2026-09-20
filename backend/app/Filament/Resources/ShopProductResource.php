@@ -70,7 +70,9 @@ class ShopProductResource extends Resource
 
                         Forms\Components\TextInput::make('sku')
                             ->label('Šifra proizvoda (SKU)')
-                            ->helperText('Jedinstvena interna šifra proizvoda, npr. FKR-DRES-DOM-26.')
+                            ->helperText(
+                                'Jedinstvena interna šifra proizvoda, npr. FKR-DRES-DOM-26.'
+                            )
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
@@ -102,21 +104,73 @@ class ShopProductResource extends Resource
                             ->prefix('KM')
                             ->minValue(0)
                             ->nullable()
-                            ->helperText('Ostaviti prazno ako proizvod nije na akciji.')
+                            ->helperText(
+                                'Ostaviti prazno ako proizvod nije na akciji.'
+                            )
                             ->lt('price'),
                     ])
                     ->columns(2),
 
-                Forms\Components\Section::make('Slika proizvoda')
+                /*
+                |--------------------------------------------------------------------------
+                | Slike proizvoda
+                |--------------------------------------------------------------------------
+                |
+                | main_image ostaje glavna slika proizvoda.
+                |
+                | images relacija omogućava maksimalno 5 dodatnih slika.
+                | Redoslijed dodatnih slika moguće je mijenjati drag & drop.
+                |
+                */
+                Forms\Components\Section::make('Slike proizvoda')
+                    ->description(
+                        'Postavite glavnu sliku proizvoda i do 5 dodatnih slika za galeriju.'
+                    )
                     ->schema([
                         Forms\Components\FileUpload::make('main_image')
                             ->label('Glavna slika')
+                            ->helperText(
+                                'Glavna slika se koristi na listi proizvoda, u korpi i kao prva slika galerije.'
+                            )
                             ->image()
                             ->imageEditor()
                             ->disk('public')
                             ->directory('shop/products')
                             ->visibility('public')
                             ->maxSize(5120)
+                            ->columnSpanFull(),
+
+                        Forms\Components\Repeater::make('images')
+                            ->label('Dodatne slike')
+                            ->helperText(
+                                'Možete dodati maksimalno 5 dodatnih slika proizvoda.'
+                            )
+                            ->relationship()
+                            ->schema([
+                                Forms\Components\FileUpload::make('image_path')
+                                    ->label('Slika')
+                                    ->image()
+                                    ->imageEditor()
+                                    ->disk('public')
+                                    ->directory('shop/products/gallery')
+                                    ->visibility('public')
+                                    ->maxSize(5120)
+                                    ->required()
+                                    ->columnSpanFull(),
+
+                                Forms\Components\Hidden::make('sort_order')
+                                    ->default(0),
+                            ])
+                            ->maxItems(5)
+                            ->defaultItems(0)
+                            ->reorderable('sort_order')
+                            ->addActionLabel('Dodaj sliku')
+                            ->collapsible()
+                            ->itemLabel(
+                                fn(array $state): ?string => isset($state['image_path'])
+                                    ? 'Slika galerije'
+                                    : 'Nova slika'
+                            )
                             ->columnSpanFull(),
                     ]),
 
@@ -190,6 +244,12 @@ class ShopProductResource extends Resource
                 Tables\Columns\TextColumn::make('variants_count')
                     ->label('Varijante')
                     ->counts('variants'),
+
+                Tables\Columns\TextColumn::make('images_count')
+                    ->label('Galerija')
+                    ->counts('images')
+                    ->badge()
+                    ->suffix('/5'),
 
                 Tables\Columns\IconColumn::make('is_active')
                     ->label('Aktivan')
