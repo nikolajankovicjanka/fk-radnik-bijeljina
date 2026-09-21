@@ -73,14 +73,14 @@ class CreateShopOrderRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:100',
-                'prohibited_with:voucher_code',
+                'prohibits:voucher_code',
             ],
 
             'voucher_code' => [
                 'nullable',
                 'string',
                 'max:100',
-                'prohibited_with:season_ticket_number',
+                'prohibits:season_ticket_number',
             ],
 
             'items' => [
@@ -152,10 +152,10 @@ class CreateShopOrderRequest extends FormRequest
             'items.min' =>
                 'Korpa mora sadržavati najmanje jedan proizvod.',
 
-            'season_ticket_number.prohibited_with' =>
+            'season_ticket_number.prohibits' =>
                 'Sezonska karta i promo vaučer se ne mogu kombinovati.',
 
-            'voucher_code.prohibited_with' =>
+            'voucher_code.prohibits' =>
                 'Promo vaučer i sezonska karta se ne mogu kombinovati.',
         ];
     }
