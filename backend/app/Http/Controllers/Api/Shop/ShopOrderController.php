@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Shop;
 
+use App\Models\ShopSetting;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Shop\CreateShopOrderRequest;
 use App\Mail\Shop\AdminNewOrderNotification;
@@ -128,7 +129,11 @@ class ShopOrderController extends Controller
          * poslati admin obavještenje.
          */
         try {
-            $adminEmail = config('shop.admin_email');
+            $adminEmail = trim((string)ShopSetting::getValue('shop_email', ''));
+
+            if ($adminEmail === '') {
+                $adminEmail = config('shop.admin_email');
+            }
 
             if ($adminEmail) {
                 Mail::to($adminEmail)

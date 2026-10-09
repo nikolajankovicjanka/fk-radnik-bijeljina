@@ -608,10 +608,6 @@
               <Truck :size="18" class="mt-0.5 flex-shrink-0 text-[#006faf]" />
 
               <div>
-                <p class="text-[10px] font-black uppercase tracking-[0.06em] text-[#072846]">
-                  Dostava ili preuzimanje
-                </p>
-
                 <p class="mt-1 text-[10px] leading-4 text-[#8e9197]">
                   Način preuzimanja bira se prilikom završetka narudžbe.
                 </p>

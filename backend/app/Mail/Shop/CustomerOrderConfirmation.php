@@ -20,6 +20,8 @@ class CustomerOrderConfirmation extends Mailable implements ShouldQueue
 
     public function build(): self
     {
+        $this->order->loadMissing('items.product');
+
         return $this
             ->subject(
                 "FK Radnik Bijeljina - Narudžba {$this->order->order_number}"

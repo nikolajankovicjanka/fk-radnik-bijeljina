@@ -39,7 +39,10 @@ class ShopOrderItem extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(ShopProduct::class);
+        return $this->belongsTo(
+            ShopProduct::class,
+            'shop_product_id'
+        );
     }
 
     public function variant(): BelongsTo
