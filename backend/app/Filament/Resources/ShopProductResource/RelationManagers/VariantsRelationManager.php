@@ -147,6 +147,75 @@ class VariantsRelationManager extends RelationManager
                             ->send();
                     }),
 
+                Tables\Actions\Action::make('reduceStock')
+                    ->label('Skini sa stanja')
+                    ->icon('heroicon-o-minus-circle')
+                    ->color('warning')
+                    ->modalHeading('Skidanje robe sa stanja')
+                    ->modalDescription(
+                        'Količina za skidanje ne može biti veća od dostupne količine.'
+                    )
+                    ->form([
+                        Forms\Components\Placeholder::make('current_stock')
+                            ->label('Trenutno stanje')
+                            ->content(fn(ShopProductVariant $record): string => 'Ukupno: ' . $record->stock_quantity .
+                                ' | Rezervisano: ' . $record->reserved_quantity .
+                                ' | Dostupno: ' . $record->available_quantity
+                            ),
+
+                        Forms\Components\TextInput::make('quantity')
+                            ->label('Količina za skidanje')
+                            ->numeric()
+                            ->integer()
+                            ->minValue(1)
+                            ->required(),
+
+                        Forms\Components\Textarea::make('note')
+                            ->label('Razlog skidanja')
+                            ->placeholder('npr. Prodaja u klupskim prostorijama, oštećena roba...')
+                            ->rows(3),
+                    ])
+                    ->action(function (ShopProductVariant $record, array $data): void {
+                        DB::transaction(function () use ($record, $data): void {
+                            $variant = ShopProductVariant::query()
+                                ->lockForUpdate()
+                                ->findOrFail($record->id);
+
+                            $before = (int)$variant->stock_quantity;
+                            $reserved = (int)$variant->reserved_quantity;
+                            $available = max(0, $before - $reserved);
+                            $quantity = (int)$data['quantity'];
+
+                            if ($quantity < 1 || $quantity > $available) {
+                                throw \Illuminate\Validation\ValidationException::withMessages([
+                                    'quantity' => "Nedozvoljena količina. Dostupno je {$available} komada.",
+                                ]);
+                            }
+
+                            $after = $before - $quantity;
+
+                            $variant->update([
+                                'stock_quantity' => $after,
+                            ]);
+
+                            ShopStockMovement::create([
+                                'shop_product_variant_id' => $variant->id,
+                                'type' => ShopStockMovement::TYPE_ADJUSTMENT,
+                                'quantity' => -$quantity,
+                                'quantity_before' => $before,
+                                'quantity_after' => $after,
+                                'reference' => null,
+                                'note' => $data['note'] ?? null,
+                                'created_by' => auth()->id(),
+                            ]);
+                        });
+
+                        Notification::make()
+                            ->title('Roba je uspješno skinuta sa stanja.')
+                            ->success()
+                            ->send();
+                    }),
+
                 Tables\Actions\EditAction::make()
                     ->label('Uredi'),
 
