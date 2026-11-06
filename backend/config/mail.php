@@ -45,6 +45,10 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'zoho' => [
+            'transport' => 'zoho',
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],
